@@ -1,35 +1,69 @@
-/* MOBILE FIXES - Targeted improvements to existing design */
+/* MOBILE FIXES - Comprehensive responsive design for all pages */
+/* Academic Professional Standards - Perfect on all devices */
 
-/* Ensure proper mobile layout for main content */
+/* ============================================
+   BASE MOBILE LAYOUT (768px and below)
+   ============================================ */
 @media screen and (max-width: 768px) {
-    /* Fix body padding for nav - AGGRESSIVE padding to clear fixed header */
-    body,
-    body.paper,
-    main.container .paper {
-        padding-top: 200px !important;
+    /* Body padding for fixed nav - calibrated for nav height */
+    body {
+        padding-top: 90px !important;
+    }
+
+    /* Hero section centering */
+    .hero {
+        text-align: center !important;
+    }
+
+    .hero .container {
+        text-align: center !important;
+    }
+
+    .hero .title,
+    .hero .subtitle,
+    .hero p {
+        text-align: center !important;
+    }
+
+    /* Stats grid - 2 columns on mobile */
+    .stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px;
+        justify-items: center;
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    /* CTA Buttons centering */
+    .cta-buttons {
+        justify-content: center !important;
+        text-align: center !important;
     }
 
     /* Ensure proper container width */
+    .container,
     .paper {
         max-width: 100%;
         padding-left: 15px;
         padding-right: 15px;
+        box-sizing: border-box;
     }
 
-    /* Fix stats grid on very small screens */
-    .stats {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px;
+    /* Section padding */
+    .section {
+        padding: 30px 15px !important;
     }
 
     /* Better code block handling */
     pre {
         font-size: 9pt;
-        padding: 10px;
-        margin-left: -15px;
-        margin-right: -15px;
-        border-left: none;
-        border-right: none;
+        padding: 12px;
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* Better table handling */
@@ -38,6 +72,7 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         font-size: 9pt;
+        width: 100%;
     }
 
     /* Mobile navigation improvements */
@@ -49,7 +84,8 @@
 
     /* Touch target improvements - minimum 44px per Apple/Google guidelines */
     .internal-nav a,
-    .external-nav a {
+    .external-nav a,
+    .nav-links a {
         min-height: 44px;
         display: flex;
         align-items: center;
@@ -66,7 +102,8 @@
     /* Better spacing for mobile content */
     h1 {
         font-size: 18pt;
-        margin: 25px 0 15px 0;
+        margin: 20px 0 15px 0;
+        text-align: center;
     }
 
     h2 {
@@ -74,22 +111,28 @@
         margin: 20px 0 12px 0;
     }
 
+    h3 {
+        font-size: 12pt;
+    }
+
     /* Warning boxes mobile */
     .warning-box,
-    .abstract {
-        margin-left: -15px;
-        margin-right: -15px;
-        border-left: none;
-        border-right: none;
+    .abstract,
+    .highlight-box {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 15px;
     }
 
     /* Global button touch targets */
     button,
     .btn,
     input[type="submit"],
-    input[type="button"] {
-        min-height: 44px;
-        padding: 12px 16px;
+    input[type="button"],
+    a.btn {
+        min-height: 48px;
+        padding: 14px 18px;
+        font-size: 11pt;
     }
 
     /* Form inputs touch-friendly */
@@ -99,62 +142,129 @@
     input[type="password"],
     textarea,
     select {
-        min-height: 44px;
+        min-height: 48px;
         font-size: 16px !important; /* Prevents iOS zoom */
-        padding: 10px 12px;
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Improve list item spacing for touch */
     ul li,
     ol li {
         padding: 4px 0;
+        line-height: 1.6;
     }
 
-    /* Improve footer links */
+    /* Footer centering */
+    footer {
+        text-align: center;
+    }
+
+    footer .footer-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    footer .footer-content > div {
+        text-align: center;
+    }
+
     footer a {
         display: inline-block;
         padding: 8px 4px;
         min-height: 44px;
     }
+
+    /* Feature grid mobile */
+    .features,
+    .spec-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .feature,
+    .spec-card {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Comparison tables */
+    .comparison-table,
+    .matrix-table {
+        font-size: 9pt;
+    }
+
+    .comparison-table th,
+    .comparison-table td,
+    .matrix-table th,
+    .matrix-table td {
+        padding: 8px 6px;
+    }
+
+    /* Code examples */
+    .code-example {
+        margin: 15px 0;
+    }
+
+    .code-example pre {
+        font-size: 8pt;
+    }
 }
 
-/* Very small screens (< 480px) */
-@media screen and (max-width: 480px) {
+/* ============================================
+   SMALL MOBILE (380px and below - iPhone SE)
+   ============================================ */
+@media screen and (max-width: 380px) {
+    body {
+        padding-top: 80px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .container,
+    .paper {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .section {
+        padding: 20px 10px !important;
+    }
+
+    /* Stats single column */
     .stats {
         grid-template-columns: 1fr !important;
     }
 
     .stat .value {
-        font-size: 16pt;
+        font-size: 14pt;
     }
 
-    h1 {
-        font-size: 16pt;
-    }
-
-    /* Extra padding for very small screens */
-    body {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-    }
-
-    /* Larger touch targets for very small screens */
-    button,
-    .btn,
-    a.btn {
-        min-height: 50px;
-        font-size: 11pt;
-    }
-
-    /* Better spacing for lists */
-    ul, ol {
-        padding-left: 20px;
+    .stat .label {
+        font-size: 8pt;
     }
 
     /* Compact headers */
     h1 { font-size: 15pt; }
     h2 { font-size: 13pt; }
     h3 { font-size: 11pt; }
+
+    /* Larger touch targets */
+    button,
+    .btn,
+    a.btn {
+        min-height: 50px;
+        font-size: 10pt;
+        padding: 12px 16px;
+    }
+
+    /* Better spacing for lists */
+    ul, ol {
+        padding-left: 18px;
+    }
 
     /* Full-width images */
     img {
@@ -165,30 +275,87 @@
     /* Improve code block readability */
     pre, code {
         font-size: 8pt;
-        word-break: break-all;
+        word-break: break-word;
+    }
+
+    /* Tables on very small */
+    table {
+        font-size: 8pt;
+    }
+
+    th, td {
+        padding: 6px 4px;
     }
 }
 
-/* Landscape mobile */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    .nav-wrapper {
-        max-height: 60vh;
+/* ============================================
+   TABLET (769px - 1024px)
+   ============================================ */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 100px !important;
     }
-}
 
-/* Fix navigation overflow on desktop */
-@media screen and (min-width: 769px) {
     .nav-wrapper {
         overflow: visible;
     }
+
+    .stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
-/* Ensure scrollbars are visible on overflow */
+/* ============================================
+   LANDSCAPE MOBILE
+   ============================================ */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding-top: 70px !important;
+    }
+
+    .nav-wrapper {
+        max-height: 50vh;
+    }
+
+    .hero {
+        padding: 15px 0 !important;
+    }
+
+    .stats {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px;
+    }
+}
+
+/* ============================================
+   iOS SAFE AREAS (Notched devices)
+   ============================================ */
+@supports (padding: env(safe-area-inset-top)) {
+    @media screen and (max-width: 768px) {
+        body {
+            padding-left: max(15px, env(safe-area-inset-left));
+            padding-right: max(15px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+
+        .academic-nav {
+            padding-top: env(safe-area-inset-top);
+        }
+
+        footer {
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
 pre::-webkit-scrollbar,
 table::-webkit-scrollbar,
 .nav-wrapper::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+    height: 6px;
+    width: 6px;
 }
 
 pre::-webkit-scrollbar-track,
@@ -209,36 +376,22 @@ table::-webkit-scrollbar-thumb:hover,
     background: #666;
 }
 
-/* Safe area insets for notched devices (iPhone X+, etc.) */
-@supports (padding: env(safe-area-inset-top)) {
-    body {
-        padding-left: max(15px, env(safe-area-inset-left));
-        padding-right: max(15px, env(safe-area-inset-right));
-        padding-bottom: max(40px, env(safe-area-inset-bottom));
-    }
-
-    .academic-nav {
-        padding-top: env(safe-area-inset-top);
-    }
-
-    footer {
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-    }
-}
-
-/* Prevent text selection flash on mobile tap */
+/* ============================================
+   TOUCH INTERACTION IMPROVEMENTS
+   ============================================ */
 @media (hover: none) {
     a, button, .btn {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     }
 }
 
-/* Improve scroll behavior on iOS */
+/* ============================================
+   iOS SAFARI FIXES
+   ============================================ */
 html {
     -webkit-overflow-scrolling: touch;
 }
 
-/* Fix for iOS Safari address bar */
 @media screen and (max-width: 768px) {
     body {
         min-height: 100vh;
@@ -247,5 +400,44 @@ html {
 
     html {
         height: -webkit-fill-available;
+    }
+}
+
+/* ============================================
+   GLOBAL CENTERING FOR ALL HERO CONTENT
+   ============================================ */
+.hero,
+.hero .container,
+.hero .title,
+.hero .subtitle,
+.hero p,
+.hero .stats,
+.hero .cta-buttons {
+    text-align: center;
+}
+
+.hero .stats {
+    justify-content: center;
+}
+
+.hero .cta-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   HIGHLIGHT BOXES CENTERING
+   ============================================ */
+.highlight-box {
+    text-align: left;
+    margin: 15px auto;
+    max-width: 600px;
+}
+
+@media screen and (max-width: 768px) {
+    .highlight-box {
+        max-width: 100%;
+        margin: 15px 0;
     }
 }
