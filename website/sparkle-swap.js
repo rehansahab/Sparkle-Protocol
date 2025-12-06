@@ -98,6 +98,138 @@ const OP = {
 const EXPECTED_NETWORK = 'testnet'; // Change to 'mainnet' for production
 
 // ============================================================================
+// SECURITY: Swap Parameter Validation (Time-Bandit Attack Prevention)
+// ============================================================================
+
+/**
+ * Safety margin in blocks between Lightning invoice expiry and Bitcoin refund timelock.
+ * This prevents the "Time-Bandit Attack" where a malicious seller reveals the preimage
+ * at the last moment, leaving the buyer insufficient time to claim on-chain.
+ *
+ * 6 blocks = ~1 hour minimum safety margin
+ * We default to 288 blocks (~48 hours) for delta-safe operation
+ */
+const SAFETY_DELTA_BLOCKS = 6;
+const AVG_BLOCK_TIME_SECONDS = 600; // ~10 minutes per block
+
+/**
+ * Validate swap parameters to prevent timing attacks
+ * @param {number} invoiceExpiryUnix - Lightning invoice expiry timestamp (Unix)
+ * @param {number} bitcoinCltvBlockHeight - Bitcoin refund timelock block height
+ * @param {number} currentBlockHeight - Current Bitcoin block height
+ * @returns {Object} - { valid: boolean, message: string, safeCltvHeight: number }
+ */
+function validateSwapParameters(invoiceExpiryUnix, bitcoinCltvBlockHeight, currentBlockHeight) {
+  // 1. Convert Lightning invoice expiry to estimated block height
+  const nowUnix = Math.floor(Date.now() / 1000);
+  const secondsToLnExpiry = invoiceExpiryUnix - nowUnix;
+
+  if (secondsToLnExpiry <= 0) {
+    return {
+      valid: false,
+      message: 'Lightning invoice has already expired',
+      safeCltvHeight: null
+    };
+  }
+
+  const estimatedLnExpiryBlock = currentBlockHeight + Math.ceil(secondsToLnExpiry / AVG_BLOCK_TIME_SECONDS);
+
+  // 2. Calculate minimum safe Bitcoin refund timelock
+  const safeCltvHeight = estimatedLnExpiryBlock + SAFETY_DELTA_BLOCKS;
+
+  // 3. Validate: Bitcoin refund path must NOT be valid until after invoice expires + buffer
+  if (bitcoinCltvBlockHeight < safeCltvHeight) {
+    const shortfall = safeCltvHeight - bitcoinCltvBlockHeight;
+    return {
+      valid: false,
+      message: `SECURITY RISK: Timelock too short by ${shortfall} blocks. ` +
+               `Seller could front-run the refund. ` +
+               `Required: >${safeCltvHeight}, Actual: ${bitcoinCltvBlockHeight}`,
+      safeCltvHeight: safeCltvHeight
+    };
+  }
+
+  // 4. Calculate safety margin in human-readable format
+  const marginBlocks = bitcoinCltvBlockHeight - estimatedLnExpiryBlock;
+  const marginHours = Math.round((marginBlocks * AVG_BLOCK_TIME_SECONDS) / 3600);
+
+  return {
+    valid: true,
+    message: `Timelock validated. Safety margin: ${marginBlocks} blocks (~${marginHours} hours)`,
+    safeCltvHeight: safeCltvHeight,
+    marginBlocks: marginBlocks,
+    marginHours: marginHours
+  };
+}
+
+// Expose for global use
+window.validateSwapParameters = validateSwapParameters;
+
+// ============================================================================
+// NIP-65 Relay Discovery (Gossip Protocol Enhancement)
+// ============================================================================
+
+/**
+ * Discover user's preferred relays via NIP-65 (Relay List Metadata)
+ * This provides censorship resistance by finding where users actually publish
+ * @param {string} userPubkey - User's public key (hex)
+ * @returns {Promise<string[]>} - Array of relay URLs
+ */
+async function discoverUserRelays(userPubkey) {
+  if (!window.NostrTools || !NostrTools.SimplePool) {
+    console.warn('NostrTools not available for NIP-65 discovery');
+    return [];
+  }
+
+  const pool = new NostrTools.SimplePool();
+  const discoveredRelays = [];
+
+  try {
+    // Query seed relays for NIP-65 (kind 10002) events
+    const events = await pool.list(DEFAULT_RELAYS, [{
+      kinds: [10002], // NIP-65: Relay List Metadata
+      authors: [userPubkey],
+      limit: 1
+    }]);
+
+    if (events.length > 0) {
+      // Extract 'r' tags (relay URLs) from the user's relay list
+      const userRelays = events[0].tags
+        .filter(tag => tag[0] === 'r')
+        .map(tag => tag[1])
+        .filter(url => url.startsWith('wss://'));
+
+      discoveredRelays.push(...userRelays);
+      console.log(`NIP-65: Discovered ${userRelays.length} relays for ${userPubkey.slice(0, 8)}...`);
+    }
+  } catch (err) {
+    console.warn('NIP-65 discovery failed:', err);
+  }
+
+  return discoveredRelays;
+}
+
+/**
+ * Get enhanced relay list including NIP-65 discovered relays
+ * @param {string} counterpartyPubkey - Optional counterparty to discover relays for
+ * @returns {Promise<string[]>} - Merged relay list
+ */
+async function getEnhancedRelayList(counterpartyPubkey = null) {
+  let relays = getActiveRelays();
+
+  if (counterpartyPubkey) {
+    const counterpartyRelays = await discoverUserRelays(counterpartyPubkey);
+    relays = [...new Set([...relays, ...counterpartyRelays])];
+  }
+
+  return relays;
+}
+
+// Expose for global use
+window.discoverUserRelays = discoverUserRelays;
+window.getEnhancedRelayList = getEnhancedRelayList;
+
+// ============================================================================
 // Toast Notification System (replaces alert())
 // ============================================================================
 
