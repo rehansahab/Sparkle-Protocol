@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle Protocol - Formal Security Proofs</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/rfc-professional.css">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+                <h1>Sparkle Protocol: Formal Security Analysis</h1>
+            <p><em>You are in the Design Track – theoretical specifications that have not been implemented.</em></p>
+
+            <section class="section" aria-label="Status and Risks">
+                <div class="warning-box">
+                    <p><strong>Status: Experimental Research</strong></p>
+                    <ul>
+                        <li><strong>Not implemented:</strong> No production infrastructure exists</li>
+                        <li><strong>Theoretical design:</strong> Untested in real environments</li>
+                        <li><strong>Breaking changes likely:</strong> Specification may change fundamentally</li>
+                        <li><strong>No wallet support:</strong> No wallets implement this protocol</li>
+                    </ul>
+                </div>
+            </section>
+
+    <div class="version-info">
+        <p><strong>Formal Proofs & Security Analysis</strong></p>
+        <p>Version 0.1.0 (Alpha) | January 2025</p>
+        <p>Mathematical Security Properties</p>
+    </div>
+
+    <div class="abstract">
+        <h2>Abstract</h2>
+        <p>
+            This document presents formal security proofs for Sparkle Protocol's atomic swap mechanism. We prove that under specific assumptions, the protocol guarantees atomicity (either both parties receive their expected assets or neither does), while acknowledging trust assumptions regarding the coordinator's honest broadcasting behavior.
+        </p>
+        <div class="warning">
+            <strong>Warning:</strong> These proofs are theoretical and have not been peer-reviewed or independently verified. Real-world security depends on correct implementation, which does not yet exist.
+        </div>
+    </div>
+
+    <h2 id="definitions">1. Formal Definitions</h2>
+
+    <h3>1.1 System Model</h3>
+    <p><strong>Definition 1.1 (Parties):</strong> Let <em>P = {B, S, C}</em> where:</p>
+    <ul>
+        <li><em>B</em> = Buyer (wants inscription, has Lightning sats)</li>
+        <li><em>S</em> = Seller (has inscription, wants sats)</li>
+        <li><em>C</em> = Coordinator (facilitates atomic swap)</li>
+    </ul>
+
+    <p><strong>Definition 1.2 (Assets):</strong></p>
+    <ul>
+        <li><em>I</em> = Inscription (Bitcoin UTXO with ordinal satoshi)</li>
+        <li><em>L<sub>n</sub></em> = Lightning payment of <em>n</em> satoshis</li>
+    </ul>
+
+    <p><strong>Definition 1.3 (Hash Time-Locked Contract):</strong></p>
+    <p>An HTLC is a tuple <em>H = (h, t, v)</em> where:</p>
+    <ul>
+        <li><em>h</em> = payment_hash (SHA-256 hash)</li>
+        <li><em>t</em> = timeout (block height)</li>
+        <li><em>v</em> = value in satoshis</li>
+    </ul>
+
+    <div class="definition">
+        <strong>Definition 1.4 (Preimage):</strong> For hash <em>h</em>, the preimage <em>p</em> satisfies: <em>SHA256(p) = h</em>
+    </div>
+
+    <h2 id="assumptions">2. Security Assumptions</h2>
+
+    <h3>2.1 Cryptographic Assumptions</h3>
+    <p><strong>Assumption 2.1 (Hash Function Security):</strong></p>
+    <p>SHA-256 is:</p>
+    <ul>
+        <li><strong>Preimage resistant:</strong> Given <em>h</em>, computationally infeasible to find <em>p</em> such that <em>SHA256(p) = h</em></li>
+        <li><strong>Collision resistant:</strong> Computationally infeasible to find <em>p1 ≠ p2</em> such that <em>SHA256(p1) = SHA256(p2)</em></li>
+    </ul>
+
+    <p><strong>Assumption 2.2 (Lightning Network Security):</strong></p>
+    <p>Lightning HTLCs provide atomic payment settlement:</p>
+    <ul>
+        <li>Payment succeeds if and only if preimage is revealed before timeout</li>
+        <li>If timeout expires, payment is reverted to sender</li>
+    </ul>
+
+    <p><strong>Assumption 2.3 (Bitcoin Security):</strong></p>
+    <ul>
+        <li>Bitcoin transactions cannot be reversed after sufficient confirmations</li>
+        <li>Double-spending is computationally infeasible with >6 confirmations</li>
+    </ul>
+
+    <h3>2.2 Trust Assumptions</h3>
+    <div class="warning">
+        <strong>Trust Assumption 2.4 (Coordinator Honesty):</strong> The coordinator <em>C</em> will broadcast valid PSBTs after receiving Lightning payments. This is a trust assumption, not a cryptographic guarantee.
+    </div>
+
+    <h2 id="properties">3. Security Properties</h2>
+
+    <h3>3.1 Atomicity Property</h3>
+    <p><strong>Theorem 3.1 (Weak Atomicity):</strong></p>
+    <p><em>Under Assumptions 2.1-2.4, Sparkle Protocol provides weak atomicity:</em></p>
+    <ul>
+        <li>If buyer <em>B</em> pays Lightning invoice, then either:
+            <ul>
+                <li>(a) Seller <em>S</em> receives payment AND buyer receives inscription, OR</li>
+                <li>(b) HTLC times out and buyer receives refund</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="definition">
+        <strong>Proof Sketch:</strong>
+        <ol>
+            <li>Buyer pays HTLC locked by hash <em>h</em></li>
+            <li>Coordinator only claims payment by revealing preimage <em>p</em></li>
+            <li>If coordinator reveals <em>p</em>, coordinator must have broadcast PSBT (per Assumption 2.4)</li>
+            <li>If coordinator doesn't reveal <em>p</em> before timeout <em>t</em>, HTLC refunds buyer</li>
+            <li>Therefore: payment succeeds ⇒ PSBT broadcasted, or timeout ⇒ refund ∎</li>
+        </ol>
+    </div>
+
+    <h3>3.2 No Double-Payment Property</h3>
+    <p><strong>Theorem 3.2 (Single Payment Guarantee):</strong></p>
+    <p><em>A buyer cannot be charged twice for the same inscription.</em></p>
+
+    <p><strong>Proof:</strong></p>
+    <ol>
+        <li>Each HTLC is uniquely identified by hash <em>h</em></li>
+        <li>Per Assumption 2.1, finding collisions in SHA-256 is computationally infeasible</li>
+        <li>Each inscription transfer uses unique HTLC hash</li>
+        <li>Lightning Network prevents double-claiming of same HTLC</li>
+        <li>Therefore: buyer cannot pay twice for same trade ∎</li>
+    </ol>
+
+    <h3>3.3 No Theft Property</h3>
+    <p><strong>Theorem 3.3 (Fund Safety):</strong></p>
+    <p><em>Under Assumptions 2.1-2.3, the coordinator cannot steal funds from either party.</em></p>
+
+    <p><strong>Proof by Cases:</strong></p>
+    <ul>
+        <li><strong>Case 1 (Buyer's funds):</strong>
+            <ul>
+                <li>Buyer's funds locked in HTLC</li>
+                <li>Coordinator can only claim by revealing preimage</li>
+                <li>If coordinator claims but doesn't broadcast PSBT, violates Assumption 2.4</li>
+                <li>If coordinator doesn't claim, HTLC refunds buyer after timeout</li>
+                <li>∴ Buyer's funds are safe (under trust assumption)</li>
+            </ul>
+        </li>
+        <li><strong>Case 2 (Seller's inscription):</strong>
+            <ul>
+                <li>Seller signs PSBT transferring inscription</li>
+                <li>PSBT only broadcasted if buyer pays HTLC</li>
+                <li>If PSBT broadcasted, seller receives Lightning payment</li>
+                <li>If PSBT not broadcasted, seller retains inscription</li>
+                <li>∴ Seller's inscription is safe ∎</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="warning">
+        <strong>Important:</strong> Theorem 3.3 relies on Assumption 2.4 (coordinator honesty). A malicious coordinator could violate this property by claiming Lightning payment without broadcasting the PSBT.
+    </div>
+
+    <h2 id="attack-analysis">4. Attack Vector Analysis</h2>
+
+    <h3>4.1 Coordinator Withholding Attack</h3>
+    <p><strong>Attack 4.1:</strong> Malicious coordinator claims Lightning payment but doesn't broadcast PSBT.</p>
+
+    <p><strong>Analysis:</strong></p>
+    <ul>
+        <li><strong>Success condition:</strong> Requires violating Assumption 2.4</li>
+        <li><strong>Mitigation:</strong> HTLC timeout allows buyer to reclaim funds</li>
+        <li><strong>Cost to attacker:</strong> Reputation loss, potential legal liability</li>
+        <li><strong>Defense:</strong> Run own coordinator or use bonded/reputable coordinators</li>
+    </ul>
+
+    <h3>4.2 Seller Double-Spend Attack</h3>
+    <p><strong>Attack 4.2:</strong> Seller signs PSBT but broadcasts competing transaction spending same UTXO.</p>
+
+    <p><strong>Analysis:</strong></p>
+    <ul>
+        <li><strong>Success condition:</strong> Seller's competing tx confirms before PSBT</li>
+        <li><strong>Mitigation:</strong> Coordinator verifies UTXO status before revealing HTLC preimage</li>
+        <li><strong>Cost to attacker:</strong> Still loses inscription if PSBT confirms first</li>
+        <li><strong>Defense:</strong> Coordinator monitors mempool and blockchain state</li>
+    </ul>
+
+    <h3>4.3 Timing Attack</h3>
+    <p><strong>Attack 4.3:</strong> Attacker exploits HTLC timeout edge cases.</p>
+
+    <p><strong>Analysis:</strong></p>
+    <ul>
+        <li><strong>Success condition:</strong> HTLC expires while PSBT in mempool</li>
+        <li><strong>Mitigation:</strong> Set conservative timeout periods (e.g., 144 blocks)</li>
+        <li><strong>Cost to attacker:</strong> Low, but requires precise timing</li>
+        <li><strong>Defense:</strong> Monitor network conditions, adjust timeout dynamically</li>
+    </ul>
+
+    <h2 id="game-theory">5. Game-Theoretic Analysis</h2>
+
+    <h3>5.1 Nash Equilibrium</h3>
+    <p><strong>Proposition 5.1:</strong> Honest behavior is a Nash equilibrium for all parties under reputation incentives.</p>
+
+    <p><strong>Payoff Matrix (Coordinator-Buyer interaction):</strong></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Coordinator / Buyer</th>
+                <th>Pay Invoice</th>
+                <th>Don't Pay</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Broadcast PSBT</strong></td>
+                <td>(+fee, +inscription)</td>
+                <td>(0, 0)</td>
+            </tr>
+            <tr>
+                <td><strong>Withhold PSBT</strong></td>
+                <td>(-reputation, -payment)</td>
+                <td>(0, 0)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Analysis:</strong></p>
+    <ul>
+        <li>If coordinator values future fees > one-time theft, broadcasting PSBT is dominant strategy</li>
+        <li>Reputation loss makes withholding attack costly in long-term</li>
+        <li>Bonding mechanisms can enforce honesty through economic penalties</li>
+    </ul>
+
+    <h3>5.2 Byzantine Fault Tolerance</h3>
+    <p>Sparkle Protocol is <strong>NOT</strong> Byzantine fault tolerant:</p>
+    <ul>
+        <li>Single coordinator is trusted (not Byzantine tolerant)</li>
+        <li>Multiple coordinators would require consensus protocol (future work)</li>
+        <li>Users can choose coordinators, but no automatic failover</li>
+    </ul>
+
+    <h2 id="limitations">6. Proof Limitations</h2>
+
+    <div class="warning">
+        <strong>Important Limitations:</strong>
+        <ol>
+            <li><strong>Assumption 2.4 is not provable:</strong> Coordinator honesty is a trust assumption, not a mathematical guarantee</li>
+            <li><strong>Implementation bugs not covered:</strong> Proofs assume correct implementation (which doesn't exist)</li>
+            <li><strong>Network failures not modeled:</strong> Lightning routing failures, Bitcoin mempool congestion, etc.</li>
+            <li><strong>Economic incentives assumed stable:</strong> Real markets may behave differently</li>
+            <li><strong>No formal verification:</strong> Proofs are informal sketches, not machine-verified</li>
+        </ol>
+    </div>
+
+    <h2 id="comparison">7. Comparison to Other Protocols</h2>
+
+    <h3>7.1 vs. Lightning Network Atomic Swaps</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Standard Lightning Swap</th>
+                <th>Sparkle Protocol</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Atomicity</td>
+                <td>Full (no trust)</td>
+                <td>Weak (coordinator trust)</td>
+            </tr>
+            <tr>
+                <td>On-chain txs</td>
+                <td>0 (fully off-chain)</td>
+                <td>1 (for inscription transfer)</td>
+            </tr>
+            <tr>
+                <td>Assets supported</td>
+                <td>BTC ↔ BTC only</td>
+                <td>Inscription ↔ BTC</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>7.2 vs. On-Chain Atomic Swaps</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>On-Chain Swap</th>
+                <th>Sparkle Protocol</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Trust required</td>
+                <td>None</td>
+                <td>Coordinator</td>
+            </tr>
+            <tr>
+                <td>Payment speed</td>
+                <td>~10+ minutes</td>
+                <td>&lt;1 second</td>
+            </tr>
+            <tr>
+                <td>Ownership speed</td>
+                <td>~10+ minutes</td>
+                <td>~10+ minutes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="future-work">8. Future Research Directions</h2>
+
+    <h3>8.1 Removing Coordinator Trust</h3>
+    <p>Potential approaches to eliminate Assumption 2.4:</p>
+    <ul>
+        <li><strong>Multi-sig coordinators:</strong> Require M-of-N coordinators to broadcast</li>
+        <li><strong>Bonded coordinators:</strong> Economic penalties for misbehavior</li>
+        <li><strong>Blockchain-based coordination:</strong> Use smart contracts (requires Bitcoin upgrades)</li>
+        <li><strong>Optimistic rollups:</strong> Fraud proofs for coordinator misbehavior</li>
+    </ul>
+
+    <h3>8.2 Formal Verification</h3>
+    <ul>
+        <li>Machine-verified proofs using Coq/Isabelle</li>
+        <li>Model checking for state transitions</li>
+        <li>Symbolic execution of coordinator logic</li>
+    </ul>
+
+    <h3>8.3 Economic Security</h3>
+    <ul>
+        <li>Optimal bonding amounts for coordinators</li>
+        <li>Game-theoretic analysis with multiple coordinators</li>
+        <li>Sybil resistance mechanisms</li>
+    </ul>
+
+    <h2 id="conclusion">9. Conclusion</h2>
+
+    <p>
+        Sparkle Protocol provides provable security under the assumption of honest coordinator behavior (Assumption 2.4). The protocol guarantees weak atomicity: either both parties receive their assets, or the HTLC refunds the buyer.
+    </p>
+
+    <p>
+        However, the protocol cannot prevent a malicious coordinator from claiming Lightning payments without broadcasting PSBTs. This is a fundamental limitation of the current design. Users must either:
+    </p>
+    <ul>
+        <li>Trust reputable coordinators with established track records</li>
+        <li>Use coordinators with bonding mechanisms</li>
+        <li>Run their own coordinators</li>
+        <li>Accept the residual trust assumption</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> These proofs are theoretical and have not been peer-reviewed. Real-world security depends on correct implementation, extensive testing, and independent audits—none of which exist yet.
+    </div>
+
+    <h2 id="references">References</h2>
+
+    <ol>
+        <li>Poon, J., & Dryja, T. (2016). The Bitcoin Lightning Network: Scalable Off-Chain Instant Payments.</li>
+        <li>Nakamoto, S. (2008). Bitcoin: A Peer-to-Peer Electronic Cash System.</li>
+        <li>Tier Nolan. (2013). Alt Chains and Atomic Transfers. Bitcointalk Forum.</li>
+        <li>Herlihy, M. (2018). Atomic Cross-Chain Swaps. ACM PODC.</li>
+        <li>Osuntokun, O. (2022). BOLT Specifications. Lightning Network.</li>
+    </ol>
+
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #333;">
+        <p><small>Formal Security Analysis - Version 0.1.0 (Alpha)</small></p>
+        <p><small>Theoretical proofs - not peer-reviewed or independently verified.</small></p>
+    </div>
+        
+            <section style="background: #f5f5f5; padding: 2rem; margin: 2rem 0;">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="whitepaper.html">Sparkle Protocol Whitepaper</a> – Protocol overview</li>
+                    <li><a href="technical-reality.html">Technical Implementation Analysis</a> – System architecture</li>
+                    <li><a href="docs/sip-3.html">SIP-3 Specification</a> – Atomic trade protocol</li>
+                    <li><a href="protocol-comparison.html">Protocol Comparison</a> – Security comparisons</li>
+                    <li><a href="glossary.html">Glossary</a> – Technical terms</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="swap.html">Taproot Swap</a></p>
+    </footer>
+
+    <script src="js/main-academic.js"></script>
+</body>
+</html>

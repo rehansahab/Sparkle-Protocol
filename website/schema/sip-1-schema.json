@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sparkleprotocol.com/schema/sip-1.json",
+  "title": "Sparkle Protocol SIP-1 Metadata Schema",
+  "description": "JSON Schema for validating Sparkle Protocol v1 inscription metadata",
+  "type": "object",
+  "required": ["p", "v"],
+  "additionalProperties": false,
+  "properties": {
+    "p": {
+      "type": "string",
+      "const": "sparkle",
+      "description": "Protocol identifier (must be 'sparkle')"
+    },
+    "v": {
+      "type": "integer",
+      "const": 1,
+      "description": "Protocol version (currently only v1 is defined)"
+    },
+    "layers": {
+      "type": "array",
+      "description": "Array of recursive layer references",
+      "items": {
+        "type": "object",
+        "required": ["id", "z"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}i[0-9]+$",
+            "description": "Inscription ID (64 hex chars + 'i' + index)"
+          },
+          "z": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999,
+            "description": "Z-index layer order (0 = bottom, 999 = top)"
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "description": "Optional metadata",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "collection": {
+          "type": "string",
+          "maxLength": 100
+        }
+      }
+    },
+    "lightning": {
+      "type": "object",
+      "description": "Lightning Network trade settings",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether Lightning trading is enabled"
+        },
+        "network": {
+          "type": "string",
+          "enum": ["mainnet", "testnet", "signet"],
+          "description": "Bitcoin network"
+        },
+        "htlc_timeout": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 1008,
+          "description": "HTLC timeout in blocks (6-1008, ~1 hour to 1 week)"
+        }
+      }
+    }
+  }
+}

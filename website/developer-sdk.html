@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sparkle Protocol SDK Documentation</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/rfc-professional.css">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+                <h1>Sparkle Protocol SDK Documentation</h1>
+            <p><em>You are in the Implementation Track – testnet experiments and developer guides.</em></p>
+
+            <section class="section" aria-label="Status and Risks">
+                <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+                    <p><strong>Update: Core Implementation Complete</strong></p>
+                    <p>The Sparkle Swap core library is now implemented and working. See the <a href="#working-implementation">Working Implementation</a> section below for real, tested code.</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>Status: Testnet Experiments Only</strong></p>
+                    <ul>
+                        <li><strong>Testnet only:</strong> Never use on mainnet</li>
+                        <li><strong>No production infrastructure:</strong> Coordinators, indexers don't exist yet</li>
+                        <li><strong>Breaking changes expected:</strong> APIs will change</li>
+                        <li><strong>Educational purpose:</strong> For learning and experimentation</li>
+                    </ul>
+                </div>
+            </section>
+
+    <div class="version-info">
+        <p><strong>Developer SDK - Core Implementation Complete</strong></p>
+        <p>Version 0.3.0 | December 2025</p>
+        <p>For Application Developers</p>
+    </div>
+
+    <div class="abstract">
+        <h2>Overview</h2>
+        <p>
+            This document describes the Sparkle Protocol SDK for JavaScript/TypeScript developers. The <strong>core Sparkle Swap library is now implemented</strong> with working Taproot atomic swap functionality. The higher-level SDK for inscriptions and coordinator integration is still in design phase.
+        </p>
+        <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 1rem; margin: 1rem 0;">
+            <strong>Implemented:</strong> Taproot address generation, claim transactions, refund transactions, preimage verification. See Section 1 for working code.
+        </div>
+        <div class="warning">
+            <strong>Note:</strong> The higher-level SDK (inscription creation, coordinator integration, wallet management) described in Sections 2-11 is still conceptual. Only Section 1 contains working, tested code.
+        </div>
+    </div>
+
+    <h2 id="working-implementation">1. Working Implementation</h2>
+
+    <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+        <strong>This code is real and tested.</strong> The core Sparkle Swap library is now implemented.
+    </div>
+
+    <h3>1.1 Install Dependencies</h3>
+    <pre>npm install @scure/btc-signer @noble/hashes</pre>
+
+    <h3>1.2 Create a Sparkle Swap Address</h3>
+    <pre>import { createSparkleSwapAddress } from './core/taproot-scripts';
+import { sha256 } from '@noble/hashes/sha256';
+
+// Generate payment hash from preimage
+const preimage = new Uint8Array(32); // Your 32-byte preimage
+crypto.getRandomValues(preimage);
+const paymentHash = sha256(preimage);
+
+// Create the swap address
+const swapAddress = createSparkleSwapAddress({
+  paymentHash,
+  buyerPubkey: buyerCompressedPubkey,  // 33 bytes
+  sellerPubkey: sellerCompressedPubkey, // 33 bytes
+  refundLocktime: currentBlockHeight + 144, // ~24 hours
+  network: 'testnet',
+});
+
+console.log('Swap Address:', swapAddress.address);
+// Seller sends Ordinal to this address</pre>
+
+    <h3>1.3 Build Claim Transaction (Buyer)</h3>
+    <pre>import { buildClaimTransaction } from './core/claim-transaction';
+
+// After Lightning payment reveals preimage
+const claimTx = buildClaimTransaction({
+  swapAddress,
+  fundingTxid: 'abc123...', // TX where seller sent Ordinal
+  fundingVout: 0,
+  fundingAmount: 10000n, // satoshis
+  preimage, // 32 bytes - revealed by Lightning payment
+  buyerPrivkey, // 32 bytes
+  destinationAddress: 'tb1q...', // Buyer's address
+  feeRate: 2, // sats/vbyte
+  network: 'testnet',
+});
+
+console.log('Claim TX:', claimTx.txHex);
+console.log('TXID:', claimTx.txid);
+// Broadcast to claim the Ordinal</pre>
+
+    <h3>1.4 Build Refund Transaction (Seller)</h3>
+    <pre>import { buildRefundTransaction } from './core/refund-transaction';
+
+// If buyer doesn't pay before timeout
+const refundTx = buildRefundTransaction({
+  swapAddress,
+  fundingTxid: 'abc123...',
+  fundingVout: 0,
+  fundingAmount: 10000n,
+  sellerPrivkey, // 32 bytes
+  destinationAddress: 'tb1q...', // Seller's address
+  feeRate: 2,
+  network: 'testnet',
+});
+
+console.log('Refund TX:', refundTx.txHex);
+console.log('Locktime:', refundTx.locktime);
+// Can only broadcast after locktime passes</pre>
+
+    <h3>1.5 Taproot Script Details</h3>
+    <p>The swap address uses a Taproot tree with two spending paths:</p>
+    <table class="data-table">
+        <thead>
+            <tr><th>Path</th><th>Script</th><th>Used By</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Hashlock (Claim)</td>
+                <td><code>OP_SHA256 &lt;hash&gt; OP_EQUALVERIFY &lt;buyer_pk&gt; OP_CHECKSIG</code></td>
+                <td>Buyer with preimage</td>
+            </tr>
+            <tr>
+                <td>Timelock (Refund)</td>
+                <td><code>&lt;locktime&gt; OP_CLTV OP_DROP &lt;seller_pk&gt; OP_CHECKSIG</code></td>
+                <td>Seller after timeout</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>1.6 Browser Integration (NIP-07 + Bitcoin Wallets)</h3>
+    <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+        <strong>NEW in v0.3.0:</strong> Secure browser wallet integration - no private keys required.
+    </div>
+
+    <p>The browser modules enable secure wallet connections without ever handling private keys:</p>
+
+    <h4>NIP-07 Nostr Wallet (Alby, nos2x)</h4>
+    <pre>import { connectWallet, signEvent, encryptNip04 } from 'sparkle-protocol/browser';
+
+// Connect via browser extension (prompts user)
+const connection = await connectWallet();
+if (connection.state === 'connected') {
+  console.log('Nostr pubkey:', connection.pubkey);
+}
+
+// Sign events (extension handles private key)
+const signedEvent = await signEvent({
+  kind: 4,
+  created_at: Math.floor(Date.now() / 1000),
+  tags: [['p', recipientPubkey]],
+  content: await encryptNip04(recipientPubkey, message),
+});</pre>
+
+    <h4>Bitcoin Wallet (Unisat, Xverse)</h4>
+    <pre>import {
+  detectBitcoinWallets,
+  connectBitcoinWallet,
+  signPsbt
+} from 'sparkle-protocol/browser';
+
+// Detect available wallets
+const wallets = detectBitcoinWallets();
+// ['unisat', 'xverse']
+
+// Connect (prompts user)
+const btcConnection = await connectBitcoinWallet('unisat');
+console.log('Address:', btcConnection.accounts[0].address);
+
+// Sign PSBT (extension handles private key)
+const result = await signPsbt('unisat', psbtHex, {
+  autoFinalized: false
+});</pre>
+
+    <h4>Unified Wallet Manager</h4>
+    <pre>import { SparkleWalletManager } from 'sparkle-protocol/browser';
+
+const manager = new SparkleWalletManager((state) => {
+  console.log('Wallet state changed:', state);
+});
+
+// Connect both wallets
+await manager.connectNostr();
+await manager.connectBitcoin();
+
+// Sign and publish Nostr events
+await manager.signAndPublish(event);
+
+// Sign Bitcoin PSBTs
+const { signedPsbtHex } = await manager.signPsbt(psbtHex);</pre>
+
+    <p><strong>Try it live:</strong> <a href="swap.html">Taproot Swap Demo</a></p>
+
+    <h2 id="installation">2. Future SDK Installation</h2>
+
+    <h3>2.1 NPM Package</h3>
+    <p><strong>Proposed package name:</strong> <code>@sparkle/protocol-sdk</code></p>
+    <pre># Future installation command
+npm install @sparkle/protocol-sdk
+
+# Or with yarn
+yarn add @sparkle/protocol-sdk</pre>
+
+    <h3>2.2 Requirements</h3>
+    <ul>
+        <li>Node.js v18 or higher</li>
+        <li>Bitcoin Core RPC access (testnet or mainnet)</li>
+        <li>Lightning Network node (LND or Core Lightning)</li>
+        <li>Ord CLI tool installed</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> All code examples below are conceptual designs, not working code.
+    </div>
+
+    <h2 id="quick-start">2. Quick Start (Conceptual)</h2>
+
+    <h3>2.1 Initialize SDK</h3>
+    <pre>import { SparkleClient } from '@sparkle/protocol-sdk'
+
+// Initialize client
+const sparkle = new SparkleClient({
+  network: 'testnet',
+  bitcoinRPC: {
+    url: 'http://localhost:18332',
+    username: 'your_rpc_user',
+    password: 'your_rpc_pass'
+  },
+  lightningNode: {
+    type: 'lnd',
+    macaroonPath: '/path/to/admin.macaroon',
+    tlsCertPath: '/path/to/tls.cert',
+    host: 'localhost:10009'
+  },
+  coordinator: 'https://coordinator.sparkleprotocol.com'
+})</pre>
+
+    <h3>2.2 Create Sparkle Inscription</h3>
+    <pre>// Create Sparkle-compatible NFT
+const inscription = await sparkle.inscribe({
+  file: './my-nft.png',
+  metadata: {
+    name: 'My First Sparkle NFT',
+    description: 'Experimental Lightning-tradeable ordinal',
+    lightning: {
+      enabled: true,
+      minChannelCapacity: 100000
+    }
+  },
+  feeRate: 10
+})
+
+console.log('Inscription ID:', inscription.id)
+// Output: abc123def456...i0</pre>
+
+    <h3>2.3 List for Sale</h3>
+    <pre>// List inscription for Lightning-settled sale
+const listing = await sparkle.list({
+  inscriptionId: 'abc123def456...i0',
+  priceSats: 100000,
+  expiresIn: 86400 // 24 hours in seconds
+})
+
+console.log('Listing created:', listing.id)
+console.log('Share URL:', listing.url)</pre>
+
+    <h3>2.4 Buy Inscription</h3>
+    <pre>// Purchase inscription via Lightning
+const purchase = await sparkle.buy({
+  listingId: 'listing_xyz',
+  maxPriceSats: 105000 // Allow 5% slippage
+})
+
+console.log('Purchase complete!')
+console.log('TXID:', purchase.txid)
+console.log('Lightning payment:', purchase.lightningPayment)</pre>
+
+    <h2 id="api-reference">3. API Reference</h2>
+
+    <h3>3.1 SparkleClient Class</h3>
+
+    <h4>Constructor</h4>
+    <pre>new SparkleClient(config: ClientConfig)</pre>
+
+    <p><strong>ClientConfig interface:</strong></p>
+    <pre>interface ClientConfig {
+  network: 'mainnet' | 'testnet' | 'regtest'
+  bitcoinRPC: {
+    url: string
+    username: string
+    password: string
+  }
+  lightningNode: {
+    type: 'lnd' | 'cln' | 'eclair'
+    macaroonPath?: string  // LND only
+    tlsCertPath?: string   // LND only
+    host: string
+    port?: number
+  }
+  coordinator: string  // Coordinator URL
+  feeRate?: number     // Default fee rate (sat/vB)
+}</pre>
+
+    <h4>Methods</h4>
+
+    <p><strong>sparkle.inscribe(options)</strong></p>
+    <pre>await sparkle.inscribe({
+  file: string | Buffer,
+  metadata: {
+    name?: string,
+    description?: string,
+    attributes?: object,
+    lightning: {
+      enabled: boolean,
+      minChannelCapacity?: number
+    }
+  },
+  feeRate?: number
+})
+
+Returns: Promise&lt;Inscription&gt;</pre>
+
+    <p><strong>sparkle.list(options)</strong></p>
+    <pre>await sparkle.list({
+  inscriptionId: string,
+  priceSats: number,
+  expiresIn?: number  // seconds
+})
+
+Returns: Promise&lt;Listing&gt;</pre>
+
+    <p><strong>sparkle.buy(options)</strong></p>
+    <pre>await sparkle.buy({
+  listingId: string,
+  maxPriceSats?: number
+})
+
+Returns: Promise&lt;Purchase&gt;</pre>
+
+    <p><strong>sparkle.getInscription(id)</strong></p>
+    <pre>await sparkle.getInscription(inscriptionId: string)
+
+Returns: Promise&lt;Inscription&gt;</pre>
+
+    <p><strong>sparkle.getListings(filter)</strong></p>
+    <pre>await sparkle.getListings({
+  minPrice?: number,
+  maxPrice?: number,
+  limit?: number
+})
+
+Returns: Promise&lt;Listing[]&gt;</pre>
+
+    <h3>3.2 Type Definitions</h3>
+
+    <pre>interface Inscription {
+  id: string
+  owner: string
+  metadata: object
+  sparkleEnabled: boolean
+  contentType: string
+  contentLength: number
+  genesisTransaction: string
+  genesisHeight: number
+}
+
+interface Listing {
+  id: string
+  inscriptionId: string
+  seller: string
+  priceSats: number
+  status: 'active' | 'sold' | 'expired' | 'cancelled'
+  createdAt: number
+  expiresAt: number
+  url: string
+}
+
+interface Purchase {
+  id: string
+  listingId: string
+  inscriptionId: string
+  buyer: string
+  seller: string
+  priceSats: number
+  txid: string
+  lightningPayment: string
+  status: 'pending' | 'complete' | 'failed'
+}</pre>
+
+    <h2 id="advanced-usage">4. Advanced Usage</h2>
+
+    <h3>4.1 Custom Coordinator</h3>
+    <pre>// Use your own coordinator
+const sparkle = new SparkleClient({
+  // ... other config
+  coordinator: 'https://my-coordinator.example.com',
+  coordinatorAuth: {
+    apiKey: 'your_api_key'
+  }
+})</pre>
+
+    <h3>4.2 Batch Inscriptions</h3>
+    <pre>// Inscribe multiple files at once
+const inscriptions = await sparkle.batchInscribe({
+  files: [
+    { path: './nft1.png', metadata: { name: 'NFT #1' } },
+    { path: './nft2.png', metadata: { name: 'NFT #2' } },
+    { path: './nft3.png', metadata: { name: 'NFT #3' } }
+  ],
+  feeRate: 10
+})
+
+console.log('Inscribed:', inscriptions.length, 'NFTs')</pre>
+
+    <h3>4.3 Trade Monitoring</h3>
+    <pre>// Monitor trade status
+sparkle.on('trade:initiated', (trade) => {
+  console.log('Trade initiated:', trade.id)
+})
+
+sparkle.on('trade:payment', (trade) => {
+  console.log('Lightning payment sent:', trade.lightningPayment)
+})
+
+sparkle.on('trade:complete', (trade) => {
+  console.log('Trade complete! TXID:', trade.txid)
+})
+
+sparkle.on('trade:failed', (trade, error) => {
+  console.error('Trade failed:', error.message)
+})</pre>
+
+    <h3>4.4 Wallet Integration</h3>
+    <pre>// Get wallet balance
+const balance = await sparkle.wallet.balance()
+console.log('Ordinals:', balance.ordinals)
+console.log('Cardinal sats:', balance.cardinal)
+
+// Get wallet address
+const address = await sparkle.wallet.address()
+console.log('Receive address:', address)
+
+// List wallet inscriptions
+const inscriptions = await sparkle.wallet.inscriptions()
+console.log('You own:', inscriptions.length, 'inscriptions')</pre>
+
+    <h2 id="coordinator-api">5. Coordinator API (For Coordinator Operators)</h2>
+
+    <h3>5.1 Running a Coordinator</h3>
+    <pre>import { SparkleCoordinator } from '@sparkle/coordinator'
+
+const coordinator = new SparkleCoordinator({
+  network: 'testnet',
+  lightningNode: {
+    type: 'lnd',
+    macaroonPath: '/path/to/admin.macaroon',
+    tlsCertPath: '/path/to/tls.cert'
+  },
+  bitcoinRPC: {
+    url: 'http://localhost:18332',
+    username: 'user',
+    password: 'pass'
+  },
+  port: 3000,
+  feePercent: 0.5  // 0.5% coordinator fee
+})
+
+await coordinator.start()
+console.log('Coordinator running on port 3000')</pre>
+
+    <h3>5.2 Coordinator Configuration</h3>
+    <pre>interface CoordinatorConfig {
+  network: 'mainnet' | 'testnet'
+  lightningNode: LightningNodeConfig
+  bitcoinRPC: BitcoinRPCConfig
+  port: number
+  feePercent: number
+  maxTradeValue?: number
+  htlcTimeout?: number     // blocks
+  requireKYC?: boolean
+  bondAmount?: number      // sats
+  reputationThreshold?: number
+}</pre>
+
+    <h2 id="error-handling">6. Error Handling</h2>
+
+    <h3>6.1 Common Errors</h3>
+    <pre>try {
+  await sparkle.buy({ listingId: 'xyz' })
+} catch (error) {
+  if (error instanceof SparkleError) {
+    switch (error.code) {
+      case 'INSUFFICIENT_FUNDS':
+        console.error('Not enough sats in Lightning channel')
+        break
+      case 'LISTING_EXPIRED':
+        console.error('Listing has expired')
+        break
+      case 'COORDINATOR_OFFLINE':
+        console.error('Coordinator is not responding')
+        break
+      case 'HTLC_TIMEOUT':
+        console.error('Lightning payment timed out')
+        break
+      case 'INSCRIPTION_ALREADY_SOLD':
+        console.error('Inscription was sold to another buyer')
+        break
+      default:
+        console.error('Unknown error:', error.message)
+    }
+  }
+}</pre>
+
+    <h3>6.2 Error Codes Reference</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Error Code</th>
+                <th>Description</th>
+                <th>Recovery</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>INSUFFICIENT_FUNDS</td>
+                <td>Not enough Lightning channel capacity</td>
+                <td>Open larger channel or top up</td>
+            </tr>
+            <tr>
+                <td>LISTING_EXPIRED</td>
+                <td>Listing time window closed</td>
+                <td>Find another listing</td>
+            </tr>
+            <tr>
+                <td>COORDINATOR_OFFLINE</td>
+                <td>Cannot reach coordinator</td>
+                <td>Retry or use different coordinator</td>
+            </tr>
+            <tr>
+                <td>HTLC_TIMEOUT</td>
+                <td>Lightning payment timed out</td>
+                <td>Funds automatically refunded</td>
+            </tr>
+            <tr>
+                <td>INVALID_INSCRIPTION</td>
+                <td>Inscription not Sparkle-compatible</td>
+                <td>Check metadata format</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="testing">7. Testing</h2>
+
+    <h3>7.1 Testnet Example</h3>
+    <pre>import { SparkleClient } from '@sparkle/protocol-sdk'
+
+// Initialize for testnet
+const sparkle = new SparkleClient({
+  network: 'testnet',
+  bitcoinRPC: { /*...*/ },
+  lightningNode: { /*...*/ },
+  coordinator: 'https://testnet-coordinator.sparkleprotocol.com'
+})
+
+// Test inscription
+const inscription = await sparkle.inscribe({
+  file: './test-nft.png',
+  metadata: {
+    name: 'Test NFT',
+    lightning: { enabled: true }
+  }
+})
+
+console.log('Test inscription created:', inscription.id)</pre>
+
+    <h3>7.2 Mock Coordinator</h3>
+    <pre>import { MockCoordinator } from '@sparkle/protocol-sdk/testing'
+
+// Use mock coordinator for local testing
+const sparkle = new SparkleClient({
+  network: 'regtest',
+  coordinator: new MockCoordinator({
+    simulateDelay: 100,  // ms
+    failureRate: 0.1     // 10% failure rate for testing
+  })
+})</pre>
+
+    <h2 id="best-practices">8. Best Practices</h2>
+
+    <h3>8.1 Security</h3>
+    <ul>
+        <li><strong>Never share RPC credentials:</strong> Keep bitcoin.conf secure</li>
+        <li><strong>Use macaroons properly:</strong> Limit LND macaroon permissions</li>
+        <li><strong>Verify inscriptions:</strong> Always check metadata before buying</li>
+        <li><strong>Test on testnet first:</strong> Never jump straight to mainnet</li>
+        <li><strong>Monitor Lightning channels:</strong> Ensure sufficient liquidity</li>
+    </ul>
+
+    <h3>8.2 Performance</h3>
+    <ul>
+        <li>Batch inscriptions when possible</li>
+        <li>Cache inscription metadata locally</li>
+        <li>Use connection pooling for RPC calls</li>
+        <li>Implement exponential backoff for retries</li>
+        <li>Monitor Lightning channel health</li>
+    </ul>
+
+    <h3>8.3 User Experience</h3>
+    <ul>
+        <li>Show clear fee breakdowns (inscription + Lightning + coordinator)</li>
+        <li>Display HTLC timeout clearly to buyers</li>
+        <li>Provide estimated settlement times</li>
+        <li>Handle errors gracefully with user-friendly messages</li>
+        <li>Show real-time trade status updates</li>
+    </ul>
+
+    <h2 id="contributing">9. Contributing</h2>
+
+    <div class="note">
+        <strong>Future:</strong> Once the SDK exists, contributions would be welcome. Potential areas:
+    </div>
+
+    <ul>
+        <li>Add support for additional Lightning implementations (Eclair, etc.)</li>
+        <li>Improve error handling and retry logic</li>
+        <li>Build UI components (React, Vue, etc.)</li>
+        <li>Write comprehensive tests</li>
+        <li>Improve documentation with more examples</li>
+        <li>Add TypeScript type definitions</li>
+    </ul>
+
+    <h2 id="roadmap">10. SDK Development Roadmap</h2>
+
+    <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+        <strong>Phase 1 Complete!</strong> Core protocol implementation is done.
+    </div>
+
+    <ul>
+        <li><strong>Phase 1:</strong> Core protocol implementation <span style="color: #2e7d32;">✓ COMPLETE</span>
+            <ul>
+                <li>Taproot script generation</li>
+                <li>Claim transaction builder</li>
+                <li>Refund transaction builder</li>
+                <li>Cryptographic verification tests</li>
+            </ul>
+        </li>
+        <li><strong>Phase 2:</strong> Lightning integration (In Progress)
+            <ul>
+                <li>Lightning invoice generation</li>
+                <li>HTLC coordination</li>
+            </ul>
+        </li>
+        <li><strong>Phase 3:</strong> Testing & debugging (~150 hours)</li>
+        <li><strong>Phase 4:</strong> Documentation & examples (~50 hours)</li>
+    </ul>
+
+    <p><strong>Remaining work:</strong> Lightning integration, coordinator API, inscription management.</p>
+
+    <h2 id="support">11. Support & Resources</h2>
+
+    <h3>11.1 Documentation</h3>
+    <ul>
+        <li><a href="whitepaper.html">Whitepaper</a> - Protocol overview</li>
+        <li><a href="practical-implementation.html">Implementation Guide</a> - Step-by-step setup</li>
+        <li><a href="technical-reality.html">Technical Analysis</a> - Detailed spec</li>
+    </ul>
+
+    <h3>11.2 Community</h3>
+    <ul>
+        <li>GitHub: <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">github.com/ProtocolSparkle/Sparkles-Protocol</a></li>
+        <li>X / Twitter: <a href="https://x.com/SparkleProtocol">@SparkleProtocol</a></li>
+        <li>Issues: <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol/issues">Report bugs or suggest features</a></li>
+    </ul>
+
+    <div class="document-footer">
+        <p><small>SDK Documentation - Version 0.3.0</small></p>
+        <p><small>Core Sparkle Swap library implemented. Higher-level SDK in design phase.</small></p>
+    </div>
+        
+            <section class="related-docs">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="practical-implementation.html">Practical Implementation Guide</a> – Getting started</li>
+                    <li><a href="recursive-inscriptions-guide.html">Recursive Inscriptions Guide</a> – Code examples</li>
+                    <li><a href="technical-reality.html">Technical Implementation Analysis</a> – Architecture details</li>
+                    <li><a href="docs/sip-3.html">SIP-3 Specification</a> – Protocol reference</li>
+                    <li><a href="darkita-case-study.html">DARKITA Case Study</a> – Implementation example</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <script src="js/main-academic.js"></script>
+</body>
+</html>

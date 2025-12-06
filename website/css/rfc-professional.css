@@ -1,0 +1,520 @@
+/**
+ * RFC-Style Professional Enhancements
+ * Adds numbered sections, call-out boxes, keyword highlighting, and print-friendly styles
+ * Based on IETF RFC, Lightning BOLT, and Nostr NIP formatting standards
+ */
+
+/* ========================================
+   1. NUMBERED HEADINGS (RFC-STYLE)
+   ======================================== */
+
+/* Counter initialization */
+body {
+    counter-reset: h2counter;
+}
+
+h2 {
+    counter-reset: h3counter;
+}
+
+h3 {
+    counter-reset: h4counter;
+}
+
+/* Section numbering for specification pages */
+.spec-page h2::before {
+    counter-increment: h2counter;
+    content: counter(h2counter) ". ";
+    color: #666;
+    font-weight: 700;
+}
+
+.spec-page h3::before {
+    counter-increment: h3counter;
+    content: counter(h2counter) "." counter(h3counter) " ";
+    color: #666;
+    font-weight: 600;
+}
+
+.spec-page h4::before {
+    counter-increment: h4counter;
+    content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) " ";
+    color: #666;
+    font-weight: 600;
+}
+
+/* Don't number the abstract, introduction, or appendix */
+.spec-page .abstract h2::before,
+.spec-page #introduction::before,
+.spec-page #appendix::before,
+.spec-page #references::before,
+.spec-page #conclusion::before {
+    content: "";
+    counter-increment: none;
+}
+
+
+/* ========================================
+   2. CALL-OUT BOXES (CONSISTENT STYLING)
+   ======================================== */
+
+/* Base call-out box */
+.callout {
+    margin: 20px 0;
+    padding: 15px 20px;
+    border-left: 4px solid #ccc;
+    background: #f9f9f9;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.callout strong:first-child {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+/* Note box - Light grey */
+.note,
+.callout.note {
+    border-left-color: #888;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.note strong:first-child::before {
+    content: "NOTE: ";
+    margin-right: 5px;
+}
+
+/* Warning box - Red outline */
+.warning,
+.callout.warning {
+    border-left-color: #c00;
+    background: #fff5f5;
+    color: #600;
+}
+
+.warning strong:first-child::before {
+    content: "WARNING: ";
+    margin-right: 5px;
+}
+
+/* Normative text - Blue outline */
+.normative,
+.callout.normative {
+    border-left-color: #0066cc;
+    background: #f0f8ff;
+    color: #003366;
+}
+
+.normative strong:first-child::before {
+    content: "NORMATIVE: ";
+    margin-right: 5px;
+}
+
+/* Implementation note - Green outline */
+.implementation-note,
+.callout.implementation-note {
+    border-left-color: #0a0;
+    background: #f0fff0;
+    color: #060;
+}
+
+.implementation-note strong:first-child::before {
+    content: "IMPLEMENTATION: ";
+    margin-right: 5px;
+}
+
+/* Definition box - Purple outline */
+.definition,
+.callout.definition {
+    border-left-color: #6633cc;
+    background: #f8f5ff;
+    color: #330066;
+    font-style: italic;
+}
+
+.definition strong:first-child::before {
+    content: "DEFINITION: ";
+    margin-right: 5px;
+}
+
+
+/* ========================================
+   3. RFC KEYWORD HIGHLIGHTING
+   ======================================== */
+
+/* Keywords: MUST, SHOULD, MAY, etc. */
+.rfc-keyword,
+code .rfc-keyword {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #c00;
+    background: #fff5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* Auto-highlight common RFC keywords in code blocks */
+pre strong,
+code strong {
+    font-weight: 700;
+    color: #c00;
+}
+
+
+/* ========================================
+   4. SIDE TABLE OF CONTENTS
+   ======================================== */
+
+.spec-toc {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.spec-toc h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: 700;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.spec-toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.spec-toc li {
+    margin: 8px 0;
+}
+
+.spec-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 4px 0;
+    transition: color 0.2s;
+}
+
+.spec-toc a:hover {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+.spec-toc .toc-h2 {
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+.spec-toc .toc-h3 {
+    padding-left: 15px;
+    font-weight: 400;
+}
+
+.spec-toc .toc-h4 {
+    padding-left: 30px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+/* ========================================
+   5. CODE AND MONOSPACE IMPROVEMENTS
+   ======================================== */
+
+/* Ensure code blocks use monospace consistently */
+pre,
+code,
+.code-block {
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+    font-size: 0.9em;
+}
+
+/* Inline code */
+code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #333;
+}
+
+/* Code blocks */
+pre {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-left: 4px solid #333;
+    padding: 15px;
+    overflow-x: auto;
+    line-height: 1.5;
+    margin: 20px 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+
+/* ========================================
+   6. PRINT-FRIENDLY STYLES
+   ======================================== */
+
+@media print {
+    /* Page setup */
+    @page {
+        margin: 2cm;
+        size: A4;
+    }
+
+    body {
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    /* Hide navigation and interactive elements */
+    nav,
+    .nav-wrapper,
+    .mobile-menu-toggle,
+    .back-button,
+    button,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Headers and footers */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Prevent breaking inside important elements */
+    .callout,
+    .note,
+    .warning,
+    .definition,
+    pre,
+    table,
+    figure {
+        page-break-inside: avoid;
+    }
+
+    /* Links - show URLs */
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+    }
+
+    th {
+        background: #f0f0f0;
+        font-weight: 700;
+    }
+
+    /* Code blocks */
+    pre {
+        border: 1px solid #333;
+        padding: 10px;
+        font-size: 9pt;
+        overflow: visible;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    /* Call-out boxes */
+    .callout,
+    .note,
+    .warning,
+    .definition,
+    .implementation-note {
+        border: 1px solid #333;
+        border-left-width: 4px;
+        padding: 10px;
+        margin: 15px 0;
+    }
+
+    /* Remove emoji icons in print (they don't print well) */
+    .note strong:first-child::before,
+    .warning strong:first-child::before,
+    .normative strong:first-child::before,
+    .implementation-note strong:first-child::before,
+    .definition strong:first-child::before {
+        content: "";
+    }
+
+    /* TOC in print */
+    .spec-toc {
+        position: static;
+        border: 1px solid #333;
+        page-break-after: always;
+    }
+
+    /* RFC keywords - make readable in print */
+    .rfc-keyword {
+        background: none;
+        border: 1px solid #000;
+        padding: 1px 4px;
+    }
+}
+
+
+/* ========================================
+   7. RESPONSIVE ADJUSTMENTS
+   ======================================== */
+
+@media screen and (max-width: 1024px) {
+    /* Hide sidebar TOC on tablets */
+    .spec-toc {
+        position: static;
+        margin-bottom: 30px;
+        max-height: 300px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* Collapse TOC completely on mobile */
+    .spec-toc {
+        display: none;
+    }
+
+    /* Call-out boxes - reduce padding */
+    .callout,
+    .note,
+    .warning,
+    .definition,
+    .implementation-note {
+        padding: 12px 15px;
+        margin: 15px 0;
+    }
+
+    /* Code blocks - smaller font on mobile */
+    pre,
+    code {
+        font-size: 0.85em;
+    }
+
+    pre {
+        padding: 12px;
+    }
+}
+
+
+/* ========================================
+   8. ACCESSIBILITY IMPROVEMENTS
+   ======================================== */
+
+/* Focus states for keyboard navigation */
+.spec-toc a:focus,
+a:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .callout,
+    .note,
+    .warning,
+    .definition {
+        border-width: 2px;
+    }
+
+    .rfc-keyword {
+        border: 2px solid #c00;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .spec-toc a,
+    a {
+        transition: none;
+    }
+}
+
+
+/* ========================================
+   9. ACADEMIC ENHANCEMENTS
+   ======================================== */
+
+/* Section anchors (for deep linking) */
+h2, h3, h4 {
+    position: relative;
+}
+
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor {
+    opacity: 1;
+}
+
+.anchor {
+    opacity: 0;
+    position: absolute;
+    left: -20px;
+    color: #999;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+/* References and citations */
+.reference {
+    font-size: 0.9em;
+    color: #666;
+    border-left: 2px solid #ccc;
+    padding-left: 10px;
+    margin: 10px 0;
+}
+
+/* Footnotes */
+.footnote {
+    font-size: 0.85em;
+    color: #666;
+    border-top: 1px solid #ddd;
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+/* Version info box */
+.version-info {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    margin: 20px 0;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.version-info strong {
+    display: block;
+    margin-bottom: 5px;
+}

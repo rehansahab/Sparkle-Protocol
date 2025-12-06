@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle Protocol: Glossary of Terms</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+            <h1>Sparkle Protocol: Glossary of Terms</h1>
+
+            <div class="abstract">
+                <h2>About This Glossary</h2>
+                <p>Key terms used throughout the Sparkle Protocol documentation, with concise, neutral definitions. Terms are relevant to both the theoretical Sparkle Protocol and the broader Ordinals ecosystem.</p>
+            </div>
+
+            <section class="section" aria-label="Status">
+                <div class="warning-box">
+                    <p><strong>Note:</strong> Many of these terms relate to experimental or theoretical concepts within Sparkle Protocol, which has no production implementation.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2>Core Terms</h2>
+
+                <h3>Atomic Swap</h3>
+                <p>A smart contract technology enabling the exchange of one cryptocurrency for another without using centralized intermediaries. In Sparkle's design, this would link Lightning payments to Ordinal transfers, though this is not implemented.</p>
+
+                <h3>Coordinator</h3>
+                <p>An off‑chain service in the Sparkle design that orchestrates the interaction between Lightning HTLCs and Bitcoin PSBTs for trades. A correctly implemented coordinator cannot steal funds, but can censor or fail to execute trades. No production coordinator exists.</p>
+
+                <h3>HTLC (Hash Time-Locked Contract)</h3>
+                <p>A conditional payment used in Lightning Network where the recipient must acknowledge receiving payment by generating cryptographic proof within a certain timeframe, or the payment is returned to the payer. Central to Lightning's atomic swap mechanism.</p>
+
+                <h3>Inscription</h3>
+                <p>In the context of Bitcoin Ordinals, data embedded in a Bitcoin transaction's witness data. Can contain images, text, or any arbitrary data up to the block size limit. Inscriptions are immutably stored on the Bitcoin blockchain.</p>
+
+                <h3>Lightning Network</h3>
+                <p>A Layer 2 payment protocol operating on top of Bitcoin, enabling fast, low-cost transactions through payment channels. Sparkle Protocol proposes using Lightning for NFT trading settlement, though this integration doesn't exist in production.</p>
+
+                <h3>Ordinal / Ordinals</h3>
+                <p>A protocol created by Casey Rodarmor that allows tracking and transferring individual satoshis (the smallest unit of Bitcoin) and attaching arbitrary data to them, effectively creating NFTs on Bitcoin.</p>
+
+                <h3>Parent-Child Inscription</h3>
+                <p>A technique where shared data is inscribed once as a "parent" and referenced by multiple "child" inscriptions. This is also called recursive inscriptions and works with standard Ordinals today.</p>
+
+                <h3>PSBT (Partially Signed Bitcoin Transaction)</h3>
+                <p>A Bitcoin standard (BIP 174) for transactions that are not fully signed, allowing multiple parties to sign the same transaction. Used in Ordinals marketplaces for trustless trading.</p>
+
+                <h3>Recursive Inscription</h3>
+                <p>An inscription that references other inscriptions by their ID, allowing composition of complex data from multiple sources. Reduces on-chain storage by avoiding duplication. Works natively in Ordinals protocol.</p>
+
+                <h3>Reinscription Bridge</h3>
+                <p>In Sparkle's theoretical model, a mechanism to "upgrade" existing Ordinals with Lightning trading capability by creating a new inscription that references the original. This concept is not implemented.</p>
+
+                <h3>Satoshi (sat)</h3>
+                <p>The smallest unit of Bitcoin, equal to 0.00000001 BTC. In Ordinals, individual satoshis can be tracked and inscribed with data.</p>
+
+                <h3>SIP (Sparkle Improvement Proposal)</h3>
+                <p>Draft specifications for various aspects of Sparkle Protocol. Currently includes SIP-1 (metadata format), SIP-3 (Lightning trades), and SIP-4 (coordinator behavior). All are experimental drafts.</p>
+
+                <h3>Sparkle Metadata</h3>
+                <p>JSON format proposed by Sparkle Protocol for marking Ordinals as Lightning-tradeable. Uses <code>{"p": "sparkle", "v": 1}</code> as identifier. Has no special functionality in standard Ordinals.</p>
+
+                <h3>State Checkpoint</h3>
+                <p>In Sparkle's design, periodic on-chain commitments of off-chain state to ensure consistency. Proposed to occur every 72 blocks. Not implemented in production.</p>
+
+                <h3>Weak Atomicity</h3>
+                <p>Sparkle's term for trades where Lightning payment is instant but on-chain ownership transfer requires Bitcoin confirmations. Contrasts with "strong atomicity" where both legs settle simultaneously.</p>
+            </section>
+
+            <section>
+                <h2>Technical Terms</h2>
+
+                <h3>Channel Liquidity</h3>
+                <p>The amount of Bitcoin available in Lightning Network channels for routing payments. Limited liquidity can prevent large NFT trades even if the protocol supports them.</p>
+
+                <h3>Content Hash</h3>
+                <p>A cryptographic hash (usually SHA-256) of inscription content, used for verification and reference. Allows proving data integrity without storing the full content.</p>
+
+                <h3>Fee Rate (sat/vB)</h3>
+                <p>Bitcoin transaction fees measured in satoshis per virtual byte. Higher fee rates result in faster confirmation. Inscription costs are directly proportional to fee rates and data size.</p>
+
+                <h3>Mempool</h3>
+                <p>The pool of unconfirmed Bitcoin transactions waiting to be included in a block. High mempool congestion increases required fee rates for timely confirmation.</p>
+
+                <h3>Mempool Pinning</h3>
+                <p>An attack where a malicious actor prevents a transaction from confirming by broadcasting conflicting transactions with lower fees. Can disrupt HTLC-based protocols.</p>
+
+                <h3>RBF (Replace-By-Fee)</h3>
+                <p>Bitcoin feature allowing unconfirmed transactions to be replaced with higher-fee versions. Can complicate NFT trades if not properly handled.</p>
+
+                <h3>UTXO (Unspent Transaction Output)</h3>
+                <p>The fundamental unit of Bitcoin ownership. Each UTXO can only be spent once. Ordinals are tied to specific UTXOs for tracking.</p>
+
+                <h3>Witness Data</h3>
+                <p>Part of a Bitcoin transaction introduced by SegWit where signatures and other scripts are stored. Ordinals inscriptions are embedded in witness data.</p>
+            </section>
+
+            <section>
+                <h2>Protocol Comparison Terms</h2>
+
+                <h3>BRC-20</h3>
+                <p>First fungible token standard on Bitcoin using Ordinals inscriptions. Uses JSON to define token operations. Requires off-chain indexer for state tracking.</p>
+
+                <h3>GBRC-721</h3>
+                <p>Generative BRC-721, an optimization of Ordinals for generative art collections. Supports some recursion concepts similar to Sparkle's proposals.</p>
+
+                <h3>RGB Protocol</h3>
+                <p>Client-validated smart contracts on Bitcoin. More complex than Ordinals but offers privacy and scalability. Unrelated to Sparkle Protocol.</p>
+
+                <h3>Runes</h3>
+                <p>Casey Rodarmor's fungible token protocol for Bitcoin. UTXO-based and more efficient than BRC-20. Competes with token aspects of various protocols.</p>
+
+                <h3>Stamps</h3>
+                <p>Bitcoin Stamps protocol that stores data in spendable outputs rather than witness data. More expensive but arguably more permanent than Ordinals.</p>
+
+                <h3>Taproot Assets</h3>
+                <p>Lightning Labs' protocol for assets on Lightning Network. Actually implements Lightning-speed transfers unlike Sparkle's theoretical model.</p>
+            </section>
+
+            <section>
+                <h2>Economic Terms</h2>
+
+                <h3>Cardinal UTXO</h3>
+                <p>A UTXO that doesn't contain inscriptions, used purely for its Bitcoin value. Needed for transaction fees when trading inscribed UTXOs.</p>
+
+                <h3>Inscription Budget</h3>
+                <p>The total cost calculation for inscribing a collection, including parent inscriptions, child inscriptions, and transaction fees.</p>
+
+                <h3>Postage</h3>
+                <p>The Bitcoin value (in satoshis) attached to an inscribed UTXO. Typically 546 sats (dust limit) or 10,000 sats for better wallet compatibility.</p>
+
+                <h3>Reinscription</h3>
+                <p>Creating a new inscription that references or modifies an existing one. Can be used to add metadata or "upgrade" NFTs with new properties.</p>
+            </section>
+
+            <section>
+                <h2>Implementation Status Terms</h2>
+
+                <h3>Alpha</h3>
+                <p>Early experimental software not suitable for production use. Sparkle Protocol reference implementations are alpha quality at best.</p>
+
+                <h3>Mainnet</h3>
+                <p>The main Bitcoin network where real economic value exists. Sparkle Protocol should NOT be used on mainnet.</p>
+
+                <h3>Production Ready</h3>
+                <p>Software that has been tested, audited, and proven safe for real-world use with actual funds. Sparkle Protocol is NOT production ready.</p>
+
+                <h3>Regtest</h3>
+                <p>Regression test network - a local Bitcoin network for development. Recommended for all Sparkle Protocol experimentation.</p>
+
+                <h3>Testnet</h3>
+                <p>Public Bitcoin test networks (testnet3, testnet4, signet) where developers can experiment without real funds. Appropriate for Sparkle testing.</p>
+            </section>
+
+            <section class="related-docs">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="whitepaper.html">Sparkle Protocol Whitepaper</a> – Full protocol specification</li>
+                    <li><a href="technical-reality.html">Technical Implementation Analysis</a> – Detailed architecture</li>
+                    <li><a href="recursive-inscriptions-guide.html">Recursive Inscriptions Guide</a> – Practical implementation</li>
+                    <li><a href="alternatives.html">Alternative Protocols</a> – Comparison with other solutions</li>
+                    <li><a href="changelog.html">Changelog</a> – Documentation version history</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="swap.html">Taproot Swap</a></p>
+    </footer>
+
+    <script src="js/main-academic.js"></script>
+</body>
+</html>

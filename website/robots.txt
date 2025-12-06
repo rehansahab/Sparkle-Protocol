@@ -1,0 +1,21 @@
+# Sparkle Protocol - robots.txt
+# https://sparkleprotocol.com
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://sparkleprotocol.com/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /

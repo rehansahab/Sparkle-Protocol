@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Taproot Atomic Swap - Sparkle Protocol v0.3.0</title>
+    <meta name="description" content="Trustless P2P Ordinals trading with Taproot atomic swaps. No accounts, no custody, no middlemen. Powered by Nostr and Lightning Network.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sparkle Protocol - Serverless Ordinals OTC">
+    <meta property="og:description" content="Trade Bitcoin Ordinals trustlessly using Taproot atomic swaps via Lightning Network. No accounts required.">
+    <meta property="og:image" content="images/sparkle-logo.png">
+    <meta property="og:url" content="https://sparkleprotocol.com/swap.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sparkle Protocol - Taproot Atomic Swaps">
+    <meta name="twitter:description" content="Trustless P2P Ordinals trading via Nostr. No custody, no middlemen.">
+    <meta name="twitter:image" content="images/sparkle-logo.png">
+
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <style>
+        /* Academic Professional Swap Interface - No rounded corners, monochrome palette */
+
+        .grid-container { display: grid; grid-template-columns: 320px 1fr; gap: 40px; }
+
+        /* MOBILE RESPONSIVE - Comprehensive fixes */
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; gap: 20px; }
+
+            /* Fix back button - make it relative on mobile to prevent overlap */
+            .back-button {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                display: block !important; /* Force block to take up full width/line */
+                margin: 20px 0 20px 15px !important; /* Add left margin for alignment */
+                z-index: 1 !important;
+                width: fit-content;
+            }
+
+            /* Hero section mobile spacing */
+            .hero {
+                margin-top: 30px !important;
+                padding: 20px 0 !important;
+            }
+
+            .hero .title {
+                font-size: 16pt !important;
+            }
+
+            .hero .subtitle {
+                font-size: 10pt !important;
+            }
+
+            /* Security notice mobile */
+            .security-notice {
+                font-size: 9pt;
+                padding: 8px 12px;
+            }
+
+            /* Cards mobile */
+            .card {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .card h2 {
+                font-size: 12pt;
+                margin-bottom: 10px;
+            }
+
+            /* Filter bar - stack vertically */
+            .filter-bar {
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+
+            .filter-bar input {
+                width: 100% !important;
+            }
+
+            .filter-bar button {
+                width: 100% !important;
+            }
+
+            /* Offer specs grid mobile */
+            .offer-specs {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+            }
+
+            /* Wallet buttons mobile - touch friendly */
+            .btn-wallet {
+                padding: 14px 16px;
+                font-size: 11pt;
+                min-height: 48px;
+            }
+
+            .btn-wallet svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* All buttons touch friendly */
+            .btn, .btn-secondary {
+                min-height: 48px;
+                padding: 14px 16px;
+                font-size: 11pt;
+            }
+
+            /* Form inputs mobile */
+            .form-group input,
+            .form-group textarea {
+                font-size: 16px !important; /* Prevents iOS zoom on focus */
+                min-height: 48px;
+                padding: 12px;
+            }
+
+            /* Filter inputs touch friendly */
+            .filter-bar input {
+                min-height: 44px;
+                padding: 10px 12px;
+                font-size: 16px !important;
+            }
+
+            /* Swap card mobile */
+            .swap-card {
+                padding: 10px;
+            }
+
+            .swap-header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            /* Chat window mobile */
+            .chat-window {
+                max-height: 150px;
+            }
+
+            /* Reply box mobile */
+            .reply-box {
+                flex-direction: column;
+            }
+
+            .reply-box input {
+                width: 100%;
+            }
+
+            .reply-box button {
+                width: 100%;
+            }
+
+            /* Action card mobile */
+            .action-card {
+                padding: 12px;
+            }
+
+            .action-card h4 {
+                font-size: 11pt;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .offer-specs {
+                grid-template-columns: 1fr !important;
+            }
+
+            .spec .value {
+                font-size: 10pt;
+            }
+
+            .spec .label {
+                font-size: 8pt;
+            }
+
+            .btn {
+                font-size: 10pt;
+                padding: 8px 12px;
+            }
+
+            .badge, .status-badge {
+                font-size: 8pt;
+                padding: 2px 6px;
+            }
+        }
+
+        .card { border: 1px solid #000; padding: 15px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 10pt; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #000;
+            background: #fdfdfd;
+            font-size: 10pt;
+        }
+
+        /* Buttons - Academic style, no rounded corners */
+        .btn {
+            background: #000;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11pt;
+            margin-top: 5px;
+            width: 100%;
+            font-family: 'Times New Roman', serif;
+        }
+        .btn:hover { background: #333; }
+        .btn-secondary { background: #fff; color: #000; border: 2px solid #000; }
+        .btn-secondary:hover { background: #f5f5f5; }
+
+        /* Wallet buttons - Monochrome academic style */
+        .btn-wallet {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .btn-nostr {
+            background: #000;
+            border: 2px solid #000;
+        }
+        .btn-nostr:hover { background: #333; }
+        .btn-bitcoin {
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+        }
+        .btn-bitcoin:hover { background: #f5f5f5; }
+
+        #userInfo p, #relayInfo p { margin: 5px 0; font-size: 10pt; }
+        #userInfo code { font-size: 9pt; word-break: break-all; }
+        .offer-list, .swap-list { list-style: none; padding: 0; }
+        .offer-item, .swap-item { border: 1px solid #000; padding: 15px; margin-bottom: 10px; }
+        .offer-item h3, .swap-item h3 { margin-top: 0; font-size: 13pt; border-bottom: 1px solid #000; padding-bottom: 5px; }
+
+        /* Status badges - Academic monochrome */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 9pt;
+            margin-left: 10px;
+            border: 1px solid #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge.taproot { background: #000; color: #fff; }
+        .badge.legacy { background: #f5f5f5; color: #666; }
+        .badge.available { background: #000; color: #fff; }
+
+        /* Wallet status indicators */
+        .wallet-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 10pt;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #ccc;
+        }
+        .status-dot.connected { background: #000; }
+        .status-dot.disconnected { background: #999; }
+
+        /* Chat styles - Academic */
+        .chat-window {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+        .msg { margin-bottom: 10px; }
+        .msg .msg-content {
+            display: inline-block;
+            padding: 5px 10px;
+            max-width: 80%;
+            word-break: break-word;
+            border: 1px solid #ccc;
+        }
+        .msg.me { text-align: right; }
+        .msg.me .msg-content { background: #000; color: #fff; border-color: #000; }
+        .msg.provider .msg-content { background: #fff; }
+        .msg-meta { font-size: 8pt; color: #666; margin-top: 2px; }
+
+        /* Action cards - Academic style */
+        .action-card {
+            border: 2px solid #000;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+        .action-card h4 { margin-top: 0; font-size: 12pt; text-transform: uppercase; letter-spacing: 0.5px; }
+        .action-card.warning { border-width: 3px; background: #fff; }
+        .action-card.success { border-width: 3px; background: #fff; }
+
+        /* Code input */
+        .code-input {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* Reply box */
+        .reply-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .reply-box input { flex: 1; border: 1px solid #000; padding: 8px; }
+        .reply-box button { width: auto; padding: 8px 15px; }
+
+        /* Swap card */
+        .swap-card {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .swap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .swap-title { font-weight: bold; font-size: 13pt; }
+
+        /* Status badges - Academic monochrome */
+        .status-badge {
+            padding: 3px 10px;
+            font-size: 9pt;
+            font-weight: bold;
+            border: 1px solid #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-badge.negotiating { background: #fff; color: #000; }
+        .status-badge.premium_due { background: #f5f5f5; color: #000; border-width: 2px; }
+        .status-badge.waiting_funding { background: #eee; color: #000; }
+        .status-badge.funded { background: #000; color: #fff; }
+        .status-badge.claim_pending { background: #333; color: #fff; }
+
+        /* Offer specs */
+        .offer-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .spec { text-align: center; }
+        .spec .label { display: block; font-size: 9pt; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .spec .value { font-weight: bold; font-size: 11pt; }
+
+        .offer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #000;
+        }
+        .offer-actions small { color: #666; }
+        .offer-actions button { width: auto; padding: 8px 15px; }
+
+        /* Security notice - Academic style */
+        .security-notice {
+            background: #fff;
+            border: 2px solid #000;
+            padding: 10px 15px;
+            font-size: 10pt;
+            margin-bottom: 15px;
+        }
+
+        /* Version badge - Academic style */
+        .version-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 2px 8px;
+            font-size: 9pt;
+            margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <a href="index.html" class="logo">
+                Sparkle Protocol
+                <span class="version-badge">v0.3.0 Taproot</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="spec.html">Specification</a></li>
+                <li><a href="swap.html" style="background:#000; color:#fff;">Atomic Swap</a></li>
+                <li><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol" target="_blank">Repository</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">Back to Home</a>
+
+    <header class="hero" style="padding-top: 0;">
+        <h1 class="title" style="font-size: 20pt; border: none;">Taproot Atomic Swap</h1>
+        <p class="subtitle" style="font-size: 12pt;">
+            Trustless P2P swaps using Taproot script-path spending. No private keys required.
+        </p>
+    </header>
+
+    <section class="section">
+        <div class="security-notice">
+            <div>
+                <strong>Security Model:</strong> This application never handles your private keys.
+                All signing is performed by your browser wallet extensions (NIP-07, Unisat, Xverse).
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <!-- Left Column: Wallets & Relays -->
+            <div>
+                <div class="card" id="identityCard">
+                    <h2>Connect Wallets</h2>
+
+                    <div id="loginSection">
+                        <p style="font-size: 10pt; margin-bottom: 15px;">
+                            Connect your Nostr wallet for identity and messaging.
+                        </p>
+                        <button class="btn btn-nostr btn-wallet" onclick="connectNip07()">
+                            <svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor">
+                                <path d="M128 24C70.6 24 24 70.6 24 128s46.6 104 104 104 104-46.6 104-104S185.4 24 128 24zm0 192c-48.5 0-88-39.5-88-88s39.5-88 88-88 88 39.5 88 88-39.5 88-88 88z"/>
+                            </svg>
+                            Connect Nostr (NIP-07)
+                        </button>
+
+                        <p style="font-size: 10pt; margin: 15px 0 10px;">
+                            Connect Bitcoin wallet for PSBT signing.
+                        </p>
+                        <button class="btn btn-bitcoin btn-wallet" onclick="connectBitcoin()">
+                            <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor">
+                                <path d="M16 0C7.2 0 0 7.2 0 16s7.2 16 16 16 16-7.2 16-16S24.8 0 16 0zm0 28.8c-7.1 0-12.8-5.7-12.8-12.8S8.9 3.2 16 3.2 28.8 8.9 28.8 16 23.1 28.8 16 28.8z"/>
+                            </svg>
+                            Connect Bitcoin Wallet
+                        </button>
+
+                        <p style="font-size: 9pt; color: #666; margin-top: 10px;">
+                            Supported: Alby, nos2x, Unisat, Xverse
+                        </p>
+                    </div>
+
+                    <div id="userInfo" style="display: none;">
+                        <div class="wallet-status">
+                            <span class="status-dot connected"></span>
+                            <span>Nostr: <code id="userNpub"></code></span>
+                        </div>
+                        <div class="wallet-status" id="btcWalletStatus" style="display: none;">
+                            <span class="status-dot connected"></span>
+                            <span id="btcStatus">Bitcoin: Not connected</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="logout()" style="margin-top: 15px;">
+                            Disconnect
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="relayCard">
+                    <h2>Network Status</h2>
+                    <div id="relayInfo">
+                        <p><strong>Relays:</strong> <span id="relayStatus">Not Connected</span></p>
+                        <div id="activeRelaysList" style="font-size: 9pt; color: #666; margin: 10px 0;"></div>
+                    </div>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; font-size: 10pt; color: #666;">Add Custom Relay</summary>
+                        <div style="margin-top: 10px;">
+                            <input type="text" id="customRelayInput" placeholder="wss://relay.example.com"
+                                style="width: 100%; padding: 5px; border: 1px solid #000; font-size: 10pt; box-sizing: border-box;">
+                            <button class="btn" onclick="handleAddRelay()" style="margin-top: 8px; font-size: 9pt; padding: 5px 10px;">
+                                Add Relay
+                            </button>
+                            <p style="font-size: 8pt; color: #999; margin-top: 5px;">
+                                Custom relays persist in browser storage. Refresh to reconnect.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+                <script>
+                    function updateRelaysList() {
+                        const list = document.getElementById('activeRelaysList');
+                        if (!list || typeof getActiveRelays !== 'function') return;
+                        const relays = getActiveRelays();
+                        list.innerHTML = 'Using: ' + relays.map(r => r.replace('wss://', '')).join(', ');
+                    }
+                    function handleAddRelay() {
+                        const input = document.getElementById('customRelayInput');
+                        const url = input.value.trim();
+                        if (!url) return;
+                        try {
+                            addCustomRelay(url);
+                            input.value = '';
+                            updateRelaysList();
+                            if (typeof toast !== 'undefined') {
+                                toast.success('Relay added! Refresh page to connect.');
+                            } else {
+                                alert('Relay added! Refresh page to connect.');
+                            }
+                        } catch (e) {
+                            if (typeof toast !== 'undefined') {
+                                toast.error(e.message);
+                            } else {
+                                alert(e.message);
+                            }
+                        }
+                    }
+                    // Initialize on load
+                    document.addEventListener('DOMContentLoaded', updateRelaysList);
+                </script>
+
+                <div class="card" id="createOfferCard" style="display: none;">
+                    <h2>Create Offer</h2>
+                    <p style="font-size: 10pt; margin-bottom: 15px;">
+                        Publish a Taproot swap offer to the Nostr network.
+                    </p>
+                    <div class="form-group">
+                        <label>Offer Name</label>
+                        <input type="text" id="offerName" placeholder="e.g., Ordinal #12345">
+                    </div>
+                    <div class="form-group">
+                        <label>Price (sats)</label>
+                        <input type="number" id="offerPrice" placeholder="100000">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (blocks)</label>
+                        <input type="number" id="offerDuration" value="288" placeholder="288">
+                    </div>
+                    <button class="btn" onclick="publishOffer()">Publish Offer</button>
+                    <p style="font-size: 9pt; color: #666; margin-top: 10px;">
+                        Offer will be broadcast to connected Nostr relays.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column: Offers and Swaps -->
+            <div>
+                <div class="card">
+                    <h2>Available Swap Offers</h2>
+                    <p style="font-size: 10pt; margin-bottom: 15px;">
+                        Live Taproot atomic swap offers from the Nostr network.
+                    </p>
+
+                    <div class="filter-bar" style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <input type="number" id="minAmountFilter" placeholder="Min sats"
+                            style="width: 100px; padding: 5px; border: 1px solid #000;">
+                        <input type="number" id="maxAmountFilter" placeholder="Max sats"
+                            style="width: 100px; padding: 5px; border: 1px solid #000;">
+                        <input type="number" id="minDurationFilter" placeholder="Min blocks"
+                            style="width: 100px; padding: 5px; border: 1px solid #000;">
+                        <button class="btn-secondary" onclick="fetchLiquidityOffers()"
+                            style="width: auto; padding: 5px 15px;">
+                            Filter
+                        </button>
+                    </div>
+
+                    <div id="offerList" class="offer-list">
+                        <div class="status-msg" style="text-align: center; padding: 20px; color: #666;">
+                            Connect your Nostr wallet to view offers.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h2>My Active Swaps</h2>
+                    <p style="font-size: 10pt; margin-bottom: 15px;">
+                        Your ongoing negotiations and atomic swap contracts.
+                    </p>
+                    <div id="swapList" class="swap-list">
+                        <div class="status-msg" style="text-align: center; padding: 20px; color: #666;">
+                            Connect to see your swaps.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="copyright">
+            <p>
+                &copy; 2025 Sparkle Protocol.
+                <strong>TESTNET ONLY</strong> - Experimental software for demonstration.
+                <br>
+                <a href="developer-sdk.html">Developer SDK</a> |
+                <a href="spec.html">Technical Specification</a> |
+                <a href="changelog.html">Changelog</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- NostrTools for relay connections -->
+    <script src="https://unpkg.com/nostr-tools@1.17.0/lib/nostr.bundle.js"></script>
+
+    <!-- Sparkle Protocol SDK v0.3.0 - Core swap primitives -->
+    <script src="js/sparkle-browser.js"></script>
+
+    <!-- Sparkle Swap v0.3.0 - Secure NIP-07 + Taproot -->
+    <script src="sparkle-swap.js"></script>
+</body>
+</html>

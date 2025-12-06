@@ -1,0 +1,444 @@
+/* CRISP MOBILE OPTIMIZATION - PIXEL PERFECT */
+
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container with proper alignment */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Mobile First: 320px and up */
+@media screen and (min-width: 320px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        margin-bottom: 0.875rem;
+    }
+
+    p, li {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Stats grid mobile */
+    .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        padding: 1rem 0;
+    }
+
+    .stat {
+        text-align: center;
+        padding: 1rem 0.5rem;
+        border: 1px solid #000;
+        background: #fff;
+    }
+
+    .stat .value {
+        font-size: 1.25rem;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat .label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Tables on mobile */
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 0.75rem 0.5rem;
+        border: 1px solid #000;
+        text-align: left;
+        white-space: nowrap;
+        font-size: 0.875rem;
+    }
+
+    /* Code blocks */
+    pre, code {
+        font-size: 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Navigation mobile */
+    .academic-nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        border-bottom: 1px solid #000;
+        padding: 0.75rem 0;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .nav-links li {
+        list-style: none;
+        white-space: nowrap;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        color: #000;
+        border: 1px solid transparent;
+    }
+
+    .nav-links a.active,
+    .nav-links a:active {
+        border: 1px solid #000;
+        background: #f5f5f5;
+    }
+
+    /* Back button mobile */
+    .back-button {
+        position: fixed;
+        top: 0.5rem;
+        left: 0.5rem;
+        background: #000;
+        color: #fff;
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        font-size: 0.875rem;
+        z-index: 2000;
+        border: 2px solid #000;
+    }
+
+    /* Sections */
+    .section {
+        padding: 2rem 0;
+        border-bottom: 1px solid #000;
+    }
+
+    /* Forms and inputs */
+    input, button, textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.75rem;
+        border: 1px solid #000;
+        width: 100%;
+        margin-bottom: 0.75rem;
+    }
+
+    button {
+        background: #000;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        min-height: 44px; /* iOS touch target */
+    }
+
+    /* Feature grid mobile */
+    .feature-grid,
+    .spec-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .feature-card,
+    .spec-card {
+        padding: 1rem;
+        border: 1px solid #000;
+        background: #fff;
+    }
+}
+
+/* Tablet: 768px and up */
+@media screen and (min-width: 768px) {
+    .container {
+        padding: 0 2rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    .stat .value {
+        font-size: 1.5rem;
+    }
+
+    .stat .label {
+        font-size: 0.875rem;
+    }
+
+    th, td {
+        padding: 1rem;
+        font-size: 1rem;
+        white-space: normal;
+    }
+
+    pre, code {
+        font-size: 0.875rem;
+    }
+
+    .feature-grid,
+    .spec-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .back-button {
+        top: 1rem;
+        left: 1rem;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Desktop: 1024px and up */
+@media screen and (min-width: 1024px) {
+    .container {
+        padding: 0 2rem;
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    h2 {
+        font-size: 2.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .spec-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .comparison-table {
+        font-size: 1rem;
+    }
+
+    th, td {
+        padding: 1.25rem;
+    }
+
+    .nav-links {
+        justify-content: flex-start;
+        gap: 2rem;
+    }
+}
+
+/* Ensure crisp text rendering */
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Fix alignment issues */
+.hero {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.hero .title {
+    margin: 0 auto 1rem;
+}
+
+.hero .subtitle {
+    margin: 0 auto 1rem;
+}
+
+/* Responsive images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ensure tables are responsive */
+.comparison-table,
+.matrix-table {
+    min-width: 100%;
+    table-layout: fixed;
+}
+
+@media screen and (max-width: 767px) {
+    .comparison-table,
+    .matrix-table {
+        table-layout: auto;
+    }
+
+    .comparison-table td:first-child,
+    .matrix-table td:first-child {
+        position: sticky;
+        left: 0;
+        background: #fff;
+        z-index: 1;
+        border-right: 2px solid #000;
+    }
+}
+
+/* Timeline mobile */
+.timeline {
+    padding: 1rem 0;
+}
+
+.timeline-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #000;
+    position: relative;
+}
+
+.timeline-item .date {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-item h4 {
+    margin-bottom: 0.5rem;
+}
+
+/* Print styles for clean output */
+@media print {
+    .back-button,
+    .nav-links {
+        display: none !important;
+    }
+
+    body {
+        font-size: 10pt;
+        line-height: 1.4;
+    }
+
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+
+    .section {
+        page-break-inside: avoid;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    * {
+        border-width: 2px !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Touch-friendly spacing */
+a, button, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Fix floating and alignment */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Center content properly */
+.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Grid alignment fix */
+.grid-fix {
+    display: grid;
+    align-items: start;
+    justify-items: stretch;
+}
+
+/* Flexbox alignment helpers */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Remove all animations for crisp performance */
+* {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}

@@ -1,0 +1,1037 @@
+/* ULTRA CLEAN ACADEMIC CSS - Professional Standards Only */
+
+/* Reset Everything */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    border-radius: 0 !important;
+}
+
+/* Document Root */
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    scroll-behavior: auto !important;
+}
+
+/* Body - Clean Academic Layout */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 12pt;
+    line-height: 1.8;
+    color: #000;
+    background: #fff;
+    max-width: 900px;
+    margin: 0 auto;
+    /* INCREASED PADDING: Clears the fixed navigation bar + spacing */
+    padding: 140px 60px 40px 60px;
+}
+
+/* Prevent Text Cutoff Globally */
+h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+/* Mobile body padding adjustment & Text Alignment */
+@media screen and (max-width: 768px) {
+    body {
+        /* INCREASED PADDING for mobile too */
+        padding: 140px 20px 40px 20px;
+    }
+    
+    /* Disable justify on mobile for better readability */
+    p {
+        text-align: left !important;
+    }
+
+    /* Ensure back button doesn't float awkwardly on mobile */
+    .back-button {
+        position: absolute !important; /* scroll with page */
+        top: 90px !important;
+        left: 20px !important;
+    }
+}
+
+/* Container - Consistent Spacing */
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Navigation - Fixed and Clean */
+.academic-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 2px solid #000;
+    padding: 15px 0;
+    z-index: 1000;
+    height: auto; /* Let content define height */
+    min-height: 60px;
+}
+
+.academic-nav .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.logo {
+    font-size: 14pt;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    background: #fff; /* cover content behind */
+}
+
+.logo-icon {
+    height: 20px;
+    margin-right: 10px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    color: #000;
+    text-decoration: none;
+    font-size: 11pt;
+    padding: 5px 10px;
+    display: block;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background: #000;
+    color: #fff;
+    border-bottom: 2px solid #000;
+}
+
+/* Back Button - Properly Positioned */
+.back-button {
+    position: fixed;
+    /* MOVED DOWN: To sit clearly below the nav bar */
+    top: 120px !important; 
+    left: 20px; /* Keep it reachable */
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 15px; /* slightly smaller padding */
+    font-size: 10pt;
+    z-index: 9999 !important; /* MAX Z-INDEX */
+    border: none;
+    cursor: pointer;
+    font-family: 'Times New Roman', serif; /* Match theme */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow for lift */
+}
+
+/* Header/Hero - Clean and Centered */
+.hero {
+    margin-top: 0; /* Padding handled by body */
+    padding: 0 0 60px 0;
+    text-align: center;
+    border-bottom: 2px solid #000;
+}
+
+/* Fix: Ensure paragraphs in Hero are centered, not justified */
+.hero p, .hero .subtitle, .hero .title {
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-size: 24pt;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 14pt;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Stats Grid - Properly Aligned */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 40px 0;
+    padding: 30px 0;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.stat {
+    text-align: center;
+    padding: 10px;
+}
+
+.stat .value {
+    font-size: 20pt;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    min-height: 28pt;
+}
+
+.stat .label {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+/* Sections - Clear Separation */
+.section {
+    padding: 40px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.section.alt {
+    background: #fafafa;
+    margin: 0 -60px;
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+/* Paragraphs - Justified */
+p {
+    margin: 15px 0;
+    text-align: justify;
+    line-height: 1.8;
+}
+
+/* Lists - Clean */
+ul, ol {
+    margin: 15px 0 15px 30px;
+    line-height: 1.8;
+}
+
+li {
+    margin: 5px 0;
+}
+
+/* Tables - Professional */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    font-size: 11pt;
+}
+
+table caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+table th {
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+table tr:nth-child(even) td {
+    background: #f9f9f9;
+}
+
+/* Code Blocks - Clean */
+pre {
+    background: #f5f5f5;
+    border: 1px solid #000;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    margin: 20px 0;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    background: #f0f0f0;
+    padding: 2px 4px;
+}
+
+/* Special Boxes */
+.abstract,
+.warning-box,
+.requirement-box,
+.implementation-note {
+    background: #fff;
+    border: 2px solid #000;
+    padding: 20px;
+    margin: 30px 0;
+}
+
+.abstract {
+    font-style: italic;
+    border-left: 4px solid #000;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.warning-box {
+    background: #fff;
+    border: 3px solid #000;
+    font-weight: bold;
+}
+
+/* Theorem/Proof Blocks */
+.theorem,
+.lemma,
+.definition,
+.proposition,
+.proof {
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 3px solid #000;
+    background: #fafafa;
+}
+
+.proof:after {
+    content: " ■";
+    float: right;
+    font-size: 14pt;
+}
+
+/* Feature Grid - Aligned */
+.spec-grid,
+.features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.spec-card,
+.feature {
+    border: 1px solid #000;
+    padding: 20px;
+    background: #fff;
+}
+
+.spec-card h3,
+.feature h3 {
+    font-size: 12pt;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #333;
+}
+
+/* Comparison Tables */
+.comparison-table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+.comparison-table th {
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.comparison-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.status-exists {
+    background: #e8f5e9;
+}
+
+.status-partial {
+    background: #fff3e0;
+}
+
+.status-none {
+    background: #ffebee;
+}
+
+/* Timeline */
+.timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.timeline-item {
+    border: 1px solid #000;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Footer */
+footer {
+    margin-top: 60px;
+    padding: 40px 0 20px 0;
+    border-top: 2px solid #000;
+    font-size: 10pt;
+    color: #666;
+}
+
+.footer-content {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 40px;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.footer-content h4 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+}
+
+.footer-content ul li {
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+.footer-content ul li::after {
+    content: "•";
+    margin-left: 15px;
+    color: #ccc;
+}
+
+.footer-content ul li:last-child::after {
+    content: "";
+    margin-left: 0;
+}
+
+.footer-content ul li a {
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.footer-content ul li a:hover {
+    border-bottom-color: #000;
+}
+
+.copyright {
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+/* Mobile Responsive - Clean */
+@media screen and (max-width: 768px) {
+    body {
+        /* Keep proper padding for fixed nav - don't override */
+        padding-top: 120px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 40px;
+        font-size: 11pt;
+        max-width: 100%;
+    }
+
+    .container {
+        padding: 0 !important;
+    }
+
+    .academic-nav .container {
+        padding: 0 15px !important;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    /* Touch-friendly nav links - minimum 44px touch target */
+    .nav-links a {
+        font-size: 9pt;
+        padding: 12px 15px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero {
+        margin-top: 20px;
+        padding: 20px 0;
+    }
+
+    .title {
+        font-size: 16pt;
+        letter-spacing: 1px;
+    }
+
+    .subtitle {
+        font-size: 11pt;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+        padding: 20px 0;
+    }
+
+    .stat {
+        padding: 8px 5px;
+    }
+
+    .stat .value {
+        font-size: 14pt;
+        white-space: nowrap;
+    }
+
+    .stat .label {
+        font-size: 8pt;
+    }
+
+    h1 {
+        font-size: 15pt;
+        margin: 30px 0 15px 0;
+    }
+
+    h2 {
+        font-size: 13pt;
+        margin: 25px 0 12px 0;
+    }
+
+    h3 {
+        font-size: 11pt;
+        margin: 20px 0 10px 0;
+    }
+
+    h4 {
+        font-size: 10pt;
+    }
+
+    p {
+        font-size: 10pt;
+        line-height: 1.6;
+        margin: 12px 0;
+    }
+
+    .section {
+        padding: 25px 0;
+    }
+
+    .section.alt {
+        margin: 0 -15px;
+        padding: 25px 15px;
+    }
+
+    .spec-grid,
+    .features {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    .timeline {
+        grid-template-columns: 1fr !important;
+    }
+
+    table {
+        font-size: 8pt;
+        overflow-x: auto;
+        display: block;
+    }
+
+    table th,
+    table td {
+        padding: 6px;
+    }
+
+    .footer-content {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px;
+        font-size: 8pt;
+    }
+
+    .footer-content h4 {
+        font-size: 9pt;
+        margin-bottom: 8px;
+    }
+
+    .footer-content ul li {
+        margin-bottom: 5px;
+    }
+
+    .copyright {
+        font-size: 8pt;
+        padding-top: 15px;
+    }
+
+    .back-button {
+        position: static;
+        display: inline-block;
+        margin: 10px 0;
+        font-size: 9pt;
+        padding: 8px 12px;
+    }
+
+    pre {
+        font-size: 7pt;
+        padding: 8px;
+        overflow-x: auto;
+    }
+
+    code {
+        font-size: 8pt;
+    }
+
+    ul, ol {
+        margin: 12px 0 12px 20px;
+        font-size: 10pt;
+    }
+
+    li {
+        margin: 4px 0;
+        line-height: 1.5;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    table {
+        font-size: 8pt;
+    }
+
+    table th,
+    table td {
+        padding: 5px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        font-size: 10pt;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .academic-nav,
+    .back-button,
+    footer,
+    .footer-content {
+        display: none;
+    }
+
+    .hero {
+        margin-top: 0;
+        page-break-after: always;
+    }
+
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+
+    table,
+    .theorem,
+    .proof,
+    .spec-card {
+        page-break-inside: avoid;
+    }
+
+    .section.alt {
+        margin: 0;
+        padding: 20px 0;
+        background: none;
+    }
+}
+
+/* Remove ALL Visual Effects */
+* {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* API Method Boxes */
+.api-method {
+    border: 1px solid #000;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.api-method h3 {
+    background: #000;
+    color: #fff;
+    margin: 0;
+    padding: 10px 15px;
+}
+
+.api-method > * {
+    padding: 0 15px;
+}
+
+/* Parameter Tables */
+.parameter-table {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.parameter-table th {
+    background: #f5f5f5;
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #333;
+}
+
+.parameter-table td {
+    padding: 8px;
+    border: 1px solid #333;
+}
+
+/* Command Boxes */
+.command-box {
+    background: #000;
+    color: #fff;
+    padding: 15px;
+    margin: 20px 0;
+    font-family: monospace;
+    overflow-x: auto;
+    font-size: 10pt;
+}
+
+/* File Structure */
+.file-structure {
+    background: #f5f5f5;
+    border: 1px solid #000;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 10pt;
+    margin: 20px 0;
+}
+
+/* Step Numbers */
+.step-number {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* =========================================
+   Swap Interface & Application Specifics
+   ========================================= */
+
+.highlight-box {
+    background: #fff;
+    border: 2px solid #000;
+    padding: 1rem;
+    margin: 1rem auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.swap-card {
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.swap-header {
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-bottom: 1px solid #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.swap-title {
+    font-weight: bold;
+    font-size: 11pt;
+    text-transform: uppercase;
+}
+
+.status-badge {
+    font-size: 9pt;
+    padding: 2px 6px;
+    border: 1px solid #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.negotiating { background: #fff3e0; }
+.status-badge.premium_due { background: #ffebee; }
+.status-badge.funded { background: #e8f5e9; }
+
+.swap-body {
+    padding: 15px;
+}
+
+.chat-window {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.msg {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.msg.me {
+    align-items: flex-end;
+}
+
+.msg.provider {
+    align-items: flex-start;
+}
+
+.msg-content {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    max-width: 80%;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+}
+
+.msg.me .msg-content {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.msg-meta {
+    font-size: 8pt;
+    color: #666;
+    margin-top: 2px;
+}
+
+.action-card {
+    border: 2px solid #000;
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.action-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 11pt;
+    text-transform: uppercase;
+}
+
+.code-input {
+    width: 100%;
+    padding: 8px;
+    font-family: 'Courier New', monospace;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+    background: #f5f5f5;
+}
+
+.reply-box {
+    display: flex;
+    gap: 10px;
+}
+
+.reply-box input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #000;
+}
+
+.status-msg, .error-msg {
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    border: 1px dashed #ccc;
+}
+
+.error-msg {
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+/* Specific Overrides for Index */
+.section-bordered {
+    background: #fff;
+    border: 3px solid #000;
+    margin: 2rem auto;
+    max-width: 900px;
+    padding: 2rem;
+}
+
+.section-title-bordered {
+    color: #000;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* =========================================
+   Documentation & Whitepaper Specifics
+   ========================================= */
+
+.version-info {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.related-docs {
+    background: #f5f5f5;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-top: 1px solid #ddd;
+}
+
+.document-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.note {
+    background: #f0f8ff;
+    border-left: 4px solid #000;
+    padding: 1rem;
+    margin: 1.5rem 0;
+}
+
+.definition {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+
+.data-table th {
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.data-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.data-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Alert Boxes */
+.success-box {
+    background: #f0f8f0;
+    border: 2px solid #0a0;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.info-box {
+    background: #f5f5ff;
+    border: 2px solid #00f;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.warning-box-red {
+    background: #fff5f5;
+    border: 2px solid #d00;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}

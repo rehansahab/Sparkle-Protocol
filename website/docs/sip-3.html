@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP-3: Lightning-Atomic NFT Trades - Sparkle Protocol</title>
+    <link rel="stylesheet" href="../css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="../css/navigation-professional.css">
+    <link rel="stylesheet" href="../css/mobile-fixes.css">
+    <link rel="stylesheet" href="../css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="../images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="../index.html#abstract">Abstract</a></li>
+                        <li><a href="../index.html#specification">Specification</a></li>
+                        <li><a href="../index.html#economics">Economics</a></li>
+                        <li><a href="../index.html#marketplace">Marketplace</a></li>
+                        <li><a href="../index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="../whitepaper.html">Whitepaper</a></li>
+                        <li><a href="../practical-implementation.html">Guide</a></li>
+                        <li><a href="../formal-proofs.html">Proofs</a></li>
+                        <li><a href="../developer-sdk.html">SDK</a></li>
+                        <li><a href="../protocol-comparison.html">Compare</a></li>
+                        <li><a href="../vision.html">Vision</a></li>
+                        <li><a href="../technical-reality.html">Analysis</a></li>
+                        <li><a href="../glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+
+    <a href="../index.html" class="back-button">&larr; Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+            <h1>SIP-3: Lightning-Atomic NFT Trades</h1>
+            <p class="subtitle">Sparkle Improvement Proposal for Trustless Ordinal Swaps</p>
+
+            <div class="version-info">
+                <p><strong>SIP-3 Draft Specification</strong></p>
+                <p>Version 0.2.0 | Status: Draft</p>
+                <p>Author: David A. Michael</p>
+            </div>
+
+            <section class="section" aria-label="Status and Risks">
+                <div class="warning-box">
+                    <p><strong>Status: Draft Specification</strong></p>
+                    <ul>
+                        <li><strong>Not implemented:</strong> No production code exists</li>
+                        <li><strong>Theoretical design:</strong> Untested in real environments</li>
+                        <li><strong>Subject to change:</strong> Specification may be revised</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="abstract">
+                <h2>Abstract</h2>
+                <p>SIP-3 defines a protocol for atomic swaps between Lightning Network payments and Bitcoin Ordinal inscriptions. The protocol uses Hash Time-Locked Contracts (HTLCs) to ensure that either both parties receive their expected assets, or neither transaction completes.</p>
+            </div>
+
+            <section>
+                <h2>1. Motivation</h2>
+                <p>Current Ordinal trading methods require either:</p>
+                <ul>
+                    <li><strong>Custodial trust:</strong> Marketplaces hold assets during trade</li>
+                    <li><strong>Slow settlement:</strong> PSBT-based trades require on-chain confirmation</li>
+                </ul>
+                <p>SIP-3 proposes a mechanism where Lightning payment settlement is instant while maintaining trustless guarantees through cryptographic locks.</p>
+            </section>
+
+            <section>
+                <h2>2. Specification</h2>
+
+                <h3>2.1 Sparkle Swap Script</h3>
+                <p>The ordinal is locked in a Taproot address with two spending paths:</p>
+
+                <pre><code>// Taproot Script Tree
+//
+// Path 1: Buyer Claim (Hashlock)
+// Requires: preimage + buyer_signature
+OP_SHA256 &lt;payment_hash&gt; OP_EQUALVERIFY
+&lt;buyer_pubkey&gt; OP_CHECKSIG
+
+// Path 2: Seller Refund (Timelock)
+// Requires: timeout expired + seller_signature
+&lt;locktime&gt; OP_CHECKLOCKTIMEVERIFY OP_DROP
+&lt;seller_pubkey&gt; OP_CHECKSIG</code></pre>
+
+                <h3>2.2 Trade Flow</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Actor</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Seller</td>
+                            <td>Generates random preimage <code>r</code>, computes <code>H = SHA256(r)</code></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Seller</td>
+                            <td>Creates Taproot address with hashlock <code>H</code> and buyer pubkey</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Seller</td>
+                            <td>Transfers ordinal to Taproot address (on-chain)</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Seller</td>
+                            <td>Creates Lightning invoice with payment_hash = <code>H</code></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Buyer</td>
+                            <td>Pays Lightning invoice, learns preimage <code>r</code></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Buyer</td>
+                            <td>Claims ordinal using <code>r</code> + signature (on-chain)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2.3 Timeout Parameters</h3>
+                <p>To ensure safety, the protocol enforces delta-safe timelocks:</p>
+                <ul>
+                    <li><strong>Lightning HTLC timeout:</strong> <code>T_ln</code> blocks</li>
+                    <li><strong>On-chain claim window:</strong> <code>T_claim = T_ln - delta</code></li>
+                    <li><strong>Seller refund time:</strong> <code>T_refund = T_ln + delta</code></li>
+                    <li><strong>Recommended delta:</strong> 144 blocks (24 hours)</li>
+                </ul>
+
+                <div class="note">
+                    <strong>Safety Requirement:</strong> The seller refund timelock MUST be at least 2x the Lightning HTLC timeout to prevent race conditions.
+                </div>
+
+                <h3>2.4 Buyer Deposit</h3>
+                <p>To prevent "free option" attacks, the buyer MUST pay a non-refundable deposit:</p>
+                <ul>
+                    <li><strong>Deposit amount:</strong> 1% of trade value (minimum 1000 sats)</li>
+                    <li><strong>Purpose:</strong> Compensates seller for locked liquidity if buyer abandons</li>
+                    <li><strong>Collection:</strong> Deposit is paid via separate Lightning invoice before trade initiation</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Message Format</h2>
+
+                <h3>3.1 Trade Request</h3>
+                <pre><code>{
+  "p": "sparkle",
+  "op": "trade_request",
+  "v": 1,
+  "inscription_id": "abc123...i0",
+  "buyer_pubkey": "02...",
+  "offer_sats": 100000,
+  "deposit_invoice": "lnbc10n1..."
+}</code></pre>
+
+                <h3>3.2 Trade Accept</h3>
+                <pre><code>{
+  "p": "sparkle",
+  "op": "trade_accept",
+  "v": 1,
+  "inscription_id": "abc123...i0",
+  "funding_txid": "def456...",
+  "funding_vout": 0,
+  "payment_hash": "789abc...",
+  "invoice": "lnbc1m1...",
+  "refund_locktime": 900144,
+  "witness_script": "..."
+}</code></pre>
+
+                <h3>3.3 Trade Complete</h3>
+                <pre><code>{
+  "p": "sparkle",
+  "op": "trade_complete",
+  "v": 1,
+  "inscription_id": "abc123...i0",
+  "claim_txid": "fed987...",
+  "preimage": "..."
+}</code></pre>
+            </section>
+
+            <section>
+                <h2>4. Security Considerations</h2>
+
+                <h3>4.1 Atomicity Guarantee</h3>
+                <p>The protocol ensures atomicity through cryptographic binding:</p>
+                <ul>
+                    <li>Lightning payment reveals preimage</li>
+                    <li>Preimage is required to claim ordinal</li>
+                    <li>Without payment, buyer cannot claim</li>
+                    <li>After timeout, seller can refund</li>
+                </ul>
+
+                <h3>4.2 Attack Mitigations</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Attack</th>
+                            <th>Mitigation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Free option (buyer delays)</td>
+                            <td>Non-refundable 1% deposit</td>
+                        </tr>
+                        <tr>
+                            <td>Double-spend by seller</td>
+                            <td>Wait for funding tx confirmation before payment</td>
+                        </tr>
+                        <tr>
+                            <td>Preimage withholding</td>
+                            <td>Buyer learns preimage from Lightning payment</td>
+                        </tr>
+                        <tr>
+                            <td>Timeout race condition</td>
+                            <td>Delta-safe timelocks (2x margin)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>4.3 Trust Assumptions</h3>
+                <div class="warning-box">
+                    <p><strong>The protocol is trust-minimized, not trustless:</strong></p>
+                    <ul>
+                        <li>Coordinator can censor trades but cannot steal funds</li>
+                        <li>Lightning routing must succeed within timeout</li>
+                        <li>Bitcoin network must confirm claim before refund timeout</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>5. Reference Implementation</h2>
+
+                <h3>5.1 Witness Script Construction (JavaScript)</h3>
+                <pre><code>import * as btc from '@scure/btc-signer';
+import { sha256 } from '@noble/hashes/sha256';
+
+function createSparkleSwapScript(
+  paymentHash,    // 32 bytes
+  buyerPubkey,    // 33 bytes
+  sellerPubkey,   // 33 bytes
+  refundLocktime  // block height
+) {
+  // Hashlock branch (buyer claim)
+  const hashlockScript = btc.Script.encode([
+    'OP_SHA256',
+    paymentHash,
+    'OP_EQUALVERIFY',
+    buyerPubkey,
+    'OP_CHECKSIG'
+  ]);
+
+  // Timelock branch (seller refund)
+  const timelockScript = btc.Script.encode([
+    btc.Script.encodeNumber(refundLocktime),
+    'OP_CHECKLOCKTIMEVERIFY',
+    'OP_DROP',
+    sellerPubkey,
+    'OP_CHECKSIG'
+  ]);
+
+  return { hashlockScript, timelockScript };
+}</code></pre>
+
+                <h3>5.2 Claim Transaction</h3>
+                <pre><code>function createClaimTransaction(
+  fundingTxid,
+  fundingVout,
+  fundingAmount,
+  preimage,
+  buyerPrivkey,
+  destinationAddress,
+  feeRate
+) {
+  const tx = new btc.Transaction();
+
+  tx.addInput({
+    txid: fundingTxid,
+    index: fundingVout,
+    witnessUtxo: {
+      script: taprootOutputScript,
+      amount: BigInt(fundingAmount)
+    },
+    tapLeafScript: hashlockLeaf
+  });
+
+  const fee = BigInt(feeRate * 150); // ~150 vbytes
+  tx.addOutput({
+    address: destinationAddress,
+    amount: BigInt(fundingAmount) - fee
+  });
+
+  // Sign and add preimage to witness
+  tx.sign(buyerPrivkey);
+  tx.finalize();
+
+  return tx.hex;
+}</code></pre>
+            </section>
+
+            <section>
+                <h2>6. Compatibility</h2>
+
+                <h3>6.1 Lightning Implementations</h3>
+                <ul>
+                    <li><strong>LND:</strong> Compatible via standard BOLT-11 invoices</li>
+                    <li><strong>Core Lightning:</strong> Compatible</li>
+                    <li><strong>Eclair:</strong> Compatible</li>
+                    <li><strong>LDK:</strong> Compatible</li>
+                </ul>
+
+                <h3>6.2 Bitcoin Requirements</h3>
+                <ul>
+                    <li><strong>Taproot:</strong> Required (activated block 709,632)</li>
+                    <li><strong>Schnorr signatures:</strong> Required</li>
+                    <li><strong>CLTV:</strong> Required (BIP-65)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>7. Future Extensions</h2>
+                <ul>
+                    <li><strong>SIP-4:</strong> Multi-coordinator escrow for censorship resistance</li>
+                    <li><strong>SIP-5:</strong> Batch trades for collection purchases</li>
+                    <li><strong>SIP-6:</strong> Cross-chain atomic swaps</li>
+                </ul>
+            </section>
+
+            <section class="related-docs">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="../whitepaper.html">Sparkle Protocol Whitepaper</a></li>
+                    <li><a href="../spec.html">Technical Specification</a></li>
+                    <li><a href="../formal-proofs.html">Formal Security Analysis</a></li>
+                    <li><a href="../developer-sdk.html">Developer SDK</a></li>
+                    <li><a href="../coordinator.html">Coordinator API</a></li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p>Contact: <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="../swap.html">Taproot Swap</a></p>
+    </footer>
+</body>
+</html>

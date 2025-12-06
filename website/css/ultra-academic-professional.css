@@ -1,0 +1,913 @@
+/* ============================================================================
+   SPARKLE PROTOCOL - ULTRA ACADEMIC PROFESSIONAL DESIGN SYSTEM
+   Complete UI Redesign - 1000% More Academic & Professional
+   Desktop & Mobile Optimized
+   ============================================================================ */
+
+/* ============================================================================
+   RESET & FOUNDATION
+   ============================================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #1a1a1a;
+    background: #fafafa;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-top: 90px;
+}
+
+/* ============================================================================
+   TYPOGRAPHY - SCHOLARLY HIERARCHY
+   ============================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #000;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #000;
+    padding-bottom: 0.75rem;
+}
+
+h2 {
+    font-size: 1.875rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.875rem;
+    color: #1a1a1a;
+}
+
+h4 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+    color: #2a2a2a;
+}
+
+p {
+    margin-bottom: 1.25rem;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+}
+
+strong {
+    font-weight: 600;
+    color: #000;
+}
+
+em {
+    font-style: italic;
+}
+
+/* ============================================================================
+   HERO SECTION - SCHOLARLY TITLE PAGE
+   ============================================================================ */
+
+.hero {
+    background: #ffffff;
+    padding: 4rem 2rem;
+    margin: 0 auto 3rem;
+    max-width: 1000px;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.title {
+    font-size: 2.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #000;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 0;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #444;
+    font-weight: 400;
+    font-style: italic;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    text-align: center;
+}
+
+/* Status Box - Research Notice */
+.hero .warning-box,
+.hero > div[style*="border"] {
+    background: #fff8e1 !important;
+    border: 2px solid #f57f17 !important;
+    padding: 1.25rem !important;
+    margin: 2rem auto !important;
+    max-width: 700px !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+}
+
+.hero .warning-box strong,
+.hero > div strong {
+    display: block;
+    font-size: 1.05rem;
+    color: #e65100;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* ============================================================================
+   STATISTICS GRID - ACADEMIC METRICS
+   ============================================================================ */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 2.5rem 2rem;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.stat {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.stat:last-child {
+    border-right: none;
+}
+
+.stat .value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Georgia', serif;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stat .label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================================================
+   CONTENT SECTIONS - SCHOLARLY LAYOUT
+   ============================================================================ */
+
+.section {
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    padding: 3rem 2rem;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.section:last-child {
+    margin-bottom: 4rem;
+}
+
+.section.alt {
+    background: #f9f9f9;
+    border-left: 4px solid #000;
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================================
+   LISTS - ACADEMIC FORMATTING
+   ============================================================================ */
+
+ul, ol {
+    margin: 1.5rem 0 1.5rem 2.5rem;
+    line-height: 1.75;
+}
+
+li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+li::marker {
+    color: #666;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   TABLES - PROFESSIONAL DATA PRESENTATION
+   ============================================================================ */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+table caption {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: left;
+    font-size: 1.1rem;
+    color: #000;
+}
+
+table th {
+    background: #2a2a2a;
+    color: #ffffff;
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 3px solid #000;
+}
+
+table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e5e5;
+    vertical-align: top;
+    line-height: 1.6;
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tr:nth-child(even) td {
+    background: #f9f9f9;
+}
+
+table tr:hover td {
+    background: #f5f5f5;
+}
+
+/* ============================================================================
+   CODE BLOCKS - TECHNICAL DOCUMENTATION
+   ============================================================================ */
+
+pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.5rem;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 2rem 0;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    background: #f5f5f5;
+    padding: 0.2em 0.4em;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    color: #c7254e;
+}
+
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* ============================================================================
+   SPECIAL BOXES - ACADEMIC ANNOTATIONS
+   ============================================================================ */
+
+.abstract {
+    background: #f9f9f9;
+    border-left: 5px solid #000;
+    padding: 2rem;
+    margin: 2.5rem 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    font-style: italic;
+    color: #2a2a2a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.abstract::before {
+    content: "ABSTRACT";
+    display: block;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: #000;
+    margin-bottom: 1rem;
+}
+
+.warning-box {
+    background: #fff3cd;
+    border: 2px solid #856404;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.warning-box strong {
+    display: block;
+    color: #856404;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.requirement-box {
+    background: #e8f5e9;
+    border: 2px solid #2e7d32;
+    border-left-width: 5px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.implementation-note {
+    background: #e3f2fd;
+    border: 2px solid #1565c0;
+    border-left-width: 5px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================================================
+   THEOREM/PROOF BLOCKS - MATHEMATICAL STYLING
+   ============================================================================ */
+
+.theorem,
+.lemma,
+.definition,
+.proposition {
+    margin: 2rem 0;
+    padding: 1.5rem 1.75rem;
+    border-left: 4px solid #1a237e;
+    background: #f5f5f5;
+    font-style: italic;
+}
+
+.theorem::before {
+    content: "Theorem. ";
+    font-weight: 700;
+    font-style: normal;
+    color: #1a237e;
+}
+
+.lemma::before {
+    content: "Lemma. ";
+    font-weight: 700;
+    font-style: normal;
+    color: #1a237e;
+}
+
+.definition::before {
+    content: "Definition. ";
+    font-weight: 700;
+    font-style: normal;
+    color: #1a237e;
+}
+
+.proof {
+    margin: 1.5rem 0 2rem;
+    padding: 1.5rem 1.75rem;
+    border-left: 3px solid #666;
+    background: #fafafa;
+    position: relative;
+}
+
+.proof::before {
+    content: "Proof. ";
+    font-weight: 600;
+    font-style: italic;
+}
+
+.proof::after {
+    content: "∎";
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1rem;
+    font-size: 1.25rem;
+    color: #000;
+}
+
+/* ============================================================================
+   FEATURE GRIDS - SPECIFICATION CARDS
+   ============================================================================ */
+
+.spec-grid,
+.features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 2.5rem 0;
+}
+
+.spec-card,
+.feature {
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    padding: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.spec-card:hover,
+.feature:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.spec-card h3,
+.feature h3 {
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e0e0e0;
+    color: #000;
+    margin-top: 0;
+}
+
+.spec-card p,
+.feature p {
+    line-height: 1.7;
+    color: #333;
+    text-align: left;
+}
+
+/* ============================================================================
+   TIMELINE - ACADEMIC ROADMAP
+   ============================================================================ */
+
+.timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.timeline-item {
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -1.5rem;
+    width: 1.5rem;
+    height: 2px;
+    background: #d0d0d0;
+    z-index: -1;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-item h4 {
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+    color: #000;
+}
+
+.timeline-item p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    text-align: center;
+}
+
+/* ============================================================================
+   FOOTER - SCHOLARLY CITATION
+   ============================================================================ */
+
+footer {
+    max-width: 1000px;
+    margin: 4rem auto 2rem;
+    padding: 2.5rem 2rem 1.5rem;
+    background: #2a2a2a;
+    color: #d0d0d0;
+    border-top: 4px solid #000;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.footer-content h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.footer-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-content ul li {
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+}
+
+.footer-content ul li a {
+    color: #d0d0d0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.footer-content ul li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    font-size: 0.85rem;
+    color: #999;
+}
+
+/* ============================================================================
+   MOBILE RESPONSIVE - ACADEMIC LAYOUT PRESERVED
+   ============================================================================ */
+
+@media screen and (max-width: 1024px) {
+    .hero {
+        padding: 3rem 1.5rem;
+    }
+
+    .title {
+        font-size: 2.25rem;
+    }
+
+    .subtitle {
+        font-size: 1.125rem;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .stat {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .section {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .spec-grid,
+    .features {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .timeline {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 15px;
+        line-height: 1.7;
+        background: #ffffff;
+        padding-top: 120px;
+    }
+
+    h1 {
+        font-size: 1.875rem;
+        margin-top: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-top: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .hero {
+        padding: 2.5rem 1.25rem;
+        margin-bottom: 2rem;
+        border-left: none;
+        border-right: none;
+    }
+
+    .title {
+        font-size: 1.75rem;
+        line-height: 1.3;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        margin: 2rem 0;
+    }
+
+    .stat {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1.5rem 1.25rem;
+        background: #ffffff;
+    }
+
+    .stat:last-child {
+        border-bottom: none;
+    }
+
+    .stat .value {
+        font-size: 2rem;
+    }
+
+    .stat .label {
+        font-size: 0.8rem;
+    }
+
+    .section {
+        padding: 2rem 1.25rem;
+        margin-bottom: 1.5rem;
+        border-left: none;
+        border-right: none;
+    }
+
+    .section.alt {
+        border-left: 4px solid #000;
+    }
+
+    p {
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+
+    ul, ol {
+        margin-left: 1.5rem;
+    }
+
+    table {
+        font-size: 0.85rem;
+        display: block;
+        overflow-x: auto;
+    }
+
+    table th,
+    table td {
+        padding: 0.75rem 1rem;
+    }
+
+    pre {
+        padding: 1rem;
+        font-size: 0.8rem;
+        overflow-x: auto;
+    }
+
+    .abstract,
+    .warning-box,
+    .requirement-box,
+    .implementation-note {
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+    }
+
+    .spec-grid,
+    .features {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        margin: 2rem 0;
+    }
+
+    .spec-card,
+    .feature {
+        padding: 1.5rem;
+    }
+
+    .timeline {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .timeline-item::before {
+        display: none;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    footer {
+        padding: 2rem 1.25rem 1rem;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 0.95rem;
+    }
+
+    .section {
+        padding: 1.5rem 1rem;
+    }
+
+    .stat {
+        padding: 1.25rem 1rem;
+    }
+
+    .stat .value {
+        font-size: 1.75rem;
+    }
+
+    .stat .label {
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES - SCHOLARLY PUBLICATION
+   ============================================================================ */
+
+@media print {
+    body {
+        background: #ffffff;
+        font-size: 11pt;
+        line-height: 1.6;
+        color: #000;
+    }
+
+    .hero,
+    .section {
+        border: none;
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+
+    .hero {
+        margin-top: 0;
+    }
+
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+
+    table,
+    .theorem,
+    .proof,
+    .spec-card {
+        page-break-inside: avoid;
+    }
+
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+:focus {
+    outline: 3px solid #1565c0;
+    outline-offset: 2px;
+}
+
+a:focus,
+button:focus {
+    outline: 3px solid #1565c0;
+    outline-offset: 3px;
+}
+
+/* High contrast for important elements */
+h1, h2, h3, strong, th {
+    font-weight: 600;
+}
+
+/* Ensure sufficient contrast */
+::selection {
+    background: #1565c0;
+    color: #ffffff;
+}

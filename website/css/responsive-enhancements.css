@@ -1,0 +1,306 @@
+/* RESPONSIVE ENHANCEMENTS - Perfect UI on All Devices */
+
+/* CRITICAL FIX: Account for fixed navigation bar */
+body {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-top: 140px !important; /* Space for fixed nav - prevents content from being hidden */
+}
+
+/* Main content areas - ensure proper spacing from fixed nav */
+main.container,
+.container {
+    padding-top: 20px;
+}
+
+/* Hero section - perfect centering */
+.hero {
+    text-align: center !important;
+}
+
+.hero .container {
+    text-align: center !important;
+}
+
+.hero p {
+    text-align: center !important;
+}
+
+.hero .subtitle {
+    text-align: center !important;
+}
+
+.hero .title {
+    text-align: center !important;
+}
+
+/* Security banner responsive improvements */
+.security-banner {
+    text-align: center;
+}
+
+.security-banner .container {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Mobile responsive security banner buttons */
+@media screen and (max-width: 768px) {
+    .security-banner {
+        margin: 1rem 20px !important;
+        padding: 1.5rem !important;
+    }
+
+    .security-banner h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .security-banner p {
+        font-size: 1rem !important;
+    }
+
+    .security-banner ul {
+        font-size: 0.95rem !important;
+        margin-left: 1rem !important;
+        margin-right: 0 !important;
+    }
+
+    .security-banner a {
+        display: block !important;
+        margin: 10px 0 !important;
+        padding: 14px 20px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Stack buttons vertically on mobile */
+    .security-banner > div > div > div > div:last-child {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .security-banner > div > div > div > div:last-child a {
+        margin-right: 0 !important;
+        width: 100%;
+    }
+}
+
+/* Small mobile */
+@media screen and (max-width: 480px) {
+    .security-banner {
+        padding: 1rem !important;
+    }
+
+    .security-banner h2 {
+        font-size: 1.3rem !important;
+    }
+
+    .security-banner ul {
+        font-size: 0.85rem !important;
+    }
+
+    .security-banner a {
+        font-size: 0.85rem !important;
+        padding: 12px 16px !important;
+    }
+}
+
+/* Back button positioning fix - ensure it's visible above nav */
+.back-button {
+    position: fixed !important;
+    top: 120px !important;
+    left: 20px !important;
+    background: #000 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    padding: 10px 15px !important;
+    font-size: 10pt !important;
+    z-index: 9999 !important;
+    border: 2px solid #fff !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+}
+
+.back-button:hover {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+/* Back button mobile improvements */
+@media screen and (max-width: 768px) {
+    .back-button {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        display: block !important;
+        margin: 20px 0 20px 15px !important;
+        z-index: 1 !important;
+        width: fit-content;
+        padding: 8px 12px !important;
+        font-size: 9pt !important;
+        background: #000 !important;
+        color: #fff !important;
+        border: 2px solid #fff !important;
+    }
+}
+
+/* Ensure sections are centered */
+.section .container {
+    text-align: center;
+}
+
+.section .paper-content {
+    text-align: left;
+    margin: 0 auto;
+}
+
+/* Stats grid mobile responsive */
+@media screen and (max-width: 768px) {
+    .stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px;
+        padding: 20px 0;
+    }
+
+    .stat .value {
+        font-size: 16pt;
+    }
+
+    .stat .label {
+        font-size: 8pt;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stats {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Tables mobile overflow */
+@media screen and (max-width: 768px) {
+    .comparison-table,
+    .matrix-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .comparison-table td,
+    .comparison-table th,
+    .matrix-table td,
+    .matrix-table th {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+}
+
+/* Navigation mobile improvements */
+@media screen and (max-width: 768px) {
+    .academic-nav .container {
+        padding: 0 20px;
+    }
+
+    .mobile-menu-toggle {
+        font-size: 20pt;
+        padding: 5px 10px;
+    }
+}
+
+/* Footer centering */
+footer {
+    text-align: center;
+}
+
+footer .container {
+    text-align: center;
+}
+
+footer .footer-content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+@media screen and (max-width: 768px) {
+    footer .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    footer .footer-content > div {
+        text-align: center;
+    }
+}
+
+/* Code blocks mobile */
+@media screen and (max-width: 768px) {
+    pre {
+        font-size: 10pt !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    code {
+        font-size: 10pt !important;
+    }
+}
+
+/* Ensure all content areas are properly centered */
+.container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Feature grids mobile */
+@media screen and (max-width: 768px) {
+    .features,
+    .spec-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .feature,
+    .spec-card {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+}
+
+/* Landscape mobile optimizations */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding-top: 100px !important; /* Increased from 70px for better nav clearance */
+    }
+
+    .hero {
+        margin-top: 20px;
+        padding: 30px 0;
+    }
+
+    .security-banner {
+        padding: 1rem !important;
+    }
+}
+
+/* Tablet adjustments */
+@media screen and (max-width: 1024px) {
+    body {
+        padding-top: 110px !important;
+    }
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+    body {
+        padding-top: 100px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding-top: 90px !important;
+    }
+}

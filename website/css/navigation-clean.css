@@ -1,0 +1,356 @@
+/* CLEAN NAVIGATION CSS - Academic Professional Standards */
+
+/* Desktop Navigation */
+.academic-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 3px solid #000;
+    z-index: 1000;
+    padding: 0;
+}
+
+.academic-nav .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 18pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Navigation Links - Desktop */
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.nav-links li {
+    margin: 0;
+    border-right: 1px solid #ddd;
+}
+
+.nav-links li:last-child {
+    border-right: none;
+}
+
+.nav-links a {
+    display: block;
+    padding: 8px 15px;
+    color: #000;
+    text-decoration: none;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* Page Sections Navigation (Internal Links) */
+.internal-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.internal-nav li {
+    border-right: 1px solid #ddd;
+}
+
+.internal-nav li:last-child {
+    border-right: none;
+}
+
+.internal-nav a {
+    display: block;
+    padding: 8px 12px;
+    color: #666;
+    text-decoration: none;
+    font-size: 9pt;
+}
+
+.internal-nav a:hover {
+    background: #f5f5f5;
+    color: #000;
+}
+
+/* External Pages Navigation */
+.external-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.external-nav li {
+    border-left: 1px solid #ddd;
+}
+
+.external-nav li:first-child {
+    border-left: none;
+}
+
+.external-nav a {
+    display: block;
+    padding: 8px 12px;
+    color: #000;
+    text-decoration: none;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+.external-nav a:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* Two-Row Navigation */
+.nav-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 30px;
+}
+
+.nav-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 0;
+}
+
+.nav-row:first-child {
+    border-bottom: 1px solid #eee;
+}
+
+/* Mobile Menu Toggle (Hidden by Default) */
+.mobile-menu-toggle {
+    display: none;
+    background: transparent;
+    color: #000;
+    border: none;
+    padding: 8px;
+    font-size: 24px;
+    cursor: pointer;
+    font-weight: normal;
+    line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 0;
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-menu-toggle:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Navigation */
+@media screen and (max-width: 1024px) {
+    .academic-nav .container {
+        padding: 10px 15px;
+    }
+
+    .nav-links a {
+        padding: 8px 10px;
+        font-size: 9pt;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .academic-nav {
+        box-shadow: none;
+    }
+
+    .academic-nav .container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 15px 20px;
+        align-items: center;
+        gap: 0;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 13pt;
+        flex: 0 1 auto;
+        min-width: 0;
+        order: 1;
+    }
+
+    /* Show mobile toggle */
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 8px 4px;
+        order: 2;
+    }
+
+    /* Mobile dropdown menu */
+    .nav-wrapper {
+        display: none;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0;
+        padding-top: 10px;
+        border-top: 2px solid #000;
+        order: 3;
+        flex-basis: 100%;
+    }
+
+    .nav-wrapper.active {
+        display: block;
+    }
+
+    .nav-row {
+        flex-direction: column;
+        padding: 0;
+        border-bottom: none;
+        justify-content: flex-start;
+    }
+
+    .nav-row:first-child {
+        border-bottom: none;
+        margin-bottom: 5px;
+    }
+
+    .nav-links,
+    .internal-nav,
+    .external-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links li,
+    .internal-nav li,
+    .external-nav li {
+        border: none;
+    }
+
+    .nav-links a,
+    .internal-nav a,
+    .external-nav a {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+        font-size: 10pt;
+    }
+
+    .nav-links a:hover,
+    .internal-nav a:hover,
+    .external-nav a:hover {
+        background: #f5f5f5;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .academic-nav .container {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 11pt;
+        letter-spacing: 0.5px;
+    }
+
+    .mobile-menu-toggle {
+        padding: 8px 12px;
+        font-size: 18px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .nav-links a,
+    .internal-nav a,
+    .external-nav a {
+        font-size: 10pt;
+        padding: 10px 15px;
+    }
+}
+
+/* Simplified Single-Row Desktop Navigation */
+@media screen and (min-width: 1200px) {
+    .academic-nav .container {
+        max-width: 1400px;
+    }
+
+    .nav-wrapper {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .nav-row {
+        border-bottom: none;
+        padding: 0;
+    }
+
+    .nav-row:first-child {
+        border-bottom: none;
+        margin-right: 20px;
+    }
+
+    .all-nav-links {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+    }
+
+    .all-nav-links li {
+        border-left: 1px solid #ddd;
+    }
+
+    .all-nav-links li:first-child {
+        border-left: none;
+    }
+
+    .all-nav-links a {
+        display: block;
+        padding: 8px 12px;
+        color: #000;
+        text-decoration: none;
+        font-size: 10pt;
+        white-space: nowrap;
+    }
+
+    .all-nav-links a:hover {
+        background: #000;
+        color: #fff;
+    }
+
+    .all-nav-links a.section-link {
+        color: #666;
+        font-weight: normal;
+    }
+
+    .all-nav-links a.page-link {
+        color: #000;
+        font-weight: bold;
+    }
+}

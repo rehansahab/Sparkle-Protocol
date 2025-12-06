@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptual Overview - Sparkle Protocol</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="icon" type="image/png" href="images/sparkle-logo.png">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main>
+        <header class="document-header">
+            <h1>Conceptual Overview</h1>
+            <p class="subtitle">Understanding Sparkle Protocol in Plain Language</p>
+        </header>
+
+        <section>
+            <h2>1. Summary</h2>
+            <p>Sparkle Protocol is a standardized rulebook defining two things:</p>
+            <ol>
+                <li>How Ordinals collections describe themselves on-chain through inscription metadata</li>
+                <li>How a Lightning/Spark checkout transaction should be structured so that wallets and marketplaces can communicate using a common format</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>2. The Two Pillars</h2>
+
+            <h3>2.1 Pillar One: Collection Genesis and Children</h3>
+            <p>The first pillar establishes how collections declare their metadata on-chain:</p>
+
+            <p><strong>Genesis Inscription:</strong> A one-time inscription that declares:</p>
+            <ul>
+                <li>Collection name and total supply</li>
+                <li>Creator information and contact details</li>
+                <li>Lightning/Spark support status</li>
+                <li>Royalty percentage in basis points</li>
+            </ul>
+
+            <p><strong>Child Inscriptions:</strong> Each NFT in the collection:</p>
+            <ul>
+                <li>References the genesis inscription ID</li>
+                <li>Contains a unique token ID within the collection</li>
+                <li>May include optional trait metadata</li>
+                <li>May reference recursive parent inscriptions for cost efficiency</li>
+            </ul>
+
+            <h3>2.2 Pillar Two: Sparkle Checkout Standard</h3>
+            <p>The second pillar defines a shared JSON format for purchases:</p>
+            <ul>
+                <li>Identifies the inscription being purchased</li>
+                <li>Declares the maximum total satoshis the buyer agrees to pay</li>
+                <li>Breaks down the payment into seller amount, creator royalty, marketplace fee, and estimated Layer 1 fee</li>
+                <li>Specifies the payment network: "spark" or "ln-mainnet"</li>
+            </ul>
+            <p>This transparency enables buyers to verify exactly what they are paying for and allows creators to ensure their royalty terms are respected.</p>
+        </section>
+
+        <section>
+            <h2>3. What Sparkle Is Not</h2>
+            <p>Clear understanding of Sparkle's limitations is essential:</p>
+            <ul>
+                <li><strong>Not a new Layer 2:</strong> Sparkle is a metadata standard, not a blockchain or sidechain</li>
+                <li><strong>Not a Lightning implementation:</strong> Sparkle uses Lightning as the payment rail (compatible with LND, CLN, Eclair, LDK, etc.)</li>
+                <li><strong>Not consensus-enforced:</strong> Bitcoin does not validate Sparkle metadata; enforcement is social</li>
+                <li><strong>Not a royalty guarantee:</strong> Sparkle defines royalty fields but cannot enforce them at the protocol level</li>
+                <li><strong>Not production-ready:</strong> Currently in experimental phase with no wallet or marketplace support</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Why It Matters</h2>
+
+            <h3>4.1 For Marketplaces</h3>
+            <p>A single integration point instead of custom logic per collection. Standard checkout flow applicable to all Sparkle-compliant collections. Clear fee structure that users can independently verify.</p>
+
+            <h3>4.2 For Wallet Developers</h3>
+            <p>Simple JSON parsing for collection and checkout data. No complex PSBT construction required for buyers. Lightning payments abstract away UTXO complexity.</p>
+
+            <h3>4.3 For Creators</h3>
+            <p>On-chain declaration of collection metadata. Optional royalty configuration that markets can choose to respect. Lightning-ready status from initial inscription.</p>
+
+            <h3>4.4 For Buyers</h3>
+            <p>Complete transparency on payment breakdown. No hidden fees or unexpected charges. Fast checkout via Lightning/Spark.</p>
+        </section>
+
+        <section>
+            <h2>5. Practical Flow</h2>
+            <p>The typical workflow proceeds as follows:</p>
+            <ol>
+                <li><strong>Creator inscribes genesis:</strong> One-time inscription declaring collection parameters</li>
+                <li><strong>NFTs reference genesis:</strong> Each child inscription includes the genesis ID, establishing collection membership</li>
+                <li><strong>Marketplace generates checkout:</strong> Creates a <code>sparkle_checkout</code> object with complete price breakdown</li>
+                <li><strong>Buyer pays via Lightning:</strong> Wallet displays fee breakdown, processes Lightning/Spark payment, buyer receives Ordinal</li>
+            </ol>
+        </section>
+
+        <section class="related-docs">
+            <h2>6. Next Steps</h2>
+            <ul>
+                <li><a href="spec.html">Technical Specification</a> - Complete JSON schemas and validation rules</li>
+                <li><a href="darkita.html">Example Collection</a> - See how a reference collection implements Sparkle</li>
+                <li><a href="coordinator.html">Coordinator API</a> - Integration documentation for building services</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="swap.html">Taproot Swap</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sparkle Protocol - Bitcoin Lightning Ordinal Trading Standard</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Sparkle Protocol enables trustless atomic swaps for Bitcoin Ordinals via Lightning Network. Serverless P2P trading with Taproot security.">
+    <meta name="keywords" content="Bitcoin, Ordinals, Lightning Network, Atomic Swap, Taproot, P2P Trading, Nostr, Cryptocurrency">
+    <meta name="author" content="Sparkle Protocol">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sparkleprotocol.com/">
+    <meta property="og:title" content="Sparkle Protocol - Trustless Bitcoin Ordinal Trading">
+    <meta property="og:description" content="Serverless P2P atomic swaps for Bitcoin Ordinals. No middleman, no custody, no API keys. Powered by Taproot and Lightning.">
+    <meta property="og:image" content="https://sparkleprotocol.com/images/sparkle-logo.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@SparkleProtocol">
+    <meta name="twitter:title" content="Sparkle Protocol - Trustless Bitcoin Ordinal Trading">
+    <meta name="twitter:description" content="Serverless P2P atomic swaps for Bitcoin Ordinals. Powered by Taproot and Lightning Network.">
+    <meta name="twitter:image" content="https://sparkleprotocol.com/images/sparkle-logo.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/sparkle-logo.png">
+    <link rel="apple-touch-icon" href="images/sparkle-logo.png">
+
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="Sparkle Logo" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <!-- Internal Page Sections -->
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="#abstract">Abstract</a></li>
+                        <li><a href="#specification">Specification</a></li>
+                        <li><a href="#economics">Economics</a></li>
+                        <li><a href="#marketplace">Marketplace</a></li>
+                        <li><a href="#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <!-- External Pages -->
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="title">Sparkle Protocol</h1>
+            <p class="subtitle">Trustless Atomic Swaps for Bitcoin Ordinals via Lightning Network</p>
+            <p style="margin-top: 0.75rem;"><strong>TL;DR:</strong> Pay Lightning, get Ordinal. Trustless. No custody risk.</p>
+            <div class="highlight-box" style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+                <strong>Status: Core Protocol Implemented</strong><br>
+                TypeScript reference implementation complete and verified. Taproot atomic swaps working. Testnet ready. Lightning integration in progress.
+            </div>
+            <div class="highlight-box">
+                <strong>Core Innovation: Sparkle Swap</strong><br>
+                Taproot hashlock scripts enable atomic swaps where Lightning payment reveals the preimage that unlocks on-chain ordinal claim.
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <span class="value">Trustless</span>
+                    <span class="label">Non-Custodial Trading</span>
+                </div>
+                <div class="stat">
+                    <span class="value">Atomic</span>
+                    <span class="label">Both Parties Satisfied or Nothing</span>
+                </div>
+                <div class="stat">
+                    <span class="value">Lightning</span>
+                    <span class="label">Instant Payment Settlement</span>
+                </div>
+                <div class="stat">
+                    <span class="value">Open Source</span>
+                    <span class="label">MIT Licensed</span>
+                </div>
+            </div>
+            <div class="cta-buttons" style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 10px;">
+                <a href="swap.html" class="cta-primary" style="display: inline-block; background: #10B981; color: white; padding: 14px 24px; text-decoration: none; font-weight: bold; border-radius: 0px; min-height: 48px; text-align: center;">
+                    Try Taproot Swap Demo
+                </a>
+                <a href="developer-sdk.html" class="cta-secondary" style="display: inline-block; background: #000; color: white; padding: 14px 24px; text-decoration: none; font-weight: bold; border-radius: 0px; min-height: 48px; text-align: center;">
+                    Developer SDK
+                </a>
+            </div>
+            <style>
+                @media (max-width: 480px) {
+                    .cta-buttons { flex-direction: column; }
+                    .cta-buttons a { width: 100%; box-sizing: border-box; }
+                }
+            </style>
+        </div>
+    </header>
+
+    <section id="status" class="section section-bordered">
+        <div class="container">
+            <h2 class="section-title-bordered">What Sparkle Protocol Does</h2>
+            <div class="warning-box">
+                <p><strong>Sparkle Protocol is an experimental research standard for trading Bitcoin Ordinals using Lightning Network payments.</strong></p>
+
+                <p style="margin-top: 1rem;"><strong>The Problem:</strong></p>
+                <ul style="margin: 0.5rem 0 1rem 2rem; line-height: 1.8;">
+                    <li>Current ordinal trading is either <strong>custodial</strong> (marketplace holds your asset) or <strong>slow</strong> (PSBT-based)</li>
+                    <li>Buyers must trust marketplaces not to steal their funds or ordinals</li>
+                    <li>No native Lightning payment support for ordinal purchases</li>
+                </ul>
+
+                <p><strong>The Solution - Sparkle Swap:</strong></p>
+                <ul style="margin: 0.5rem 0 1rem 2rem; line-height: 1.8;">
+                    <li><strong>Trustless:</strong> Taproot hashlock scripts - no custody required</li>
+                    <li><strong>Atomic:</strong> Either both parties get what they want, or nothing happens</li>
+                    <li><strong>Lightning-native:</strong> Pay with any BOLT-compatible Lightning wallet</li>
+                    <li><strong>Delta-safe:</strong> 2x timelock safety margin protects against race conditions</li>
+                </ul>
+
+                <p><strong>How It Works:</strong></p>
+                <ol style="margin: 0.5rem 0 1rem 2rem; line-height: 1.8;">
+                    <li>Seller locks ordinal in Taproot address with hashlock + timelock paths</li>
+                    <li>Buyer pays Lightning invoice (same payment hash as hashlock)</li>
+                    <li>Payment reveals preimage → buyer claims ordinal on-chain</li>
+                    <li>If buyer never pays, seller reclaims after timeout</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="why-this-matters">
+        <div class="container">
+            <h2>Why This Exists</h2>
+            <div class="paper-content">
+                <p>Sparkle Protocol provides a trustless mechanism for trading Bitcoin Ordinals with Lightning payments:</p>
+                <ul>
+                    <li><strong>Sparkle Swap:</strong> Taproot hashlock scripts enabling atomic swaps - pay Lightning, claim ordinal trustlessly.</li>
+                    <li><strong>Serverless P2P:</strong> Decentralized Nostr orderbook with encrypted DM negotiation. No central server, no accounts, no API keys.</li>
+                    <li><strong>Delta-safe timelocks:</strong> 2x safety margin prevents race conditions during blockchain reorgs.</li>
+                    <li><strong>NIP-07 Security:</strong> Browser wallet signing via Alby/nos2x. Your private keys never leave your device.</li>
+                </ul>
+                <p>If you're building ordinal marketplace infrastructure and want Lightning payments without custody risk, Sparkle Swap provides the atomic swap mechanism.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="reading-paths">
+        <div class="container">
+            <h2>How to Read This Site</h2>
+            <div class="paper-content">
+                <h3>1. Overview Track (15–30 minutes)</h3>
+                <p>For curious readers who want the big picture.</p>
+                <ul>
+                    <li><a href="whitepaper.html">Whitepaper</a> – read Abstract, Introduction, Limitations.</li>
+                    <li><a href="protocol-comparison.html">Protocol Comparison</a> – see where Sparkle is weaker and where it might help.</li>
+                    <li><a href="vision.html">Vision &amp; Roadmap</a> – realistic view of why this may never be a live protocol.</li>
+                </ul>
+
+                <h3>2. Design Track (1–2 hours)</h3>
+                <p>For protocol designers, security engineers, and researchers.</p>
+                <ul>
+                    <li><a href="whitepaper.html">Whitepaper</a> – full read.</li>
+                    <li><a href="technical-reality.html">Technical Implementation Analysis</a> – architecture and security constraints.</li>
+                    <li><a href="formal-proofs.html">Formal Security Analysis</a> – theoretical guarantees and limitations.</li>
+                </ul>
+
+                <h3>3. Implementation Track (for Builders)</h3>
+                <p>For developers considering a proof‑of‑concept.</p>
+                <ul>
+                    <li><a href="recursive-inscriptions-guide.html"><strong>How Recursive Inscriptions Work</strong></a> – practical guide with working code.</li>
+                    <li><a href="alternatives.html"><strong>Production Alternatives</strong></a> – what to actually use today.</li>
+                    <li><a href="practical-implementation.html">Practical Implementation Guide</a> – testnet‑only setup sketch.</li>
+                    <li><a href="developer-sdk.html">Developer SDK (Conceptual)</a> – proposed JS/TS client API.</li>
+                    <li><a href="docs/sip-3.html">SIP‑3: Lightning‑Atomic NFT Trades</a> – draft trade flow spec.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="self-assessment">
+        <div class="container">
+            <h2>Security Model & Trade-offs</h2>
+            <div class="paper-content">
+                <p>Sparkle Protocol's security model is based on cryptographic guarantees, not trust:</p>
+                <ul>
+                    <li><strong>Decentralized Architecture:</strong> Orders published to Nostr relays; trades negotiated via encrypted NIP-04 DMs. No central server can censor or steal.</li>
+                    <li><strong>Atomic Settlement:</strong> Lightning payment reveals preimage that unlocks on-chain ordinal claim. Either both parties get what they want, or neither transaction completes.</li>
+                    <li><strong>Timelock Protection:</strong> CLTV timelocks allow sellers to reclaim ordinals if buyers never pay. Standard Bitcoin security model applies.</li>
+                    <li><strong>Browser Wallet Security:</strong> NIP-07 and Bitcoin wallet extensions (Unisat, Xverse) handle all signing. No private keys ever exposed to the application.</li>
+                </ul>
+                <p>Sparkle provides the first trustless atomic swap mechanism specifically designed for ordinal trading with Lightning settlement.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="developers" class="section">
+        <div class="container">
+            <h2>For Developers</h2>
+            <div class="paper-content">
+                <p>Sparkle Protocol provides working TypeScript implementations for building ordinal trading infrastructure:</p>
+                <ul>
+                    <li><strong>1. Sparkle Swap (COMPLETE):</strong> Taproot hashlock atomic swaps - trustless ordinal trading with Lightning settlement. Verified and tested.</li>
+                    <li><strong>2. Sparkle Indexer:</strong> Protocol-aware indexer that discovers <code>{"p": "sparkle"}</code> inscriptions and composes traits.</li>
+                    <li><strong>3. Decentralized Orderbook:</strong> Serverless P2P trade discovery via Nostr relays - no accounts, no custody, no middlemen.</li>
+                    <li><strong>4. Auction Engine (IN PROGRESS):</strong> Pay-to-bid Lightning auctions for instant confirmation ordinal bidding.</li>
+                </ul>
+                <p><strong>Technical Stack:</strong> TypeScript, @scure/btc-signer, @noble/hashes, @noble/curves for Taproot/Schnorr.</p>
+                <p><strong>Transaction Sizes:</strong> Claim TX: 142 vbytes (~$0.50 at 20 sat/vB) | Refund TX: 138 vbytes (~$0.48)</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="what-is-sparkle" class="section">
+        <div class="container">
+            <h2>Protocol Overview</h2>
+            <div class="paper-content">
+                <p><strong>Sparkle Protocol is an experimental standard for Lightning-aware Bitcoin Ordinals metadata and atomic trading flows.</strong></p>
+
+                <p>The protocol defines metadata structures for Bitcoin Ordinals inscriptions that enable Lightning Network payment integration and recursive parent-child composition patterns.</p>
+
+                <h3>Protocol Scope</h3>
+                <ul>
+                    <li><strong>Metadata Standards:</strong> JSON schemas for Ordinals inscriptions with Lightning-compatible trade fields (SIP-1)</li>
+                    <li><strong>Recursive Composition:</strong> Parent-child inscription references for reduced on-chain data redundancy</li>
+                    <li><strong>Atomic Swaps:</strong> Lightning-settled Ordinal trades via HTLC mechanisms (SIP-3, draft)</li>
+                    <li><strong>Trustless Trading:</strong> P2P atomic swaps via Nostr without custodial risk (SIP-4, draft)</li>
+                </ul>
+
+                <h3>Technical Approach</h3>
+                <p>Instead of inscribing redundant data N times for a collection of N Ordinals, Sparkle defines a pattern where:</p>
+                <ol>
+                    <li>Shared trait data is inscribed once as parent inscriptions</li>
+                    <li>Individual Ordinals reference parents by inscription ID</li>
+                    <li>Clients compose final representations by fetching referenced inscriptions</li>
+                    <li>Lightning payments settle atomically with on-chain ownership transfer</li>
+                </ol>
+                <p>All data remains on Bitcoin. No off-chain storage or centralized databases required.</p>
+
+                <h3>Authorship</h3>
+                <p>Sparkle Protocol was created and is actively researched by <strong>David A. Michael</strong> as an experimental standard for integrating Bitcoin Ordinals with Lightning-style payment flows.</p>
+
+                <h3>Non-Goals</h3>
+                <p>Sparkle Protocol does NOT:</p>
+                <ul>
+                    <li>Replace or modify the Bitcoin Ordinals protocol</li>
+                    <li>Provide custodial trading services or marketplace infrastructure</li>
+                    <li>Guarantee trustlessness without proper UTXO verification (users should verify before paying)</li>
+                    <li>Offer production-ready, audited implementations</li>
+                </ul>
+
+                <h3>For Researchers and Developers</h3>
+                <p>Sparkle Protocol is suitable for:</p>
+                <ul>
+                    <li>Researchers exploring Lightning-Ordinals integration patterns</li>
+                    <li>Developers building experimental testnet applications</li>
+                    <li>Protocol designers evaluating recursive inscription architectures</li>
+                    <li>Academic study of Bitcoin L2 scaling mechanisms</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="specification" class="section alt">
+        <div class="container">
+            <h2>Protocol Specification</h2>
+
+            <div class="spec-grid">
+                <div class="spec-card">
+                    <h3>1. Sparkle Swap Script</h3>
+                    <pre><code class="json">// Buyer Claim Path (hashlock)
+OP_SHA256 &lt;payment_hash&gt; OP_EQUALVERIFY
+&lt;buyer_pubkey&gt; OP_CHECKSIG
+
+// Seller Refund Path (timelock)
+&lt;locktime&gt; OP_CHECKLOCKTIMEVERIFY OP_DROP
+&lt;seller_pubkey&gt; OP_CHECKSIG</code></pre>
+                </div>
+
+                <div class="spec-card">
+                    <h3>2. Atomic Swap Flow</h3>
+                    <div style="background: #fff; padding: 1.5rem; border: 1px solid #000; font-family: monospace;">
+                        <strong>Trade Execution:</strong><br><br>
+                        1. Seller locks ordinal in Taproot address<br>
+                        2. Seller creates LN invoice (same payment_hash)<br>
+                        3. Buyer pays invoice → learns preimage<br>
+                        4. Buyer claims ordinal with preimage + sig<br>
+                        5. If no payment: seller refunds after timeout<br>
+                    </div>
+                </div>
+
+                <div class="spec-card">
+                    <h3>3. Security Assumptions</h3>
+                    <ul class="guarantees">
+                        <li><strong>Bitcoin Finality:</strong> Relies on standard Bitcoin confirmation security (6+ blocks recommended)</li>
+                        <li><strong>Lightning Settlement:</strong> HTLC timeout must exceed PSBT confirmation target + safety margin</li>
+                        <li><strong>Coordinator Trust:</strong> Coordinator can censor but cannot steal funds; run your own to mitigate</li>
+                        <li><strong>Reorg Risk:</strong> Deep reorgs (6+ blocks) may revert ownership; standard Bitcoin risk applies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="economics" class="section">
+        <div class="container">
+            <h2>Trading Model Comparison</h2>
+
+            <div class="cost-comparison">
+                <h3>Ordinal Trading Approaches</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Approach</th>
+                            <th>Trust Model</th>
+                            <th>Payment Speed</th>
+                            <th>Custody Risk</th>
+                            <th>Lightning Support</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Custodial Marketplace</td>
+                            <td>Trust marketplace</td>
+                            <td>Instant</td>
+                            <td>High - they hold your assets</td>
+                            <td>Varies</td>
+                        </tr>
+                        <tr>
+                            <td>PSBT-based Trading</td>
+                            <td>Trustless</td>
+                            <td>~10 min (on-chain)</td>
+                            <td>None</td>
+                            <td>No</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td><strong>Sparkle Swap</strong></td>
+                            <td><strong>Trustless (atomic)</strong></td>
+                            <td><strong>Instant (Lightning)</strong></td>
+                            <td><strong>None</strong></td>
+                            <td><strong>Native</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 1rem; font-style: italic;"><strong>Note:</strong> Sparkle Swap combines the speed of custodial solutions with the trust model of PSBT trading.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="marketplace" class="section alt">
+        <div class="container">
+            <h2>Marketplace Integration Framework</h2>
+
+            <div class="paper-content">
+                <h3>Proposed Marketplace Integration Path</h3>
+                <p>
+                    Sparkle Protocol is designed for integration with existing NFT marketplaces through a
+                    standardized detection and trading mechanism. Marketplaces can identify Sparkle-enabled
+                    ordinals by parsing inscription metadata for protocol markers.
+                </p>
+
+                <h4>Detection and Badge System</h4>
+                <p>
+                    Ordinals inscribed with Sparkle Protocol metadata display a distinctive badge on
+                    marketplace interfaces, signaling Lightning Network trading capability. This is achieved
+                    through indexer modification to detect the protocol signature: <code>{"p": "sparkle", "v": 1}</code>
+                </p>
+
+                <h4>Reinscription Bridge for Existing Collections</h4>
+                <p>
+                    A critical innovation is the reinscription bridge mechanism, allowing existing ordinals
+                    to be upgraded with Lightning capability without modifying the original inscription:
+                </p>
+
+                <pre style="background: #fff; padding: 15px; margin: 15px 0;">
+{
+  "p": "sparkle",
+  "op": "upgrade",
+  "original": "existing_ordinal_inscription_id",
+  "lightning": {
+    "enabled": true,
+    "bridged_at": block_height
+  }
+}</pre>
+
+                <p>
+                    This preserves the provenance and authenticity of the original inscription while adding
+                    Lightning Network functionality. The reinscription creates a child inscription that
+                    references the parent, maintaining the chain of ownership.
+                </p>
+
+                <h4>Trading Flow Architecture</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Function</th>
+                            <th>Integration Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Marketplace UI</td>
+                            <td>Display Sparkle badge</td>
+                            <td>Frontend modification</td>
+                        </tr>
+                        <tr>
+                            <td>Indexer</td>
+                            <td>Detect protocol metadata</td>
+                            <td>Parser enhancement</td>
+                        </tr>
+                        <tr>
+                            <td>Lightning Backend</td>
+                            <td>Handle Lightning payments via LND or Core Lightning</td>
+                            <td>Backend integration</td>
+                        </tr>
+                        <tr>
+                            <td>Trade Executor</td>
+                            <td>Atomic swap coordination</td>
+                            <td>Sparkle coordinator layer</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The integration requires minimal changes to existing marketplace infrastructure,
+                    primarily involving Lightning node integration (LND or Core Lightning) and UI modifications
+                    to display Lightning-enabled status. Sparkle Protocol provides the complete coordination layer.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section">
+        <div class="container">
+            <h2>System Architecture</h2>
+
+            <div class="architecture-diagram">
+                <div style="background: #fff; padding: 2rem; border: 1px solid #000;">
+                    <h4 style="text-align: center; margin-bottom: 1.5rem;">System Architecture</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="border: 1px solid #000; padding: 10px;">Layer</th>
+                                <th style="border: 1px solid #000; padding: 10px;">Components</th>
+                                <th style="border: 1px solid #000; padding: 10px;">Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px; font-weight: bold;">Layer 2: Lightning</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Lightning Nodes, HTLC Channels, State Channels</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Sub-second payment, ~10min ownership</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px; font-weight: bold;">Protocol Layer</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Sparkle Coordinator, Trade Validators, Indexers</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Non-custodial trade facilitation and state management</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px; font-weight: bold;">Layer 1: Bitcoin</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Ordinal Inscriptions, Taproot Scripts, Bitcoin Blockchain</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Base layer security and finality</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>Taproot Security</h3>
+                    <p>Schnorr signatures and Tapscript enable compact, private atomic swaps on Bitcoin.</p>
+                </div>
+                <div class="feature">
+                    <h3>Lightning Native</h3>
+                    <p>BOLT-compatible payment hash links Lightning invoice to on-chain ordinal claim.</p>
+                </div>
+                <div class="feature">
+                    <h3>Delta-Safe Timelocks</h3>
+                    <p>2x safety margin on refund timeout protects against race conditions and reorgs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparison" class="section">
+        <div class="container">
+            <h2>What Makes Sparkle Swap Different</h2>
+
+            <div class="comparison-matrix">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Custodial Markets</th>
+                            <th>PSBT Trading</th>
+                            <th>Sparkle Swap</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trust Required</td>
+                            <td class="poor">Full custody trust</td>
+                            <td class="excellent">None</td>
+                            <td class="excellent">None (atomic)</td>
+                        </tr>
+                        <tr>
+                            <td>Payment Speed</td>
+                            <td class="excellent">Instant</td>
+                            <td class="poor">~10 min on-chain</td>
+                            <td class="excellent">Instant (Lightning)</td>
+                        </tr>
+                        <tr>
+                            <td>Lightning Support</td>
+                            <td class="moderate">Some</td>
+                            <td class="poor">No</td>
+                            <td class="excellent">Native</td>
+                        </tr>
+                        <tr>
+                            <td>Can Steal Funds</td>
+                            <td class="poor">Yes (they hold keys)</td>
+                            <td class="excellent">No</td>
+                            <td class="excellent">No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="adoption-path">
+                <h3>Honest Assessment</h3>
+                <div style="background: #fff; border: 2px solid #000; padding: 2rem; margin: 1rem 0;">
+                    <h4 style="margin-top: 0;">What Sparkle Swap Is</h4>
+                    <p style="margin: 1rem 0; line-height: 1.6;">
+                        A trustless atomic swap mechanism for trading Bitcoin Ordinals via Lightning payments.
+                        Uses established hashlock cryptography (HTLC pattern) applied specifically to ordinal trading.
+                    </p>
+
+                    <h4>What It's Not</h4>
+                    <ul style="margin: 1rem 0 1rem 2rem; line-height: 1.8;">
+                        <li>Not a new cryptographic primitive (hashlocks exist since 2013)</li>
+                        <li>Not recursive inscriptions (that's native ord functionality)</li>
+                        <li>Not a marketplace (just the swap mechanism)</li>
+                    </ul>
+
+                    <h4>Value Proposition</h4>
+                    <p style="margin: 1rem 0 0 0; line-height: 1.6;">
+                        If you want to trade ordinals with Lightning payments and zero custody risk,
+                        Sparkle Swap provides the atomic swap mechanism. Open source, MIT licensed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="implementation" class="section alt">
+        <div class="container">
+            <h2>Reference Implementation</h2>
+
+            <div class="code-example">
+                <h3>Working Code: Create Atomic Swap Address</h3>
+                <pre><code class="javascript">import { createSparkleSwapAddress, generatePreimage } from 'sparkle-protocol';
+
+// Generate cryptographic secret (shared with Lightning invoice)
+const { preimage, paymentHash } = generatePreimage();
+
+// Create Taproot swap address with two spending paths
+const swap = createSparkleSwapAddress({
+  paymentHash,           // SHA256(preimage) - same as Lightning payment_hash
+  buyerPubkey,           // Buyer's compressed pubkey (33 bytes)
+  sellerPubkey,          // Seller's compressed pubkey (33 bytes)
+  refundLocktime: currentBlock + 288,  // 48 hours delta-safe
+  network: 'testnet',
+});
+
+console.log('Swap Address:', swap.address);
+// tb1p9796mv7hs78lrw3t9xcspjkk558zwy940cdy8q277qfyn9k0x8xsl448v8
+
+// Seller sends Ordinal to this address
+// Buyer pays Lightning invoice with same payment_hash
+// Payment reveals preimage → Buyer claims Ordinal on-chain</code></pre>
+            </div>
+
+            <div class="code-example" style="margin-top: 2rem;">
+                <h3>Claim Transaction (Buyer)</h3>
+                <pre><code class="javascript">import { buildClaimTransaction } from 'sparkle-protocol';
+
+// After paying Lightning invoice, buyer knows the preimage
+const claimTx = buildClaimTransaction({
+  swapAddress: swap,
+  fundingTxid: 'abc123...',    // TXID where Ordinal is locked
+  fundingVout: 0,
+  fundingAmount: 10000n,       // sats
+  preimage,                    // Revealed by Lightning payment
+  buyerPrivkey,
+  destinationAddress: 'tb1q...',
+  feeRate: 2,                  // sat/vbyte
+});
+
+// Broadcast claimTx.txHex to claim the Ordinal
+console.log('Claim TXID:', claimTx.txid);  // 142 vbytes</code></pre>
+            </div>
+
+            <div class="integration">
+                <h3>Implementation Status</h3>
+                <div style="background: #e8f5e9; padding: 1rem; border: 1px solid #4caf50;">
+                    <p><strong>Core Protocol - COMPLETE:</strong></p>
+                    <ul>
+                        <li><strong>taproot-scripts.ts:</strong> Hashlock + timelock Taproot address generation</li>
+                        <li><strong>claim-transaction.ts:</strong> Buyer claim with preimage + signature (142 vbytes)</li>
+                        <li><strong>refund-transaction.ts:</strong> Seller refund after timeout (138 vbytes)</li>
+                        <li><strong>All tests passing:</strong> Cryptographic verification complete</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>In Progress:</strong></p>
+                    <ul>
+                        <li>Lightning invoice integration (LND/CLN)</li>
+                        <li>First testnet swap with real Ordinal</li>
+                        <li>Auction engine for pay-to-bid Lightning auctions</li>
+                    </ul>
+                    <p style="font-style: italic; margin-top: 1rem;">
+                        <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">View source on GitHub</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="spec.html">Specification</a></li>
+                        <li><a href="docs/sip-3.html">SIP-3: Atomic Trades</a></li>
+                        <li><a href="coordinator.html">Coordinator API</a></li>
+                        <li><a href="darkita.html">Example Collection</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="developer-sdk.html">Developer SDK</a></li>
+                        <li><a href="recursive-inscriptions-guide.html">Recursive Inscriptions</a></li>
+                        <li><a href="alternatives.html">Alternatives</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                        <li><a href="changelog.html">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a></li>
+                        <li><a href="https://x.com/SparkleProtocol">X / Twitter</a></li>
+                        <li><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol/issues">Issues</a></li>
+                        <li><a href="https://mempool.space/block/914411">Mainnet Genesis</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Sparkle Protocol &bull; v0.3.0 &bull; Core Protocol Implemented<br>
+                <span style="font-size: 0.9em; margin-top: 0.5rem; display: block;">
+                    Created by David A. Michael &bull; Open source &bull; MIT Licensed
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main-academic.js"></script>
+</body>
+</html>

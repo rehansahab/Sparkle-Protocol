@@ -1,0 +1,39 @@
+{
+  "name": "sparkle-protocol",
+  "version": "0.3.0",
+  "description": "Lightning-atomic Ordinal auction system - Taproot atomic swaps",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "sparkle": "./dist/cli/sparkle-cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:browser": "node scripts/build-browser.mjs",
+    "build:all": "tsc && node scripts/build-browser.mjs",
+    "test": "vitest",
+    "test:swap": "npx tsx tests/swap.test.ts",
+    "test:e2e": "npx tsx tests/end-to-end-swap.ts",
+    "test:verify": "npx tsx tests/verify-deep.ts",
+    "cli": "npx tsx src/cli/sparkle-cli.ts"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.9.7",
+    "@noble/hashes": "^1.3.3",
+    "@scure/base": "^1.1.5",
+    "@scure/btc-signer": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "esbuild": "^0.27.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.1.0"
+  },
+  "author": "David A. Michael",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ProtocolSparkle/Sparkles-Protocol"
+  }
+}

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sparkle Protocol Whitepaper</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/rfc-professional.css">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+            <h1>Sparkle Protocol: Lightning-Settled Ordinal Trading</h1>
+            <p><em>Serverless P2P atomic swaps for Bitcoin Ordinals using Taproot and Lightning Network.</em></p>
+
+            <section class="section" aria-label="Status">
+                <div class="warning-box" style="background: #ECFDF5; border-color: #10B981;">
+                    <p><strong>Status: Core Protocol Implemented (v0.3.0)</strong></p>
+                    <ul>
+                        <li><strong>Taproot atomic swaps:</strong> Hashlock + timelock script-path spending</li>
+                        <li><strong>Decentralized orderbook:</strong> Nostr relays with NIP-15 product events</li>
+                        <li><strong>Secure wallet integration:</strong> NIP-07 for Nostr, Unisat/Xverse for Bitcoin</li>
+                        <li><strong>Testnet ready:</strong> <a href="swap.html">Try the demo</a></li>
+                    </ul>
+                </div>
+            </section>
+
+    <div class="version-info">
+        <p><strong>Technical Specification</strong></p>
+        <p>Version 0.3.0 | December 2025</p>
+        <p>Author: David A. Michael</p>
+        <p><em>This document describes an experimental draft of the Sparkle Protocol. It is not final and may change at any time.</em></p>
+    </div>
+
+    <div class="abstract">
+        <h2>Abstract</h2>
+        <p>
+            Sparkle Protocol enables trustless peer-to-peer trading of Bitcoin Ordinal inscriptions using Lightning Network payments and Taproot atomic swaps. The protocol uses a fully decentralized architecture: orders are published to Nostr relays as NIP-15 events, negotiations occur via NIP-04 encrypted DMs, and settlement uses Taproot script-path spending with hashlock/timelock conditions. No central coordinator or custody is required. Private keys never leave the user's browser wallet extensions.
+        </p>
+        <div class="warning">
+            <strong>Note:</strong> This is testnet software. The core protocol is implemented but unaudited. Use only on Bitcoin testnet with test inscriptions. <strong>Do not use with real economic value until mainnet release.</strong>
+        </div>
+    </div>
+
+    <h2 id="introduction">1. Introduction</h2>
+
+    <h3>1.1 The Problem</h3>
+    <p>
+        Bitcoin Ordinals have emerged as a way to inscribe arbitrary data—including images, text, and metadata—directly onto individual satoshis. This creates NFT-like digital artifacts with Bitcoin's security model. However, trading these inscriptions currently requires on-chain Bitcoin transactions, which introduce several limitations:
+    </p>
+    <ul>
+        <li><strong>Settlement Time:</strong> Bitcoin block confirmation times average 10+ minutes</li>
+        <li><strong>Transaction Costs:</strong> On-chain fees typically range from $1-$5 per trade</li>
+        <li><strong>User Experience:</strong> Slow settlements create friction for active trading</li>
+        <li><strong>Scalability:</strong> On-chain trading doesn't scale to high-frequency markets</li>
+    </ul>
+
+    <h3>1.2 Proposed Solution</h3>
+    <p>
+        Sparkle Protocol proposes a hybrid approach that leverages the Lightning Network for instant payment settlement while maintaining Bitcoin's on-chain ownership model for the actual inscriptions. The core idea is to separate payment finality from ownership transfer timing.
+    </p>
+
+    <div class="note">
+        <strong>Note:</strong> This proposal does not eliminate the need for on-chain transactions. It aims to make payment settlement instant while on-chain ownership transfer follows standard Bitcoin confirmation times.
+    </div>
+
+    <h2 id="architecture">2. Technical Architecture</h2>
+
+    <h3>2.1 Core Components (v0.3.0 Decentralized)</h3>
+    <p>The protocol consists of four main components:</p>
+
+    <ol>
+        <li><strong>Nostr Orderbook:</strong> Orders published as NIP-15 product events to decentralized relays (relay.damus.io, nos.lol, etc.)</li>
+        <li><strong>NIP-04 Negotiation:</strong> Encrypted peer-to-peer messaging for trade negotiation without intermediaries</li>
+        <li><strong>Taproot Atomic Swaps:</strong> P2TR addresses with script-path spending (hashlock for buyer claim, timelock for seller refund)</li>
+        <li><strong>Browser Wallet Integration:</strong> NIP-07 for Nostr identity (Alby, nos2x), Unisat/Xverse for PSBT signing</li>
+    </ol>
+
+    <div class="note" style="background: #ECFDF5; border-color: #10B981; margin: 15px 0;">
+        <strong>Architecture Evolution:</strong> v0.3.0 replaces the centralized coordinator model with a fully decentralized design. Orders, negotiations, and settlements all occur peer-to-peer with no trusted intermediary.
+    </div>
+
+    <h3>2.2 Metadata Standard</h3>
+    <p>Sparkle-compatible inscriptions include metadata that signals Lightning Network support:</p>
+    <pre>{
+  "p": "sparkle",
+  "v": 1,
+  "lightning": {
+    "enabled": true,
+    "min_channel_capacity": 100000
+  },
+  "trade": {
+    "provider_pubkey": "seller_nostr_hex_pubkey",
+    "fee_rate": 1
+  }
+}</pre>
+
+    <h3>2.3 Taproot Atomic Swap Mechanism</h3>
+    <p>Trades follow this trustless P2P sequence:</p>
+    <ol>
+        <li><strong>Discovery:</strong> Buyer finds offer on Nostr orderbook (NIP-15 product event)</li>
+        <li><strong>Negotiation:</strong> Buyer and seller negotiate via NIP-04 encrypted DMs</li>
+        <li><strong>Preimage Generation:</strong> Seller generates 32-byte preimage and SHA256 payment_hash</li>
+        <li><strong>Taproot Address:</strong> Both parties derive P2TR address with two script paths:
+            <ul>
+                <li><code>Hashlock:</code> OP_SHA256 &lt;hash&gt; OP_EQUALVERIFY &lt;buyer_pk&gt; OP_CHECKSIG</li>
+                <li><code>Timelock:</code> &lt;locktime&gt; OP_CLTV OP_DROP &lt;seller_pk&gt; OP_CHECKSIG</li>
+            </ul>
+        </li>
+        <li><strong>Funding:</strong> Seller sends Ordinal to Taproot swap address</li>
+        <li><strong>Lightning Payment:</strong> Seller creates invoice with payment_hash; buyer pays, learns preimage</li>
+        <li><strong>Claim:</strong> Buyer uses preimage to claim Ordinal via hashlock script path</li>
+        <li><strong>Refund (fallback):</strong> If buyer fails to claim, seller reclaims after timelock expires</li>
+    </ol>
+
+    <div class="definition">
+        <strong>Definition:</strong> Atomic swap means either both legs complete (buyer gets inscription, seller gets Lightning payment) or neither completes. No trusted third party is required. The Taproot scripts enforce the atomic property cryptographically.
+    </div>
+
+    <h2 id="economics">3. Economic Model</h2>
+
+    <h3>3.1 Cost Structure</h3>
+    <p>The protocol introduces new cost dynamics:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operation</th>
+                <th>One-Time Cost</th>
+                <th>Per-Trade Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Metadata Inscription</td>
+                <td>~$0.50</td>
+                <td>$0</td>
+            </tr>
+            <tr>
+                <td>Lightning Channel Setup</td>
+                <td>~$2-5 (on-chain)</td>
+                <td>$0</td>
+            </tr>
+            <tr>
+                <td>Lightning Payment</td>
+                <td>$0</td>
+                <td>~$0.001</td>
+            </tr>
+            <tr>
+                <td>On-chain Transfer</td>
+                <td>$0</td>
+                <td>~$1-5</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>3.2 Cost-Benefit Analysis</h3>
+    <p><strong>Traditional Ordinals Trading:</strong></p>
+    <ul>
+        <li>Setup: $0</li>
+        <li>Per trade: $1-5 + 10+ minute settlement</li>
+        <li>10 trades: $10-50 total</li>
+    </ul>
+
+    <p><strong>Sparkle Protocol (Proposed):</strong></p>
+    <ul>
+        <li>Setup: ~$3-6 (metadata + channel)</li>
+        <li>Per trade: $1-5 on-chain + $0.001 Lightning</li>
+        <li>Payment settlement: &lt;1 second</li>
+        <li>10 trades: ~$13-56 total</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> The primary benefit is instant payment finality, not cost reduction. On-chain fees still apply for ownership transfer.
+    </div>
+
+    <h2 id="security">4. Security Model</h2>
+
+    <h3>4.1 Trust Assumptions</h3>
+    <p>The protocol is trust-minimized but not fully trustless:</p>
+
+    <ul>
+        <li><strong>Nostr relays cannot steal funds:</strong> Relays only transmit messages; HTLCs ensure atomic settlement</li>
+        <li><strong>Relays can censor:</strong> Any relay can refuse to transmit offers, but users can switch relays freely</li>
+        <li><strong>Lightning Network risks apply:</strong> Channel liquidity, routing failures, timeout risks</li>
+        <li><strong>On-chain risks apply:</strong> Transaction pinning, RBF races, fee market volatility</li>
+    </ul>
+
+    <div class="warning">
+        <strong>Warning:</strong> The "free option" problem exists in all atomic swaps: a seller could list an Ordinal, receive Lightning payment, but have already moved the UTXO. Mitigation: buyers should verify UTXO ownership via a block explorer (e.g., mempool.space) before paying the Lightning invoice.
+    </div>
+
+    <h3>4.2 Attack Vectors</h3>
+
+    <p><strong>Potential attacks and mitigations:</strong></p>
+    <ol>
+        <li><strong>Free Option Attack:</strong> Seller lists Ordinal, receives Lightning payment, but UTXO was already spent
+            <ul>
+                <li><em>Mitigation:</em> Buyer verifies UTXO via mempool.space before paying invoice</li>
+            </ul>
+        </li>
+        <li><strong>Seller double-spend:</strong> Seller signs PSBT but broadcasts competing transaction
+            <ul>
+                <li><em>Mitigation:</em> Buyer should verify claim TX confirmation; if failed, refund path activates after timelock</li>
+            </ul>
+        </li>
+        <li><strong>Channel jamming:</strong> Attacker ties up Lightning liquidity
+            <ul>
+                <li><em>Mitigation:</em> Standard Lightning Network channel jamming mitigations</li>
+            </ul>
+        </li>
+        <li><strong>Relay censorship:</strong> Nostr relay refuses to publish offers
+            <ul>
+                <li><em>Mitigation:</em> Users can connect to multiple relays; offers propagate across relay network</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2 id="implementation">5. Implementation Considerations</h2>
+
+    <h3>5.1 Current Status</h3>
+    <div class="warning">
+        <strong>Reality Check:</strong> As of January 2025, Sparkle Protocol is a specification only. No production infrastructure exists. What would need to be built:
+    </div>
+
+    <ul>
+        <li><strong>Coordinator software:</strong> ~500+ hours of development</li>
+        <li><strong>Indexer service:</strong> To detect Sparkle-compatible inscriptions</li>
+        <li><strong>Marketplace integration:</strong> UI/UX for discovering and trading</li>
+        <li><strong>Wallet support:</strong> Lightning-enabled ordinals wallets</li>
+        <li><strong>Security audits:</strong> Independent review before mainnet deployment</li>
+        <li><strong>Testnet deployment:</strong> Extensive testing required</li>
+    </ul>
+
+    <h3>5.2 Lightning Node Requirements</h3>
+    <p>Both buyers and sellers would need:</p>
+    <ul>
+        <li>Lightning Network node (LND, Core Lightning, or Eclair)</li>
+        <li>Sufficient channel capacity</li>
+        <li>Routing liquidity to reach coordinator</li>
+        <li>Understanding of Lightning Network operation</li>
+    </ul>
+
+    <h3>5.3 Coordinator Decentralization</h3>
+    <p>While the protocol includes a coordinator service, it is designed for permissionless operation:</p>
+    <ul>
+        <li><strong>Anyone can run a coordinator:</strong> Open source software</li>
+        <li><strong>No custody of funds:</strong> Coordinators facilitate, not control</li>
+        <li><strong>Multiple coordinators can coexist:</strong> Users choose which to use</li>
+        <li><strong>Reputation systems possible:</strong> Coordinators can build trust via bonds/history</li>
+    </ul>
+
+    <h2 id="comparison">6. Comparison to Other Approaches</h2>
+
+    <h3>6.1 Traditional On-Chain Trading</h3>
+    <p><strong>Advantages over Sparkle:</strong></p>
+    <ul>
+        <li>No additional infrastructure needed</li>
+        <li>No Lightning Network complexity</li>
+        <li>Fully trustless</li>
+    </ul>
+    <p><strong>Disadvantages:</strong></p>
+    <ul>
+        <li>10+ minute settlement times</li>
+        <li>$1-5 fees per trade</li>
+        <li>Poor user experience for active trading</li>
+    </ul>
+
+    <h3>6.2 Centralized Marketplaces</h3>
+    <p><strong>Advantages over Sparkle:</strong></p>
+    <ul>
+        <li>Instant settlement of both payment and ownership</li>
+        <li>Simple user experience</li>
+        <li>No blockchain fees for trades</li>
+    </ul>
+    <p><strong>Disadvantages:</strong></p>
+    <ul>
+        <li>Full custody of assets</li>
+        <li>Counterparty risk</li>
+        <li>Not self-sovereign</li>
+    </ul>
+
+    <h3>6.3 Sparkle Protocol Position</h3>
+    <p>Sparkle attempts to find a middle ground:</p>
+    <ul>
+        <li>Self-custodial (like on-chain)</li>
+        <li>Instant payment settlement (like centralized)</li>
+        <li>Trust-minimized (better than centralized, not as good as pure on-chain)</li>
+        <li>Additional complexity (worse than both alternatives)</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> Sparkle Protocol is not "better" than existing approaches—it offers different trade-offs. Whether those trade-offs are worthwhile depends on specific use cases and user preferences.
+    </div>
+
+    <h2 id="limitations">7. Known Limitations</h2>
+
+    <h3>7.1 What Sparkle Cannot Do</h3>
+    <ul>
+        <li><strong>Cannot eliminate on-chain settlement time:</strong> Ownership transfer still requires Bitcoin confirmation</li>
+        <li><strong>Cannot eliminate on-chain fees:</strong> Inscription transfers still pay network fees</li>
+        <li><strong>Cannot force marketplace adoption:</strong> Requires voluntary integration</li>
+        <li><strong>Cannot modify existing inscriptions:</strong> Immutable by design (reinscription needed)</li>
+        <li><strong>Cannot operate without Lightning:</strong> Both parties need Lightning channels</li>
+    </ul>
+
+    <h3>7.2 Remaining Research Questions</h3>
+    <ul>
+        <li>How to prevent coordinator censorship effectively?</li>
+        <li>What coordinator reputation/bonding mechanisms are needed?</li>
+        <li>How to handle failed trades gracefully?</li>
+        <li>What are optimal HTLC timeout periods?</li>
+        <li>How to coordinate multi-coordinator scenarios?</li>
+    </ul>
+
+    <h2 id="roadmap">8. Potential Development Path</h2>
+
+    <h3>8.1 Phase 1: Specification & Research (Current)</h3>
+    <ul>
+        <li>YES Draft protocol specification</li>
+        <li>YES Publish whitepaper for review</li>
+        <li>⏳ Gather feedback from Lightning/Ordinals communities</li>
+        <li>⏳ Refine specification based on feedback</li>
+    </ul>
+
+    <h3>8.2 Phase 2: Reference Implementation (Future)</h3>
+    <ul>
+        <li>Build reference coordinator in Go/Rust</li>
+        <li>Develop indexer for Sparkle metadata detection</li>
+        <li>Create developer SDK</li>
+        <li>Deploy on Bitcoin testnet</li>
+    </ul>
+
+    <h3>8.3 Phase 3: Testing & Audits (Future)</h3>
+    <ul>
+        <li>Extensive testnet usage</li>
+        <li>Independent security audits</li>
+        <li>Bug bounty program</li>
+        <li>Community review period</li>
+    </ul>
+
+    <h3>8.4 Phase 4: Mainnet Deployment (Future)</h3>
+    <ul>
+        <li>Coordinate with marketplace partners</li>
+        <li>Launch coordinator services</li>
+        <li>Support wallet integrations</li>
+        <li>Monitor and iterate</li>
+    </ul>
+
+    <div class="warning">
+        <strong>Warning:</strong> This roadmap is aspirational. No timeline, funding, or commitment exists. The protocol may never progress beyond the specification phase.
+    </div>
+
+    <h2 id="conclusion">9. Conclusion</h2>
+
+    <p>
+        Sparkle Protocol proposes a hybrid approach to Bitcoin Ordinals trading that combines Lightning Network payment finality with on-chain ownership guarantees. The protocol is trust-minimized but introduces new complexity and infrastructure requirements.
+    </p>
+
+    <p>
+        This whitepaper presents an honest assessment of what the protocol could achieve and its limitations. Instant payment settlement is possible; instant ownership transfer is not. On-chain fees remain; only payment settlement becomes cheaper. A coordinator is required; full trustlessness is sacrificed for speed.
+    </p>
+
+    <p>
+        Whether Sparkle Protocol is valuable depends on whether these trade-offs align with real user needs. This whitepaper is shared as a starting point for discussion, not a promise of implementation or a claim of superiority over existing approaches.
+    </p>
+
+    <div class="note">
+        <strong>Invitation for Feedback:</strong> This protocol is open for review, criticism, and improvement. If you are a Lightning developer, Ordinals builder, marketplace operator, or security researcher, your feedback would help refine this specification.
+    </div>
+
+    <h2 id="references">References</h2>
+
+    <ol>
+        <li>Bitcoin Lightning Network BOLT Specifications. <a href="https://github.com/lightning/bolts">https://github.com/lightning/bolts</a></li>
+        <li>Bitcoin Ordinals Protocol. Casey Rodarmor, 2023. <a href="https://docs.ordinals.com">https://docs.ordinals.com</a></li>
+        <li>Hash Time-Locked Contracts. <a href="https://en.bitcoin.it/wiki/Hash_Time_Locked_Contracts">https://en.bitcoin.it/wiki/Hash_Time_Locked_Contracts</a></li>
+        <li>Lightning Network Daemon (LND) Documentation. <a href="https://docs.lightning.engineering">https://docs.lightning.engineering</a></li>
+        <li>Core Lightning Documentation. <a href="https://lightning.readthedocs.io">https://lightning.readthedocs.io</a></li>
+    </ol>
+
+    <div class="document-footer">
+        <p><small>Copyright © 2025 David A. Michael. Licensed under CC0 1.0 Universal.</small></p>
+        <p><small>This is an experimental research proposal, not investment advice or a promise of future performance. Testnet only. Do not use in production.</small></p>
+    </div>
+        
+            <section class="related-docs">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="technical-reality.html">Technical Implementation Analysis</a> – Detailed architecture</li>
+                    <li><a href="practical-implementation.html">Practical Implementation Guide</a> – Testnet experiments</li>
+                    <li><a href="formal-proofs.html">Formal Security Analysis</a> – Mathematical proofs</li>
+                    <li><a href="protocol-comparison.html">Protocol Comparison</a> – Compare with alternatives</li>
+                    <li><a href="docs/sip-3.html">SIP-3 Specification</a> – Lightning atomic trades</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <script src="js/main-academic.js"></script>
+</body>
+</html>

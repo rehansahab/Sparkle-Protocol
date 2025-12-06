@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle Protocol – Changelog</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main class="container">
+        <article class="paper">
+            <h1>Sparkle Protocol – Changelog</h1>
+
+            <div class="abstract">
+                <h2>Scope</h2>
+                <p>This changelog tracks substantive changes to the Sparkle Protocol specifications, documentation, and reference implementation.</p>
+            </div>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Version 0.3.0 – December 2025</h2>
+                    <p><em>Core Protocol Implementation Complete</em></p>
+                    <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+                        <strong>Major Milestone: Working Sparkle Swap Implementation</strong>
+                    </div>
+                    <ul>
+                        <li><strong>TypeScript reference implementation complete</strong> – Full Taproot atomic swap library</li>
+                        <li><strong>Taproot script generation:</strong>
+                            <ul>
+                                <li>Hashlock script: <code>OP_SHA256 &lt;payment_hash&gt; OP_EQUALVERIFY &lt;buyer_pubkey&gt; OP_CHECKSIG</code></li>
+                                <li>Timelock script: <code>&lt;locktime&gt; OP_CHECKLOCKTIMEVERIFY OP_DROP &lt;seller_pubkey&gt; OP_CHECKSIG</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Transaction builders:</strong>
+                            <ul>
+                                <li>Claim transaction (buyer claims with preimage + signature)</li>
+                                <li>Refund transaction (seller reclaims after timeout)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Comprehensive test suite:</strong> 10 cryptographic verification tests passing</li>
+                        <li><strong>Transaction sizes verified:</strong> Claim 142 vbytes, Refund 138 vbytes</li>
+                        <li><strong>Libraries used:</strong> @scure/btc-signer, @noble/hashes</li>
+                        <li><strong>Updated documentation:</strong> Status boxes, roadmap, and spec pages</li>
+                    </ul>
+
+                    <h3 style="margin-top: 1.5rem;">Secure Frontend (sparkle-swap.js)</h3>
+                    <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 1rem; margin-bottom: 1rem;">
+                        <strong>Security Fix:</strong> Removed private key input. All signing via browser extensions.
+                    </div>
+                    <ul>
+                        <li><strong>NIP-07 wallet integration</strong> – Nostr identity via Alby, nos2x (no nsec input)</li>
+                        <li><strong>Bitcoin wallet support</strong> – PSBT signing via Unisat, Xverse</li>
+                        <li><strong>Unified wallet manager</strong> – Single interface for both protocols</li>
+                        <li><strong>New swap.html</strong> – Secure NIP-07 frontend with Taproot atomic swaps</li>
+                        <li><strong>Browser modules:</strong>
+                            <ul>
+                                <li><code>nostr-nip07.ts</code> – NIP-07 provider abstraction</li>
+                                <li><code>bitcoin-wallet.ts</code> – Bitcoin wallet detection and signing</li>
+                                <li><code>wallet-manager.ts</code> – Unified state management</li>
+                            </ul>
+                        </li>
+                        <li><strong>CLI tool</strong> – <code>sparkle-cli</code> for testnet swap execution</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Version 0.2.0 – November 2024</h2>
+                    <p><em>Major restructure for clarity and honesty</em></p>
+                    <ul>
+                        <li><strong>Added "Why This Exists (Even If It Never Ships)"</strong> section to homepage</li>
+                        <li><strong>Added three reading paths</strong> (Overview, Design, Implementation) for different audiences</li>
+                        <li><strong>Added "Critical Self-Assessment"</strong> documenting weaknesses and limitations</li>
+                        <li><strong>Created practical guides:</strong>
+                            <ul>
+                                <li>"How Recursive Inscriptions Actually Work" – working code and real examples</li>
+                                <li>"Real Alternatives to Sparkle Protocol" – honest comparison of production options</li>
+                            </ul>
+                        </li>
+                        <li><strong>Added glossary</strong> of key terms with neutral definitions</li>
+                        <li><strong>Added DARKITA case study</strong> as illustrative example (not marketing)</li>
+                        <li><strong>Updated all pages</strong> with consistent navigation and status warnings</li>
+                        <li><strong>Clarified experimental status</strong> throughout documentation</li>
+                        <li><strong>Removed misleading claims</strong> about production readiness</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Version 0.1.0 – January 2025 (Original)</h2>
+                    <p><em>Initial publication</em></p>
+                    <ul>
+                        <li>Initial publication of the Sparkle Protocol whitepaper</li>
+                        <li>Added technical implementation analysis and practical implementation guide</li>
+                        <li>Added formal security analysis (theoretical; not peer-reviewed)</li>
+                        <li>Documented conceptual SDK API and coordinator behavior</li>
+                        <li>Published SIP‑3 draft for Lightning‑atomic NFT trades</li>
+                        <li>Created protocol comparison with BRC-20, GBRC-721, Runes, Stamps</li>
+                        <li>Published vision and roadmap document</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Key Changes Summary</h2>
+
+                    <h3>Documentation Philosophy Change</h3>
+                    <p>Version 0.2.0 represents a fundamental shift from promotional to educational documentation:</p>
+                    <ul>
+                        <li><strong>Before:</strong> Presented as upcoming protocol with implied production readiness</li>
+                        <li><strong>After:</strong> Clearly labeled as experimental research with no production implementation</li>
+                    </ul>
+
+                    <h3>Content Additions</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>New Content</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px;">Recursive Inscriptions Guide</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Practical implementation with working code</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px;">Alternatives Page</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Honest comparison of production options</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px;">Reading Paths</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Structured navigation for different audiences</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px;">Critical Self-Assessment</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Transparent documentation of limitations</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px;">Glossary</td>
+                                <td style="border: 1px solid #000; padding: 10px;">Clear definitions of technical terms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Clarity Improvements</h3>
+                    <ul>
+                        <li>Added explicit "testnet only" warnings throughout</li>
+                        <li>Clarified no production implementation exists</li>
+                        <li>Distinguished between working techniques (recursive inscriptions) and theoretical proposals (Lightning integration)</li>
+                        <li>Added "You are here" navigation context on spec pages</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Future Considerations</h2>
+
+                    <p>Potential updates that may be added in future versions:</p>
+                    <ul>
+                        <li>Interactive cost calculator for inscription planning</li>
+                        <li>Code repository with working recursive inscription examples</li>
+                        <li>Video tutorials for practical techniques</li>
+                        <li>Community contributions section (if community develops)</li>
+                        <li>Migration guides from theoretical to practical implementations</li>
+                    </ul>
+
+                    <div class="warning-box-red">
+                        <p><strong>Note:</strong> As Sparkle Protocol has no active development team or roadmap, future updates to this documentation may be limited or non-existent. The protocol exists primarily as a research artifact and educational resource.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h2>Version Numbering</h2>
+
+                    <p>This documentation uses semantic versioning:</p>
+                    <ul>
+                        <li><strong>Major version (X.0.0):</strong> Fundamental changes to protocol design or documentation structure</li>
+                        <li><strong>Minor version (0.X.0):</strong> Significant content additions or reorganization</li>
+                        <li><strong>Patch version (0.0.X):</strong> Minor corrections, typos, clarifications</li>
+                    </ul>
+
+                    <p>Current version: <strong>0.3.0</strong></p>
+                </div>
+            </section>
+
+            <section class="related-docs">
+                <h2>Related Documents</h2>
+                <ul>
+                    <li><a href="index.html">Homepage</a> – Overview and reading paths</li>
+                    <li><a href="README.md">README</a> – Repository documentation</li>
+                    <li><a href="SECURITY.md">Security Policy</a> – Security considerations</li>
+                    <li><a href="vision.html">Vision & Roadmap</a> – Future possibilities (theoretical)</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a></p>
+    </footer>
+</body>
+</html>

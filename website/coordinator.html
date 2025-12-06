@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Coordinator API - Sparkle Protocol</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="icon" type="image/png" href="images/sparkle-logo.png">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <div class="logo"><img src="images/sparkle-logo.png" alt="" class="logo-icon">Sparkle Protocol</div>
+            <div class="nav-wrapper">
+                <div class="nav-row">
+                    <ul class="internal-nav">
+                        <li><a href="index.html#abstract">Abstract</a></li>
+                        <li><a href="index.html#specification">Specification</a></li>
+                        <li><a href="index.html#economics">Economics</a></li>
+                        <li><a href="index.html#marketplace">Marketplace</a></li>
+                        <li><a href="index.html#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="nav-row">
+                    <ul class="external-nav">
+                        <li><a href="whitepaper.html">Whitepaper</a></li>
+                        <li><a href="practical-implementation.html">Guide</a></li>
+                        <li><a href="formal-proofs.html">Proofs</a></li>
+                        <li><a href="developer-sdk.html">SDK</a></li>
+                        <li><a href="protocol-comparison.html">Compare</a></li>
+                        <li><a href="vision.html">Vision</a></li>
+                        <li><a href="technical-reality.html">Analysis</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main>
+        <header class="document-header">
+            <h1>Coordinator API</h1>
+            <p class="subtitle">Integration Documentation for Sparkle Trade Coordinators</p>
+            <p class="meta">API Version 1.0 | Status: Specification Only</p>
+        </header>
+
+        <section>
+            <div style="background: #FEF3C7; border: 2px solid #F59E0B; padding: 20px; margin-bottom: 20px;">
+                <h3 style="color: #B45309; margin-top: 0;">Architecture Update (v0.3.0)</h3>
+                <p style="margin-bottom: 10px;">
+                    <strong>Sparkle Protocol has evolved to a fully decentralized architecture.</strong>
+                </p>
+                <p style="margin-bottom: 10px;">
+                    Instead of a centralized coordinator server, v0.3.0 uses:
+                </p>
+                <ul style="margin-bottom: 10px;">
+                    <li><strong>Nostr Relays:</strong> Orders published as NIP-15 product events</li>
+                    <li><strong>NIP-04 Encrypted DMs:</strong> Peer-to-peer trade negotiation</li>
+                    <li><strong>NIP-07 Browser Wallets:</strong> Secure signing via Alby, nos2x</li>
+                    <li><strong>Taproot Atomic Swaps:</strong> On-chain settlement without custody</li>
+                </ul>
+                <p>
+                    <a href="swap.html" style="color: #B45309; font-weight: bold;">Try the new Serverless Swap Interface</a>
+                </p>
+            </div>
+
+            <h2>1. Overview (Legacy Coordinator Model)</h2>
+            <p>This page documents the original coordinator API concept. A Sparkle coordinator is a service that facilitates Lightning/Spark-based Ordinal trades. The coordinator:</p>
+            <ol>
+                <li>Accepts a <code>sparkle_checkout</code> object</li>
+                <li>Validates pricing and inscription ownership</li>
+                <li>Generates Lightning/Spark invoice</li>
+                <li>Monitors for payment completion</li>
+                <li>Executes on-chain Ordinal transfer</li>
+            </ol>
+            <p><strong>Note:</strong> This documentation describes a legacy API specification. The current implementation uses decentralized Nostr-based coordination instead.</p>
+        </section>
+
+        <section>
+            <h2>2. API Endpoints</h2>
+
+            <h3>2.1 POST /api/checkout/prepare</h3>
+            <p>Initiates a Lightning/Spark checkout for an Ordinal inscription.</p>
+
+            <h4>Request Body</h4>
+            <pre><code>{
+  "p": "sparkle",
+  "op": "checkout",
+  "version": 1,
+  "inscription_id": "abc123...i0",
+  "collection_ref": "def456...i0",
+  "buyer": {
+    "ord_address": "bc1p...buyer...",
+    "lightning_address": "buyer@example.com"
+  },
+  "network": "spark",
+  "max_total_sats": 1500000,
+  "pricing": {
+    "seller_sats": 1400000,
+    "creator_royalty_sats": 20000,
+    "market_fee_sats": 30000,
+    "estimated_l1_fee_sats": 50000
+  },
+  "market": {
+    "id": "example.market",
+    "name": "Example Market"
+  },
+  "expiry_block": 900000
+}</code></pre>
+
+            <h4>Response</h4>
+            <pre><code>{
+  "checkout_id": "chk_1234567890",
+  "status": "pending_payment",
+  "invoice": "lnbc15000000...",
+  "expires_at": 1234567890,
+  "payment_request": {
+    "type": "spark",
+    "lightning_address": "coordinator@example.com",
+    "amount_sats": 1500000,
+    "memo": "Darkita #1234 via Sparkle"
+  }
+}</code></pre>
+
+            <h4>Error Responses</h4>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Status</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>400</td><td>Invalid checkout format or pricing mismatch</td></tr>
+                    <tr><td>404</td><td>Inscription not found or not listed for sale</td></tr>
+                    <tr><td>409</td><td>Inscription already sold or checkout in progress</td></tr>
+                </tbody>
+            </table>
+
+            <h3>2.2 POST /api/checkout/status</h3>
+            <p>Retrieves the current status of an ongoing checkout.</p>
+
+            <h4>Request Body</h4>
+            <pre><code>{
+  "checkout_id": "chk_1234567890"
+}</code></pre>
+
+            <h4>Response</h4>
+            <pre><code>{
+  "checkout_id": "chk_1234567890",
+  "status": "confirmed",
+  "inscription_id": "abc123...i0",
+  "payment": {
+    "received_sats": 1500000,
+    "confirmed_at": 1234567890
+  },
+  "transfer": {
+    "txid": "fedcba987654321...",
+    "vout": 0,
+    "confirmations": 2
+  }
+}</code></pre>
+
+            <h4>Status Values</h4>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Status</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>pending_payment</td><td>Awaiting Lightning payment</td></tr>
+                    <tr><td>paid</td><td>Payment received, preparing transfer</td></tr>
+                    <tr><td>broadcast</td><td>Transfer transaction broadcast to network</td></tr>
+                    <tr><td>confirmed</td><td>Transfer confirmed on-chain</td></tr>
+                    <tr><td>failed</td><td>Checkout failed (includes reason)</td></tr>
+                    <tr><td>expired</td><td>Checkout expired without payment</td></tr>
+                </tbody>
+            </table>
+
+            <h3>2.3 GET /api/health</h3>
+            <p>Health check endpoint for monitoring.</p>
+
+            <h4>Response</h4>
+            <pre><code>{
+  "status": "ok",
+  "version": "1.0.0",
+  "network": "mainnet",
+  "lightning": {
+    "connected": true,
+    "node_id": "03abc..."
+  },
+  "bitcoin": {
+    "connected": true,
+    "block_height": 900000
+  }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>3. Implementation Requirements</h2>
+
+            <h3>3.1 Validation</h3>
+            <p>Coordinators MUST validate incoming checkout requests:</p>
+            <ul>
+                <li>Verify JSON structure matches <code>sparkle_checkout</code> specification</li>
+                <li>Confirm <code>max_total_sats</code> equals sum of pricing fields</li>
+                <li>Verify inscription ownership (seller controls UTXO)</li>
+                <li>Validate royalty against genesis declaration</li>
+                <li>Ensure inscription is not locked in another checkout</li>
+            </ul>
+
+            <h3>3.2 Lightning Integration</h3>
+            <p>Coordinators MUST handle Lightning payments:</p>
+            <ul>
+                <li>Generate invoice for <code>max_total_sats</code> amount</li>
+                <li>For Spark network: Use UMA protocol for addressing</li>
+                <li>For ln-mainnet: Standard BOLT11 invoice</li>
+                <li>Monitor for payment within expiry window</li>
+                <li>Handle partial payments appropriately</li>
+            </ul>
+
+            <h3>3.3 Ordinal Transfer</h3>
+            <p>Coordinators MUST execute on-chain transfers:</p>
+            <ul>
+                <li>Construct transaction with inscription input</li>
+                <li>Output to buyer's <code>ord_address</code></li>
+                <li>Include appropriate fee for timely confirmation</li>
+                <li>Broadcast and monitor for confirmations</li>
+                <li>Support RBF if initial fee is insufficient</li>
+            </ul>
+
+            <h3>3.4 Fee Distribution</h3>
+            <p>Coordinators MUST distribute funds correctly:</p>
+            <ul>
+                <li>Send <code>seller_sats</code> to seller</li>
+                <li>Send <code>creator_royalty_sats</code> to creator</li>
+                <li>Retain <code>market_fee_sats</code> as coordinator fee</li>
+                <li>Use <code>estimated_l1_fee_sats</code> for on-chain transfer</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Example Integration</h2>
+            <pre><code>// JavaScript Example
+
+// 1. Prepare checkout
+const checkout = {
+  p: "sparkle",
+  op: "checkout",
+  version: 1,
+  inscription_id: "abc123...i0",
+  collection_ref: "def456...i0",
+  buyer: {
+    ord_address: "bc1p...buyer...",
+    lightning_address: "alice@example.com"
+  },
+  network: "spark",
+  max_total_sats: 1500000,
+  pricing: {
+    seller_sats: 1400000,
+    creator_royalty_sats: 70000,
+    market_fee_sats: 20000,
+    estimated_l1_fee_sats: 10000
+  }
+};
+
+// 2. Send to coordinator
+const response = await fetch('/api/checkout/prepare', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(checkout)
+});
+
+const { checkout_id, invoice } = await response.json();
+
+// 3. Poll for status
+const checkStatus = async () => {
+  const status = await fetch('/api/checkout/status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ checkout_id })
+  });
+
+  const result = await status.json();
+
+  if (result.status === 'confirmed') {
+    console.log('Transfer complete:', result.transfer.txid);
+  } else if (result.status !== 'failed') {
+    setTimeout(checkStatus, 5000);
+  }
+};
+
+checkStatus();</code></pre>
+        </section>
+
+        <section class="related-docs">
+            <h2>5. Related Documentation</h2>
+            <ul>
+                <li><a href="spec.html">Technical Specification</a> - JSON schema definitions</li>
+                <li><a href="spec.html#sparkle_checkout">Checkout Schema</a> - Complete field reference</li>
+                <li><a href="spec.html#sparkle_swap">Sparkle Swap</a> - Trustless atomic swap specification</li>
+                <li><a href="roadmap.html">Roadmap</a> - Implementation timeline</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="swap.html">Taproot Swap</a></p>
+    </footer>
+</body>
+</html>

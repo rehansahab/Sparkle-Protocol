@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Roadmap - Sparkle Protocol</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="icon" type="image/png" href="images/sparkle-logo.png">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/sparkle-logo.png" alt="" class="logo-icon">
+                SPARKLE PROTOCOL
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="concept.html">Concept</a></li>
+                <li><a href="spec.html">Specification</a></li>
+                <li><a href="coordinator.html">API</a></li>
+                <li><a href="roadmap.html" class="active">Roadmap</a></li>
+                <li><a href="darkita.html">Example</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main>
+        <header class="document-header">
+            <h1>Development Roadmap</h1>
+            <p class="subtitle">Timeline and Current Status of Sparkle Protocol</p>
+            <p class="meta">Last Updated: December 2025</p>
+        </header>
+
+        <section>
+            <h2>1. Current Status</h2>
+            <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+                <p><strong>Status: Core Protocol Implemented</strong></p>
+                <p>TypeScript reference implementation complete and verified. Taproot atomic swaps working. Ready for testnet deployment.</p>
+            </div>
+            <p>Sparkle Protocol has completed its core implementation phase. The Sparkle Swap mechanism is now a working TypeScript library with full Taproot script support, claim and refund transaction builders, and comprehensive test coverage.</p>
+
+            <h3>1.1 Completed Work</h3>
+            <ul>
+                <li>Specification v1 drafted and published</li>
+                <li>Sparkle Swap trustless atomic swap mechanism designed</li>
+                <li>Metadata standards for Lightning-aware Ordinals defined</li>
+                <li>Documentation website published</li>
+                <li><strong style="color: #2e7d32;">TypeScript reference implementation complete</strong></li>
+                <li><strong style="color: #2e7d32;">Taproot hashlock + timelock scripts verified</strong></li>
+                <li><strong style="color: #2e7d32;">Claim and refund transaction builders working</strong></li>
+                <li><strong style="color: #2e7d32;">All cryptographic tests passing</strong></li>
+            </ul>
+
+            <h3>1.2 Recently Completed</h3>
+            <ul>
+                <li><strong style="color: #2e7d32;">Lightning invoice integration (BOLT11 decoding)</strong></li>
+                <li><strong style="color: #2e7d32;">NIP-07 wallet integration (Alby, nos2x)</strong></li>
+                <li><strong style="color: #2e7d32;">Bitcoin wallet integration (Unisat, Xverse)</strong></li>
+                <li><strong style="color: #2e7d32;">Secure frontend (sparkle-swap.js) - no private key input</strong></li>
+                <li><strong style="color: #2e7d32;">CLI tool for testnet swap execution</strong></li>
+            </ul>
+
+            <h3>1.3 Next Steps</h3>
+            <ul>
+                <li>First manual testnet swap execution</li>
+                <li>Production coordinator implementation</li>
+                <li>Marketplace integrations</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. Development Phases</h2>
+
+            <h3>2.1 Phase 0: Foundation (Completed)</h3>
+            <p>Basic protocol design and specification.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Draft Sparkle Protocol v1 specification</td><td>Complete</td></tr>
+                    <tr><td>Define JSON schemas (genesis, child, checkout)</td><td>Complete</td></tr>
+                    <tr><td>Create Darkita reference collection design</td><td>Complete</td></tr>
+                    <tr><td>Publish documentation</td><td>Complete</td></tr>
+                </tbody>
+            </table>
+            <p><em>Completed: January 2025</em></p>
+
+            <h3>2.2 Phase 1: Core Implementation (Complete)</h3>
+            <p>Build working Sparkle Swap transaction library.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Taproot hashlock script (buyer claim path)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Taproot timelock script (seller refund path)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Claim transaction builder</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Refund transaction builder</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Cryptographic verification tests</td><td style="color: #2e7d32;">Complete</td></tr>
+                </tbody>
+            </table>
+            <p><em>Completed: December 2025</em></p>
+
+            <h3>2.3 Phase 1b: Wallet Integration (Complete)</h3>
+            <p>Browser wallet integrations for secure signing without private key exposure.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Lightning invoice integration (BOLT11)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>NIP-07 Nostr wallet (Alby, nos2x)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Bitcoin wallet (Unisat, Xverse)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>Secure frontend (swap.html)</td><td style="color: #2e7d32;">Complete</td></tr>
+                    <tr><td>CLI tool for testnet swaps</td><td style="color: #2e7d32;">Complete</td></tr>
+                </tbody>
+            </table>
+            <p><em>Completed: December 2025</em></p>
+
+            <h3>2.4 Phase 1c: Testnet Demo (In Progress)</h3>
+            <p>Execute first real testnet swaps.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>First manual testnet swap</td><td>Next</td></tr>
+                    <tr><td>Demo checkout flow</td><td>Pending</td></tr>
+                    <tr><td>Coordinator stub API</td><td>Pending</td></tr>
+                </tbody>
+            </table>
+            <p><em>Target: Q1 2025</em></p>
+
+            <h3>2.5 Phase 2: Lightning Integration (Planned)</h3>
+            <p>Connect real Lightning/Spark payment infrastructure.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Lightning integration (LND, CLN, Eclair, LDK)</td><td>Planned</td></tr>
+                    <tr><td>Support LND backend option</td><td>Planned</td></tr>
+                    <tr><td>Testnet Ordinal trades with real Lightning</td><td>Planned</td></tr>
+                    <tr><td>Fee splitting implementation</td><td>Planned</td></tr>
+                </tbody>
+            </table>
+            <p><em>Target: Q2 2025</em></p>
+
+            <h3>2.6 Phase 3: Ecosystem Adoption (Planned)</h3>
+            <p>First wallet and marketplace integrations.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Partner with 1 wallet provider</td><td>Planned</td></tr>
+                    <tr><td>Partner with 1 marketplace</td><td>Planned</td></tr>
+                    <tr><td>Deploy Sparkle Swap on mainnet</td><td>Planned</td></tr>
+                    <tr><td>First real trades using Sparkle</td><td>Planned</td></tr>
+                </tbody>
+            </table>
+            <p><em>Target: Q3 2025</em></p>
+
+            <h3>2.7 Phase 4: Production Ready (Future)</h3>
+            <p>Multiple implementations and wider ecosystem adoption.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>3+ wallet integrations</td><td>Future</td></tr>
+                    <tr><td>3+ marketplace integrations</td><td>Future</td></tr>
+                    <tr><td>Open source coordinator reference</td><td>Future</td></tr>
+                    <tr><td>SDK for developers</td><td>Future</td></tr>
+                </tbody>
+            </table>
+            <p><em>Target: Q4 2025</em></p>
+
+            <h3>2.7 Phase 5: v2 Planning (Future)</h3>
+            <p>Enhanced features based on ecosystem feedback.</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Advanced trading features</td><td>Future</td></tr>
+                    <tr><td>Multi-signature support</td><td>Future</td></tr>
+                    <tr><td>Cross-chain bridges</td><td>Future</td></tr>
+                    <tr><td>Enhanced metadata standards</td><td>Future</td></tr>
+                </tbody>
+            </table>
+            <p><em>Target: 2026</em></p>
+        </section>
+
+        <section>
+            <h2>3. Near-Term Priorities</h2>
+            <p>The following tasks are prioritized for the next 30 days:</p>
+
+            <h3>3.1 Technical</h3>
+            <ul>
+                <li>Complete coordinator stub implementation</li>
+                <li>Deploy testnet inscriptions</li>
+                <li>Create interactive demonstration</li>
+            </ul>
+
+            <h3>3.2 Community</h3>
+            <ul>
+                <li>Gather feedback on v1 specification</li>
+                <li>Engage with wallet developers</li>
+                <li>Present to Lightning community</li>
+            </ul>
+
+            <h3>3.3 Documentation</h3>
+            <ul>
+                <li>Create developer tutorials</li>
+                <li>Record demonstration videos</li>
+                <li>Publish integration guides</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Contributing</h2>
+            <p>Sparkle is an open protocol seeking contributors, feedback, and early adopters. There are several ways to participate:</p>
+
+            <h3>4.1 For Developers</h3>
+            <p>Review the specification, suggest improvements, and build integrations. The complete technical specification is available at <a href="spec.html">spec.html</a> and the source code is hosted on <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a>.</p>
+
+            <h3>4.2 For Wallet and Marketplace Operators</h3>
+            <p>Consider supporting Sparkle checkout in your platform. The <a href="coordinator.html">Coordinator API</a> documentation provides integration details.</p>
+
+            <h3>4.3 For Community Members</h3>
+            <p>Provide feedback on the specification, test demonstrations when available, and help spread awareness of the protocol.</p>
+        </section>
+
+        <section class="related-docs">
+            <h2>5. Related Documentation</h2>
+            <ul>
+                <li><a href="spec.html">Technical Specification</a> - Complete JSON schemas and validation rules</li>
+                <li><a href="coordinator.html">Coordinator API</a> - Integration documentation</li>
+                <li><a href="darkita.html">Example Collection</a> - Reference implementation</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Technical Specification - Sparkle Protocol</title>
+    <link rel="stylesheet" href="css/academic-ultra-clean.css">
+    <link rel="stylesheet" href="css/navigation-professional.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="icon" type="image/png" href="images/sparkle-logo.png">
+    <link rel="stylesheet" href="css/responsive-enhancements.css">
+</head>
+<body>
+    <nav class="academic-nav">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/sparkle-logo.png" alt="" class="logo-icon">
+                SPARKLE PROTOCOL
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="concept.html">Concept</a></li>
+                <li><a href="spec.html" class="active">Specification</a></li>
+                <li><a href="coordinator.html">API</a></li>
+                <li><a href="roadmap.html">Roadmap</a></li>
+                <li><a href="darkita.html">Example</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <main>
+        <header class="document-header">
+            <h1>Technical Specification</h1>
+            <p class="subtitle">Sparkle Protocol v0.3.0 - JSON Schemas and Validation Rules</p>
+            <p class="meta">Version 0.3.0 | Last Updated: December 2025</p>
+        </header>
+
+        <section>
+            <h2>Table of Contents</h2>
+            <ol>
+                <li><a href="#sparkle_genesis">sparkle_genesis - Collection Metadata</a></li>
+                <li><a href="#sparkle_child">sparkle_child - Per-Inscription Metadata</a></li>
+                <li><a href="#sparkle_checkout">sparkle_checkout - Lightning Checkout</a></li>
+                <li><a href="#validation">Validation Rules</a></li>
+                <li><a href="#sparkle_swap">Sparkle Swap - Trustless Atomic Swaps</a></li>
+                <li><a href="#implementation">Implementation Guidelines</a></li>
+            </ol>
+        </section>
+
+        <section id="sparkle_genesis">
+            <h2>1. sparkle_genesis</h2>
+            <p>Collection-level metadata inscribed once per collection. This inscription acts as the canonical source for collection information.</p>
+
+            <h3>1.1 JSON Schema</h3>
+            <pre><code>{
+  "p": "sparkle",
+  "op": "genesis",
+  "version": 1,
+  "collection": {
+    "name": "Darkita",
+    "symbol": "DARKITA",
+    "description": "10K PFP collection with Lightning-ready checkout.",
+    "supply": 10000,
+    "creator": {
+      "name": "Creator Name",
+      "website": "https://example.com",
+      "pubkey": "optional-hex-or-nostr-pubkey"
+    }
+  },
+  "spark": {
+    "enabled": true,
+    "networks": ["spark", "ln-mainnet"]
+  },
+  "royalties": {
+    "bps": 500,
+    "recipients": [
+      {
+        "label": "creator",
+        "lightning_address": "creator@example.com",
+        "ln_node_pubkey": "optional-ln-node-pubkey"
+      }
+    ]
+  }
+}</code></pre>
+
+            <h3>1.2 Field Definitions</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>p</code></td><td>string</td><td>Yes</td><td>Protocol identifier. Must be "sparkle".</td></tr>
+                    <tr><td><code>op</code></td><td>string</td><td>Yes</td><td>Operation type. Must be "genesis".</td></tr>
+                    <tr><td><code>version</code></td><td>integer</td><td>Yes</td><td>Protocol version. Currently 1.</td></tr>
+                    <tr><td><code>collection.name</code></td><td>string</td><td>Yes</td><td>Human-readable collection name.</td></tr>
+                    <tr><td><code>collection.symbol</code></td><td>string</td><td>Yes</td><td>Short uppercase ticker (3-10 characters).</td></tr>
+                    <tr><td><code>collection.supply</code></td><td>integer</td><td>Yes</td><td>Total number of NFTs. Soft commitment.</td></tr>
+                    <tr><td><code>spark.enabled</code></td><td>boolean</td><td>Yes</td><td>Lightning/Spark checkout support.</td></tr>
+                    <tr><td><code>royalties.bps</code></td><td>integer</td><td>No</td><td>Royalty in basis points (500 = 5%).</td></tr>
+                </tbody>
+            </table>
+
+            <h3>1.3 Usage Notes</h3>
+            <ul>
+                <li>Inscribe this JSON as the first inscription for your collection</li>
+                <li>The resulting inscription ID becomes the collection reference for all child NFTs</li>
+                <li>Indexers scan for <code>p: "sparkle", op: "genesis"</code> to discover collections</li>
+                <li>Supply is a soft commitment; enforcement is social, not consensus-level</li>
+            </ul>
+        </section>
+
+        <section id="sparkle_child">
+            <h2>2. sparkle_child</h2>
+            <p>Per-inscription metadata attached to each NFT in the collection.</p>
+
+            <h3>2.1 JSON Schema</h3>
+            <pre><code>{
+  "p": "sparkle",
+  "op": "child",
+  "version": 1,
+  "collection_ref": "&lt;GENESIS_INSCRIPTION_ID&gt;",
+  "token": {
+    "id": 123,
+    "name": "Darkita #123"
+  },
+  "media": {
+    "type": "image/png",
+    "recursive_parents": [
+      "&lt;PARENT_INSCRIPTION_ID_1&gt;",
+      "&lt;PARENT_INSCRIPTION_ID_2&gt;"
+    ]
+  },
+  "traits": {
+    "Background": "Yellow",
+    "Eyes": "Glowing",
+    "Accessory": "None"
+  }
+}</code></pre>
+
+            <h3>2.2 Field Definitions</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>collection_ref</code></td><td>string</td><td>Yes</td><td>Genesis inscription ID this NFT belongs to.</td></tr>
+                    <tr><td><code>token.id</code></td><td>integer</td><td>Yes</td><td>1-based index within collection (1 to supply).</td></tr>
+                    <tr><td><code>token.name</code></td><td>string</td><td>No</td><td>Display name for this specific NFT.</td></tr>
+                    <tr><td><code>media.type</code></td><td>string</td><td>No</td><td>MIME type of embedded media.</td></tr>
+                    <tr><td><code>media.recursive_parents</code></td><td>array</td><td>No</td><td>Parent inscription IDs for recursive art.</td></tr>
+                    <tr><td><code>traits</code></td><td>object</td><td>No</td><td>Key-value pairs for marketplace filtering.</td></tr>
+                </tbody>
+            </table>
+
+            <h3>2.3 Usage Notes</h3>
+            <ul>
+                <li>Minimal valid child requires only <code>collection_ref</code> and <code>token.id</code></li>
+                <li>Recursive parents enable cost-efficient collections through trait inscription reuse</li>
+                <li>Traits are optional but improve marketplace discovery</li>
+            </ul>
+        </section>
+
+        <section id="sparkle_checkout">
+            <h2>3. sparkle_checkout</h2>
+            <p>Lightning/Spark checkout object agreed upon by wallets, markets, and coordinators before payment.</p>
+
+            <h3>3.1 JSON Schema</h3>
+            <pre><code>{
+  "p": "sparkle",
+  "op": "checkout",
+  "version": 1,
+  "inscription_id": "&lt;INSCRIPTION_ID_BEING_BOUGHT&gt;",
+  "collection_ref": "&lt;GENESIS_INSCRIPTION_ID&gt;",
+  "buyer": {
+    "ord_address": "bc1p...buyer...",
+    "lightning_address": "buyer@example.com",
+    "ln_node_pubkey": "optional-ln-node-pubkey"
+  },
+  "network": "spark",
+  "max_total_sats": 1500000,
+  "pricing": {
+    "seller_sats": 1400000,
+    "creator_royalty_sats": 20000,
+    "market_fee_sats": 30000,
+    "estimated_l1_fee_sats": 50000
+  },
+  "market": {
+    "id": "example.market",
+    "name": "Example Market"
+  },
+  "expiry_block": 900000,
+  "buyer_sig": "&lt;optional-signature&gt;"
+}</code></pre>
+
+            <h3>3.2 Field Definitions</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>inscription_id</code></td><td>string</td><td>Yes</td><td>Ordinal inscription being purchased.</td></tr>
+                    <tr><td><code>buyer.ord_address</code></td><td>string</td><td>Yes</td><td>Bitcoin address for Ordinal delivery.</td></tr>
+                    <tr><td><code>network</code></td><td>string</td><td>Yes</td><td>"spark" or "ln-mainnet".</td></tr>
+                    <tr><td><code>max_total_sats</code></td><td>integer</td><td>Yes</td><td>Maximum sats buyer agrees to pay.</td></tr>
+                    <tr><td><code>pricing.seller_sats</code></td><td>integer</td><td>Yes</td><td>Amount to seller.</td></tr>
+                    <tr><td><code>pricing.creator_royalty_sats</code></td><td>integer</td><td>Yes</td><td>Creator royalty amount.</td></tr>
+                    <tr><td><code>pricing.market_fee_sats</code></td><td>integer</td><td>Yes</td><td>Marketplace fee.</td></tr>
+                    <tr><td><code>pricing.estimated_l1_fee_sats</code></td><td>integer</td><td>Yes</td><td>Estimated on-chain fee.</td></tr>
+                    <tr><td><code>expiry_block</code></td><td>integer</td><td>No</td><td>Block height when checkout expires.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="validation">
+            <h2>4. Validation Rules</h2>
+
+            <h3>4.1 Rule 1: Sum Check</h3>
+            <p><code>max_total_sats</code> MUST equal the sum of all fields in <code>pricing</code>:</p>
+            <pre><code>max_total_sats = seller_sats + creator_royalty_sats + market_fee_sats + estimated_l1_fee_sats</code></pre>
+
+            <h3>4.2 Rule 2: Royalty Check</h3>
+            <p><code>creator_royalty_sats</code> SHOULD be calculated based on the genesis <code>bps</code> value. Markets SHOULD warn if royalty exceeds genesis declaration.</p>
+
+            <h3>4.3 Rule 3: Display Requirement</h3>
+            <p>Wallets MUST display complete pricing breakdown before payment confirmation.</p>
+
+            <h3>4.4 Rule 4: Network Match</h3>
+            <p>Payment must be processed on the network specified in the <code>network</code> field.</p>
+        </section>
+
+        <section id="sparkle_swap">
+            <h2>5. Sparkle Swap - Trustless Atomic Swaps</h2>
+            <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+                <strong>Implementation Status: COMPLETE</strong><br>
+                TypeScript reference implementation available. All tests passing. Transaction sizes: Claim 142 vbytes, Refund 138 vbytes.
+            </div>
+            <p>Sparkle Swap enables trustless ordinal trading using Taproot hashlock scripts. The atomic swap guarantees that either both parties get what they want, or nothing happens.</p>
+
+            <h3>5.1 Security Model</h3>
+            <ul>
+                <li><strong>Non-custodial:</strong> Coordinator never holds keys or funds</li>
+                <li><strong>Delta-safe timelocks:</strong> Refund timeout = 2x claim window to prevent race conditions</li>
+                <li><strong>Buyer deposit:</strong> 1% non-refundable deposit prevents free option exploit</li>
+                <li><strong>Atomic:</strong> Lightning payment reveals preimage that unlocks on-chain ordinal</li>
+            </ul>
+
+            <h3>5.2 Taproot Script Structure</h3>
+            <pre><code>// Buyer Claim Path (hashlock)
+OP_SHA256 &lt;payment_hash&gt; OP_EQUALVERIFY &lt;buyer_pubkey&gt; OP_CHECKSIG
+
+// Seller Refund Path (timelock)
+&lt;locktime&gt; OP_CHECKLOCKTIMEVERIFY OP_DROP &lt;seller_pubkey&gt; OP_CHECKSIG</code></pre>
+
+            <h3>5.3 Trade Flow</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Step</th><th>Actor</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Seller</td><td>Creates listing with ordinal details and price</td></tr>
+                    <tr><td>2</td><td>Buyer</td><td>Accepts listing and pays 1% deposit via Lightning</td></tr>
+                    <tr><td>3</td><td>Seller</td><td>Sends ordinal to Taproot escrow address</td></tr>
+                    <tr><td>4</td><td>Buyer</td><td>Pays full price via Lightning, learns preimage</td></tr>
+                    <tr><td>5</td><td>Buyer</td><td>Claims ordinal on-chain using preimage + signature</td></tr>
+                </tbody>
+            </table>
+
+            <h3>5.4 Delta-Safety Guarantee</h3>
+            <p>To prevent race conditions during blockchain reorgs:</p>
+            <ul>
+                <li>Buyer has <code>claimWindowBlocks</code> (default: 144 blocks / ~24 hours) to claim after paying Lightning</li>
+                <li>Seller refund only available after <code>2 × claimWindowBlocks</code> (default: 288 blocks / ~48 hours)</li>
+                <li>This 2x safety margin ensures buyer can survive mempool congestion and minor reorgs</li>
+            </ul>
+
+            <h3>5.5 Lightning Compatibility</h3>
+            <p>Sparkle Swap is Lightning-agnostic and works with:</p>
+            <ul>
+                <li>LND (Lightning Labs)</li>
+                <li>Core Lightning / CLN (Blockstream)</li>
+                <li>Eclair (ACINQ)</li>
+                <li>LDK (Lightning Dev Kit)</li>
+                <li>Any BOLT-compliant Lightning implementation</li>
+            </ul>
+        </section>
+
+        <section id="implementation">
+            <h2>6. Implementation Guidelines</h2>
+
+            <h3>6.1 For Creators</h3>
+            <ol>
+                <li>Inscribe <code>sparkle_genesis</code> JSON as first collection inscription</li>
+                <li>Record the genesis inscription ID</li>
+                <li>Reference genesis ID in all <code>sparkle_child</code> inscriptions</li>
+                <li>Set <code>spark.enabled: true</code> if supporting Lightning checkout</li>
+            </ol>
+
+            <h3>6.2 For Marketplaces</h3>
+            <ol>
+                <li>Index inscriptions containing <code>p: "sparkle"</code></li>
+                <li>Build collection structures from genesis references</li>
+                <li>Generate <code>sparkle_checkout</code> objects for listings</li>
+                <li>Integrate with Sparkle Swap coordinator for trustless trades</li>
+            </ol>
+
+            <h3>6.3 For Wallets</h3>
+            <ol>
+                <li>Parse and validate <code>sparkle_checkout</code> objects</li>
+                <li>Display complete fee breakdown to users</li>
+                <li>Warn if fees exceed genesis royalty declaration</li>
+                <li>Process Lightning payments per network field</li>
+            </ol>
+
+            <h3>6.4 For Indexers</h3>
+            <ol>
+                <li>Scan for inscriptions with <code>p: "sparkle"</code></li>
+                <li>Build collection graphs from <code>collection_ref</code> references</li>
+                <li>Track child counts against declared supply</li>
+                <li>Identify Lightning-enabled collections</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>References</h2>
+            <ul>
+                <li><a href="coordinator.html">Coordinator API Documentation</a></li>
+                <li><a href="darkita.html">Example Collection Implementation</a></li>
+                <li><a href="https://docs.ordinals.com">Ordinals Protocol Documentation</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="document-footer">
+        <p>Sparkle Protocol v0.3.0 | Core Protocol Implemented</p>
+        <p><a href="https://github.com/ProtocolSparkle/Sparkles-Protocol">GitHub</a> | <a href="https://x.com/SparkleProtocol">X/Twitter</a> | <a href="swap.html">Taproot Swap</a></p>
+    </footer>
+</body>
+</html>
