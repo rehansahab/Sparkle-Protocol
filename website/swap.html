@@ -67,19 +67,6 @@
                 padding: 15px 10px !important;
             }
 
-            /* Fix back button - relative position on mobile */
-            .back-button {
-                position: relative !important;
-                top: auto !important;
-                left: auto !important;
-                display: inline-block !important;
-                margin: 10px 0 15px 0 !important;
-                z-index: 1 !important;
-                width: auto;
-                padding: 10px 15px !important;
-                font-size: 10pt !important;
-            }
-
             /* Hero section mobile */
             .hero {
                 margin-top: 10px !important;
@@ -417,23 +404,46 @@
         }
 
         @media (max-width: 768px) {
+            /* Navigation - highest z-index */
+            .academic-nav {
+                z-index: 9999 !important;
+                position: fixed !important;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+            }
+
             .mobile-menu-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
             }
 
             .academic-nav .container {
                 flex-wrap: wrap;
+                position: relative;
+                padding-right: 60px; /* Space for hamburger */
             }
 
             .nav-links {
                 display: none;
                 width: 100%;
                 flex-direction: column;
-                margin-top: 15px;
-                padding-top: 15px;
+                margin-top: 0;
+                padding: 0;
                 border-top: 1px solid #ccc;
+                background: #fff;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 9998;
             }
 
             .nav-links.active {
@@ -447,10 +457,27 @@
 
             .nav-links a {
                 display: block;
-                padding: 12px 15px;
+                padding: 14px 20px;
                 text-align: left;
-                min-height: 44px;
+                min-height: 48px;
                 border-bottom: 1px solid #eee;
+                background: #fff;
+            }
+
+            .nav-links a:hover {
+                background: #f5f5f5;
+            }
+
+            /* Back button - BELOW nav, not overlapping */
+            .back-button {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                display: inline-block !important;
+                margin: 15px 0 15px 10px !important;
+                z-index: 1 !important;
+                padding: 10px 15px !important;
+                font-size: 10pt !important;
             }
         }
 
@@ -690,11 +717,36 @@
     <script>
         function toggleMobileMenu() {
             const nav = document.getElementById('navLinks');
+            const btn = document.querySelector('.mobile-menu-toggle');
             nav.classList.toggle('active');
+            // Update button text
+            btn.textContent = nav.classList.contains('active') ? '✕' : '☰';
         }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navLinks');
+            const btn = document.querySelector('.mobile-menu-toggle');
+            if (nav && nav.classList.contains('active')) {
+                if (!nav.contains(e.target) && !btn.contains(e.target)) {
+                    nav.classList.remove('active');
+                    btn.textContent = '☰';
+                }
+            }
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('navLinks');
+                const btn = document.querySelector('.mobile-menu-toggle');
+                if (nav) nav.classList.remove('active');
+                if (btn) btn.textContent = '☰';
+            });
+        });
     </script>
 
-    <a href="index.html" class="back-button">Back to Home</a>
+    <a href="index.html" class="back-button">← Back to Home</a>
 
     <header class="hero" style="padding-top: 0;">
         <h1 class="title" style="font-size: 20pt; border: none;">Taproot Atomic Swap</h1>
