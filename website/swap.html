@@ -277,15 +277,16 @@
             }
 
             .grid-container {
-                padding: 0 5px;
+                padding: 0 8px;
             }
 
             .section {
-                padding: 10px 5px !important;
+                padding: 12px 8px !important;
             }
 
             .card {
-                padding: 12px;
+                padding: 14px;
+                border-width: 1px;
             }
 
             /* Offer specs - single column on very small */
@@ -326,7 +327,37 @@
             /* Security notice smaller */
             .security-notice {
                 font-size: 8pt;
-                padding: 8px 10px;
+                padding: 10px 12px;
+            }
+
+            /* Hamburger smaller on tiny screens */
+            .mobile-menu-toggle {
+                font-size: 20pt;
+                padding: 8px;
+            }
+        }
+
+        /* EXTRA SMALL (320px - older iPhones) */
+        @media (max-width: 320px) {
+            body {
+                padding-top: 65px !important;
+            }
+
+            .grid-container {
+                padding: 0 5px;
+            }
+
+            .card {
+                padding: 10px;
+            }
+
+            .btn, .btn-secondary, .btn-wallet {
+                font-size: 9pt !important;
+                padding: 10px 12px !important;
+            }
+
+            .hero .title {
+                font-size: 13pt !important;
             }
         }
 
@@ -362,17 +393,27 @@
             }
         }
 
-        /* MOBILE MENU TOGGLE */
+        /* MOBILE MENU TOGGLE - Clean minimal style */
         .mobile-menu-toggle {
             display: none;
             background: transparent;
-            border: 2px solid #000;
-            padding: 8px 12px;
-            font-size: 18pt;
+            border: none;
+            padding: 10px;
+            font-size: 22pt;
             cursor: pointer;
             min-width: 48px;
             min-height: 48px;
             line-height: 1;
+            color: #000;
+            transition: opacity 0.2s;
+        }
+
+        .mobile-menu-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .mobile-menu-toggle:active {
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
@@ -411,6 +452,11 @@
                 min-height: 44px;
                 border-bottom: 1px solid #eee;
             }
+        }
+
+        /* SMOOTH TRANSITIONS */
+        .card, .btn, .btn-secondary, .btn-wallet, .offer-item, .swap-card {
+            transition: all 0.2s ease;
         }
 
         .card { border: 1px solid #000; padding: 15px; margin-bottom: 20px; }
@@ -456,11 +502,11 @@
         }
         .btn-nostr:hover { background: #333; }
         .btn-bitcoin {
-            background: #fff;
-            color: #000;
-            border: 2px solid #000;
+            background: #F7931A;
+            color: #fff;
+            border: 2px solid #F7931A;
         }
-        .btn-bitcoin:hover { background: #f5f5f5; }
+        .btn-bitcoin:hover { background: #E8850F; border-color: #E8850F; }
 
         #userInfo p, #relayInfo p { margin: 5px 0; font-size: 10pt; }
         #userInfo code { font-size: 9pt; word-break: break-all; }

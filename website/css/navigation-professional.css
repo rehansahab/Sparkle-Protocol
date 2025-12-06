@@ -157,28 +157,29 @@
     border-bottom: 1px solid #eee;
 }
 
-/* Mobile Menu Toggle (Hidden by Default) */
+/* Mobile Menu Toggle (Hidden by Default) - Clean minimal style */
 .mobile-menu-toggle {
     display: none;
     background: transparent;
     color: #000;
     border: none;
-    padding: 8px;
+    padding: 10px;
     font-size: 24px;
     cursor: pointer;
     font-weight: normal;
     line-height: 1;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 48px;
+    min-height: 48px;
     -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.2s ease;
 }
 
 .mobile-menu-toggle:hover {
-    background: rgba(0, 0, 0, 0.04);
+    opacity: 0.7;
 }
 
 .mobile-menu-toggle:active {
-    background: rgba(0, 0, 0, 0.08);
+    opacity: 0.5;
 }
 
 /* Mobile Navigation */
