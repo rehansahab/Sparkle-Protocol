@@ -1,13 +1,20 @@
 /**
- * Sparkle Protocol v0.3.4 - Secure P2P Swap Instrument
+ * Sparkle Protocol v0.3.5 - Secure P2P Swap Instrument
  *
  * SECURITY: This module NEVER handles private keys.
  * All signing is delegated to browser wallet extensions.
  *
+ * v0.3.5 SECURITY FIXES (December 2024):
+ * - PSBT now correctly built for 2-leaf tree (hashlock + refund)
+ * - Control block includes sibling hash for merkle proof
+ * - tapMerkleRoot is TapBranch of both leaves, not single leaf
+ * - BOLT11 signature message hash corrected to spec (single SHA256)
+ * - Invoice payee binding enforced (must match counterparty)
+ *
  * v0.3.4 SECURITY FIXES (December 2024):
  * - Real EC point addition using @noble/secp256k1 (audited library)
  * - Taproot address correctly derived from script tree (BIP-341 compliant)
- * - BOLT11 signature verification using Schnorr signatures
+ * - BOLT11 signature verification using ECDSA recovery
  * - Fixed amount check to use swap.offer.price
  * - Increased MIN_FUNDING_CONFIRMATIONS from 1 to 2
  * - Real PSBT hex serialization (BIP-174/371)
@@ -39,7 +46,7 @@
  * - Bitcoin Wallets: PSBT signing via Unisat, Xverse, etc.
  *
  * @module SparkleSwap
- * @version 0.3.4
+ * @version 0.3.5
  */
 
 // ============================================================================
@@ -229,16 +236,16 @@ async function getCurrentBlockHeight() {
  * SECURITY: Verify BOLT11 invoice signature using recoverable ECDSA
  * Uses @noble/secp256k1 for signature verification
  *
- * BOLT11 signature format: 64-byte ECDSA signature + 1-byte recovery ID
- * Message: SHA256(SHA256(hrp_bytes) || SHA256(data_without_signature))
+ * BOLT11 spec (BOLT #11): Signature covers SHA256(hrp_bytes || data_5bit_words)
+ * where data_5bit_words is the timestamp + tagged fields as 5-bit values (one per byte)
  *
  * @param {string} invoice - Full BOLT11 invoice string
  * @param {Uint8Array} signatureBytes - 65-byte signature (64 sig + 1 recovery)
  * @param {string} hrp - Human readable part (prefix + amount)
- * @param {Uint8Array} dataBytes - Data part as bytes (without signature)
+ * @param {Array<number>} dataWords - Data part as 5-bit words (NOT converted to 8-bit)
  * @returns {Promise<{valid: boolean, recoveredPubkey: string|null}>}
  */
-async function verifyBolt11Signature(invoice, signatureBytes, hrp, dataBytes) {
+async function verifyBolt11Signature(invoice, signatureBytes, hrp, dataWords) {
   if (!window.nobleSecp256k1) {
     console.warn('SECURITY: Cannot verify BOLT11 signature - noble library not loaded');
     return { valid: false, recoveredPubkey: null, error: 'Library not loaded' };
@@ -252,20 +259,18 @@ async function verifyBolt11Signature(invoice, signatureBytes, hrp, dataBytes) {
     const recoveryId = signatureBytes[64];
 
     // 2. Compute the message hash per BOLT11 spec
-    // message = SHA256(SHA256(hrp) || SHA256(data))
+    // BOLT #11: message = SHA256(hrp_as_utf8 || data_5bit_words_as_bytes)
+    // Each 5-bit word becomes one byte in the message
     const hrpBytes = new TextEncoder().encode(hrp);
+    const dataBytes = new Uint8Array(dataWords); // 5-bit words as bytes
 
-    // Use Web Crypto for SHA256
-    const hrpHash = new Uint8Array(await crypto.subtle.digest('SHA-256', hrpBytes));
-    const dataHash = new Uint8Array(await crypto.subtle.digest('SHA-256', dataBytes));
+    // Concatenate hrp + data (NOT double-hashed)
+    const message = new Uint8Array(hrpBytes.length + dataBytes.length);
+    message.set(hrpBytes);
+    message.set(dataBytes, hrpBytes.length);
 
-    // Concatenate hashes
-    const combined = new Uint8Array(hrpHash.length + dataHash.length);
-    combined.set(hrpHash);
-    combined.set(dataHash, hrpHash.length);
-
-    // Final message hash
-    const messageHash = new Uint8Array(await crypto.subtle.digest('SHA-256', combined));
+    // Single SHA256 per BOLT11 spec
+    const messageHash = new Uint8Array(await crypto.subtle.digest('SHA-256', message));
 
     // 3. Try to recover the public key from signature
     const signature = secp.Signature.fromCompact(sig).addRecoveryBit(recoveryId);
@@ -391,11 +396,12 @@ async function decodeLightningInvoice(invoice) {
       const signatureBytes = new Uint8Array(convertBits(signatureWords, 5, 8, false));
 
       // Data to sign: timestamp + tagged fields (without signature)
+      // BOLT11 spec: message is SHA256(hrp || data_5bit_words_as_bytes)
+      // Each 5-bit word becomes one byte in the message (NOT converted to 8-bit)
       const dataWordsForSig = words.slice(0, words.length - 104);
-      const dataBytes = new Uint8Array(convertBits(dataWordsForSig, 5, 8, true));
 
-      // Verify signature
-      const sigResult = await verifyBolt11Signature(invoice, signatureBytes, hrp, dataBytes);
+      // Verify signature - pass 5-bit words directly, NOT converted to 8-bit
+      const sigResult = await verifyBolt11Signature(invoice, signatureBytes, hrp, dataWordsForSig);
       signatureValid = sigResult.valid;
       recoveredPayee = sigResult.recoveredPubkeyX || null;
 
@@ -631,6 +637,38 @@ async function validateInvoiceTimelock(invoice, swap) {
   // Store recovered payee pubkey for verification
   if (decoded.recoveredPayee) {
     swap.data.invoicePayee = decoded.recoveredPayee;
+  }
+
+  // SECURITY: Enforce invoice payee matches counterparty
+  // The invoice should be signed by the seller (Lightning payee = swap counterparty)
+  const expectedPayee = swap.data.sellerLightningPubkey ||
+                        swap.data.counterpartyLightningPubkey ||
+                        swap.data.scriptTree?.sellerPubkey;
+
+  if (decoded.recoveredPayee && expectedPayee) {
+    // Compare x-only pubkeys (strip prefix if present)
+    const recoveredX = decoded.recoveredPayee.replace(/^(02|03)/, '');
+    const expectedX = expectedPayee.replace(/^(02|03)/, '');
+
+    if (recoveredX.toLowerCase() !== expectedX.toLowerCase()) {
+      console.warn('SECURITY: Invoice payee mismatch!');
+      console.warn('  Expected:', expectedX.slice(0, 16) + '...');
+      console.warn('  Recovered:', recoveredX.slice(0, 16) + '...');
+
+      return {
+        valid: false,
+        message: 'SECURITY: Invoice payee does not match counterparty! ' +
+                 'This invoice may be from a third party. Refusing to proceed.',
+        payeeMismatch: true,
+        expectedPayee: expectedX,
+        actualPayee: recoveredX
+      };
+    }
+    console.log('SECURITY: Invoice payee matches expected counterparty');
+  } else if (decoded.recoveredPayee && !expectedPayee) {
+    // We have a payee but nothing to compare against - warn but allow
+    console.warn('SECURITY: Invoice payee recovered but no expected payee to compare');
+    console.warn('  Recovered payee:', decoded.recoveredPayee.slice(0, 16) + '...');
   }
 
   // SECURITY: Validate invoice network matches expected network
@@ -2759,29 +2797,56 @@ function encodeLE32(n) {
  * SECURITY: Build minimal PSBT for Taproot script-path spend
  * This produces a PSBT that can be signed by compatible wallets
  * Returns both structured data and hex-serialized PSBT (BIP-174)
+ *
+ * IMPORTANT: This is a 2-leaf tree (hashlock + refund), NOT single-leaf!
+ * - tapMerkleRoot = TapBranch(hashlockLeafHash, refundLeafHash)
+ * - controlBlock includes sibling hash for merkle proof
  */
 async function buildTaprootPsbt(claimData, swap) {
-  console.log('SECURITY: Building Taproot PSBT with verified data');
+  console.log('SECURITY: Building Taproot PSBT for 2-leaf script tree');
 
   // Use verified UTXO data if available
   const verifiedUtxo = swap?.data?.verifiedUtxo;
   const inputAmount = verifiedUtxo?.value || parseInt(claimData.input.amount);
   const scriptPubKeyHex = verifiedUtxo?.scriptPubKey || '';
 
-  // Get script data
+  // Get script data - BOTH leaves required for correct merkle root
   const hashlockScript = claimData.input.hashlockScript;
+  const refundScript = swap?.data?.verifiedScriptParams?.refundScript ||
+                       claimData.input.refundScript;
+
+  if (!refundScript) {
+    console.error('SECURITY: Missing refundScript - cannot build correct PSBT');
+    throw new Error('Missing refundScript for 2-leaf tree PSBT construction');
+  }
+
   const internalKey = claimData.input.internalKey ||
     '50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0'; // NUMS point
 
-  // Compute TapLeaf hash for the hashlock script
-  const tapLeafHash = await computeTapLeafHash(hashlockScript, 0xc0);
-  console.log('TapLeaf hash:', tapLeafHash);
+  // Compute TapLeaf hashes for BOTH scripts
+  const hashlockLeafHash = await computeTapLeafHash(hashlockScript, 0xc0);
+  const refundLeafHash = await computeTapLeafHash(refundScript, 0xc0);
+  console.log('Hashlock leaf hash:', hashlockLeafHash);
+  console.log('Refund leaf hash:', refundLeafHash);
 
-  // For a single-leaf tree, the Merkle path is empty
-  // Control block: leafVersion | parity | internal_key
-  // Parity is typically 0 for standard NUMS key
-  const controlBlock = buildControlBlock(internalKey, 0xc0, [], 0);
-  console.log('Control block:', controlBlock);
+  // Compute TapBranch merkle root for 2-leaf tree
+  // TapBranch = taggedHash("TapBranch", sorted(left, right))
+  let tapMerkleRoot;
+  let siblingHash; // The sibling we need in the control block
+  if (hashlockLeafHash < refundLeafHash) {
+    tapMerkleRoot = await taggedHash('TapBranch', hashlockLeafHash + refundLeafHash);
+    siblingHash = refundLeafHash; // Sibling of hashlock is refund
+  } else {
+    tapMerkleRoot = await taggedHash('TapBranch', refundLeafHash + hashlockLeafHash);
+    siblingHash = refundLeafHash; // Sibling of hashlock is refund
+  }
+  console.log('TapMerkleRoot (2-leaf):', tapMerkleRoot);
+  console.log('Sibling hash for control block:', siblingHash);
+
+  // Control block for 2-leaf tree includes the sibling hash as merkle path
+  // Format: [leafVersion | parity] || internal_key || merkle_path
+  const controlBlock = buildControlBlock(internalKey, 0xc0, [siblingHash], 0);
+  console.log('Control block (with sibling):', controlBlock);
 
   // Build the unsigned transaction first
   const txidLE = reverseHex(claimData.input.txid);
@@ -2871,10 +2936,11 @@ async function buildTaprootPsbt(claimData, swap) {
   psbtHex += internalKey;
 
   // PSBT_IN_TAP_MERKLE_ROOT (0x18) - BIP-371
+  // IMPORTANT: For 2-leaf tree, this is the TapBranch root, NOT single leaf hash
   psbtHex += '01';  // Key length
   psbtHex += '18';  // Key type: PSBT_IN_TAP_MERKLE_ROOT
   psbtHex += '20';  // Value length (32 bytes)
-  psbtHex += tapLeafHash;
+  psbtHex += tapMerkleRoot;
 
   // End input map
   psbtHex += '00';
@@ -2907,10 +2973,13 @@ async function buildTaprootPsbt(claimData, swap) {
       tapLeafScript: [{
         leafVersion: 0xc0,
         script: hashlockScript,
-        controlBlock: controlBlock
+        controlBlock: controlBlock,
+        siblingHash: siblingHash // Merkle proof sibling
       }],
       tapInternalKey: internalKey,
-      tapMerkleRoot: tapLeafHash
+      tapMerkleRoot: tapMerkleRoot, // 2-leaf TapBranch root
+      hashlockLeafHash: hashlockLeafHash,
+      refundLeafHash: refundLeafHash
     }],
 
     outputs: [{
