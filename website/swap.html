@@ -942,6 +942,21 @@
         </div>
     </footer>
 
+    <!--
+    ============================================================================
+    SECURITY NOTE: CDN Dependencies
+    ============================================================================
+    For PRODUCTION deployment, these libraries should be SELF-HOSTED:
+    1. Download @noble/secp256k1@2.1.0 and @noble/hashes@1.5.0
+    2. Download nostr-tools@1.17.0
+    3. Host locally with Subresource Integrity (SRI) hashes
+    4. Use: <script src="/js/noble-secp256k1.min.js" integrity="sha384-..." crossorigin="anonymous">
+
+    Current setup uses CDN with version pinning (testnet/demo acceptable).
+    jsdelivr ESM bundles don't support SRI hashes (dynamic generation).
+    ============================================================================
+    -->
+
     <!-- Noble secp256k1 - Audited EC cryptography library (MIT License) -->
     <!-- Used for: Taproot key tweaking, BOLT11 signature verification -->
     <!-- Version pinned to 2.1.0 - DO NOT upgrade without security review -->
@@ -956,14 +971,14 @@
     </script>
 
     <!-- NostrTools for relay connections -->
-    <!-- SECURITY: Version pinned to 1.17.0 -->
+    <!-- SECURITY: Version pinned to 1.17.0 - Self-host for production -->
     <script src="https://unpkg.com/nostr-tools@1.17.0/lib/nostr.bundle.js"
             crossorigin="anonymous"></script>
 
-    <!-- Sparkle Protocol SDK v0.3.5 - Core swap primitives -->
+    <!-- Sparkle Protocol SDK v0.3.6 - Core swap primitives -->
     <script src="js/sparkle-browser.js"></script>
 
-    <!-- Sparkle Swap v0.3.5 - 2-Leaf PSBT & Payee Binding (Dec 2024) -->
+    <!-- Sparkle Swap v0.3.6 - Strict Signature Verification (Dec 2024) -->
     <script src="sparkle-swap.js"></script>
 </body>
 </html>

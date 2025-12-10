@@ -1,8 +1,12 @@
 /**
- * Sparkle Protocol v0.3.5 - Secure P2P Swap Instrument
+ * Sparkle Protocol v0.3.6 - Secure P2P Swap Instrument
  *
  * SECURITY: This module NEVER handles private keys.
  * All signing is delegated to browser wallet extensions.
+ *
+ * v0.3.6 SECURITY FIXES (December 2024):
+ * - BOLT11 signature verification now STRICT (blocks on invalid)
+ * - Added CDN self-hosting documentation for production
  *
  * v0.3.5 SECURITY FIXES (December 2024):
  * - PSBT now correctly built for 2-leaf tree (hashlock + refund)
@@ -46,7 +50,7 @@
  * - Bitcoin Wallets: PSBT signing via Unisat, Xverse, etc.
  *
  * @module SparkleSwap
- * @version 0.3.5
+ * @version 0.3.6
  */
 
 // ============================================================================
@@ -603,14 +607,18 @@ async function validateInvoiceTimelock(invoice, swap) {
     };
   }
 
-  // SECURITY: Validate BOLT11 signature
+  // SECURITY: Validate BOLT11 signature - STRICT MODE
+  // Invalid signature means the invoice may be forged or from wrong party
   if (!decoded.signatureValid) {
-    console.warn('SECURITY: Invoice signature invalid or unverifiable');
-    // Don't block on invalid signature (may be library issue), but warn
-    // In production, consider: return { valid: false, message: 'Invoice signature invalid' };
-  } else {
-    console.log('SECURITY: Invoice signature verified successfully');
+    console.error('SECURITY: Invoice signature INVALID - blocking swap');
+    return {
+      valid: false,
+      message: 'SECURITY: Invoice signature verification failed. ' +
+               'The invoice may be forged or corrupted. Cannot proceed.',
+      signatureInvalid: true
+    };
   }
+  console.log('SECURITY: Invoice signature verified successfully');
 
   // SECURITY: Validate payment_hash was extracted
   if (!decoded.paymentHash) {
