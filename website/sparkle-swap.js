@@ -5,10 +5,11 @@
  * All signing is delegated to browser wallet extensions.
  *
  * v0.3.8 SECURITY FIXES (December 2024):
+ * - PSBT TAP_LEAF_SCRIPT field corrected: type 0x16, key=leafVer||script, value=controlBlock
+ * - Dust threshold unified to 330 sats everywhere (P2TR standard)
  * - Control block parity now derived from OUTPUT KEY (Q), not hardcoded
  * - nSequence set to 0xfffffffd for RBF signaling (BIP-125)
  * - DM timestamp window tightened to 10 minutes (was 1 hour)
- * - Dust threshold check added (330 sats for P2TR)
  * - Funding UTXO scriptPubKey format verification (must be 5120...)
  *
  * v0.3.7 SECURITY FIXES (December 2024):
@@ -60,7 +61,7 @@
  * - Bitcoin Wallets: PSBT signing via Unisat, Xverse, etc.
  *
  * @module SparkleSwap
- * @version 0.3.6
+ * @version 0.3.8
  */
 
 // ============================================================================
@@ -2480,7 +2481,7 @@ async function verifyFundingUtxo(txid, vout, expectedAddress, swap) {
   }
 
   // 4. Verify value is reasonable (at least dust threshold)
-  const DUST_THRESHOLD = 546; // satoshis
+  const DUST_THRESHOLD = 330; // satoshis (P2TR dust threshold)
   if (utxoInfo.value < DUST_THRESHOLD) {
     return {
       valid: false,
@@ -2595,9 +2596,9 @@ window.generateTaprootClaim = async function (swapId) {
     const fee = BigInt(feeInput || 500);
     const outputAmount = amount - fee;
 
-    // SECURITY: Validate output amount
-    if (outputAmount <= 546n) {
-      throw new Error('Output amount below dust limit (546 sats) after fee');
+    // SECURITY: Validate output amount (P2TR dust = 330 sats)
+    if (outputAmount <= 330n) {
+      throw new Error('Output amount below dust limit (330 sats) after fee');
     }
 
     // Build claim transaction data with verified values
@@ -2967,11 +2968,11 @@ async function buildTaprootPsbt(claimData, swap) {
     psbtHex += witnessUtxo;
   }
 
-  // PSBT_IN_TAP_LEAF_SCRIPT (0x15) - BIP-371
-  // Key: 0x15 || control_block
-  // Value: script || leaf_version
-  const tapLeafScriptKey = '15' + controlBlock;
-  const tapLeafScriptValue = hashlockScript + 'c0';
+  // PSBT_IN_TAP_LEAF_SCRIPT (0x16) - BIP-371
+  // Key: 0x16 || leafVersion || script
+  // Value: control_block
+  const tapLeafScriptKey = '16' + 'c0' + hashlockScript;  // type || leafVersion || script
+  const tapLeafScriptValue = controlBlock;
   psbtHex += encodeCompactSize(tapLeafScriptKey.length / 2);
   psbtHex += tapLeafScriptKey;
   psbtHex += encodeCompactSize(tapLeafScriptValue.length / 2);
