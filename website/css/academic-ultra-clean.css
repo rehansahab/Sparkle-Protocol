@@ -784,13 +784,26 @@ li code {
     }
 }
 
-/* Remove ALL Visual Effects */
+/* Remove ALL Visual Effects - Brutalist Precision */
 * {
     box-shadow: none !important;
     text-shadow: none !important;
     background-image: none !important;
     filter: none !important;
-    opacity: 1 !important;
+}
+
+/* ============================================
+   BRUTALIST BUTTON INTERACTIONS
+   Professional crosshair cursor for precision
+   ============================================ */
+button:hover,
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-bitcoin:hover,
+input[type="submit"]:hover,
+a.button:hover {
+    cursor: crosshair;
 }
 
 /* API Method Boxes */
@@ -877,9 +890,10 @@ li code {
 }
 
 .swap-card {
-    border: 1px solid #000;
-    margin-bottom: 20px;
+    border: 2px solid #000;
+    margin-bottom: -2px; /* Collapsed borders like spreadsheet */
     background: #fff;
+    padding: 0;
 }
 
 .swap-header {
@@ -959,15 +973,41 @@ li code {
 
 .action-card {
     border: 2px solid #000;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 20px;
+    margin-bottom: -2px; /* Collapsed borders */
     text-align: center;
+    background: #fff;
 }
 
 .action-card h4 {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
     font-size: 11pt;
     text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* BUTTONS - Physicality without skeuomorphism */
+.action-card button,
+button.primary,
+.btn-primary {
+    border: 2px solid #000;
+    background: #000;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 12px 24px;
+    transition: none !important; /* Instant feedback */
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+.action-card button:hover,
+button.primary:hover,
+.btn-primary:hover {
+    background: #fff;
+    color: #000;
+    cursor: crosshair;
 }
 
 .code-input {
