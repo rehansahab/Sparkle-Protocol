@@ -182,6 +182,47 @@
         </div>
     </section>
 
+    <section class="section" id="production-spec">
+        <div class="container">
+            <h2>Production Candidate v1.0</h2>
+            <div class="paper-content">
+                <p>The core SDK implements a <strong>frozen specification</strong> with safety-first design:</p>
+
+                <h3>The Lightning Pivot</h3>
+                <p><strong>Seller provides Hold Invoice</strong> — the app never generates payment hashes. This eliminates custodial key management and ensures atomic settlement via Lightning infrastructure.</p>
+
+                <h3>5-Point Safety Gate</h3>
+                <p>Every PSBT construction <strong>REFUSES</strong> unless ALL gates pass:</p>
+                <table class="spec-table" style="margin: 1rem 0;">
+                    <tr><td><strong>Gate 1</strong></td><td>Funding UTXO exists</td><td>Fees from external funding, not Ordinal</td></tr>
+                    <tr><td><strong>Gate 2</strong></td><td>Output[0] = Input[0]</td><td>Ordinal value preserved exactly</td></tr>
+                    <tr><td><strong>Gate 3</strong></td><td>Affiliates ≤3, ≤5% each</td><td>Anti-griefing caps enforced</td></tr>
+                    <tr><td><strong>Gate 4</strong></td><td>Timelock + 12 blocks</td><td>Time-bandit protection</td></tr>
+                    <tr><td><strong>Gate 5</strong></td><td>Indexer verification</td><td>Ownership truth check</td></tr>
+                </table>
+
+                <h3>Four Provider Interfaces</h3>
+                <p>Clean separation — plug your own backends:</p>
+                <ul>
+                    <li><strong>IndexerProvider:</strong> Hiro, OrdinalsBot, or custom indexer</li>
+                    <li><strong>SignerProvider:</strong> NIP-07 (Alby, nos2x) for Nostr signing</li>
+                    <li><strong>WalletProvider:</strong> UniSat, Xverse, OKX for Bitcoin</li>
+                    <li><strong>LightningProvider:</strong> WebLN, LND REST, CLN</li>
+                </ul>
+
+                <h3>Ghost Desk (Private OTC)</h3>
+                <p>NIP-17 Gift Wrap + NIP-44 XChaCha20-Poly1305 encryption for completely private trades. No public offers, no chain analysis.</p>
+
+                <h3>What Sparkle is NOT</h3>
+                <ul>
+                    <li><strong>Not custodial escrow:</strong> Taproot scripts enforce settlement</li>
+                    <li><strong>Not a generic PSBT builder:</strong> Safety gates prevent unsafe transactions</li>
+                    <li><strong>Not marketplace-dependent:</strong> P2P via Nostr, no middleman</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
     <section class="section" id="reading-paths">
         <div class="container">
             <h2>How to Read This Site</h2>
