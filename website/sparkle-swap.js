@@ -1,13 +1,19 @@
 /**
- * Sparkle Protocol v0.3.7 - Secure P2P Swap Instrument
+ * Sparkle Protocol v0.3.8 - Secure P2P Swap Instrument
  *
  * SECURITY: This module NEVER handles private keys.
  * All signing is delegated to browser wallet extensions.
  *
+ * v0.3.8 SECURITY FIXES (December 2024):
+ * - Control block parity now derived from OUTPUT KEY (Q), not hardcoded
+ * - nSequence set to 0xfffffffd for RBF signaling (BIP-125)
+ * - DM timestamp window tightened to 10 minutes (was 1 hour)
+ * - Dust threshold check added (330 sats for P2TR)
+ * - Funding UTXO scriptPubKey format verification (must be 5120...)
+ *
  * v0.3.7 SECURITY FIXES (December 2024):
  * - All third-party libraries now SELF-HOSTED (supply-chain hardened)
  * - Subresource Integrity (SRI) hashes on all external scripts
- * - Removed unused nobleHashes import (uses Web Crypto API)
  *
  * v0.3.6 SECURITY FIXES (December 2024):
  * - BOLT11 signature verification now STRICT (blocks on invalid)
@@ -1416,10 +1422,11 @@ async function validateIncomingDM(event) {
     return { valid: false, reason: 'Duplicate event (replay attack prevention)' };
   }
 
-  // 3. TIMESTAMP FRESHNESS: Reject events older than 1 hour or more than 5 min in future
+  // 3. TIMESTAMP FRESHNESS: Reject events older than 10 min or more than 2 min in future
+  // Tighter window prevents replay attacks with stale messages
   const now = Math.floor(Date.now() / 1000);
-  const maxAge = 3600; // 1 hour
-  const maxFuture = 300; // 5 minutes
+  const maxAge = 600; // 10 minutes (tightened from 1 hour)
+  const maxFuture = 120; // 2 minutes
 
   if (event.created_at < now - maxAge) {
     return { valid: false, reason: 'Event too old (possible replay attack)' };
@@ -1826,7 +1833,8 @@ async function deriveTaprootAddress(internalKey, hashlockScript, refundScript, n
   // 4. Tweak the internal key: output_key = internal_key + tapTweak * G
   // For the NUMS key, we can compute this without full EC math
   // Since NUMS has no known discrete log, the tweaked key is deterministic
-  const tweakedKey = await tweakPublicKey(internalKey, tapTweak);
+  const tweakResult = await tweakPublicKey(internalKey, tapTweak);
+  const tweakedKey = tweakResult.key;
 
   // 5. Convert to bech32m address
   const hrp = network === 'mainnet' ? 'bc' : 'tb';
@@ -1884,15 +1892,21 @@ async function tweakPublicKey(pubkeyHex, tweakHex) {
     // 8. Get x-coordinate of Q (x-only output key)
     const Qaffine = Q.toAffine();
 
-    // 9. If y is odd, we need to negate (BIP-341 requires even y for output key)
-    // Actually for verification we just need x-coordinate
+    // 9. Determine parity of Q's y-coordinate for control block
+    // BIP-341: parity bit is 0 if y is even, 1 if y is odd
+    const yIsOdd = (Qaffine.y & 1n) === 1n;
+    const parity = yIsOdd ? 1 : 0;
+
+    // 10. Get x-coordinate (x-only output key)
     let outputX = Qaffine.x;
 
-    // 10. Convert to 32-byte hex string
+    // 11. Convert to 32-byte hex string
     const outputKeyHex = outputX.toString(16).padStart(64, '0');
 
-    console.log('SECURITY: Real EC point addition performed for taptweak');
-    return outputKeyHex;
+    console.log(`SECURITY: Real EC point addition performed for taptweak (parity=${parity})`);
+
+    // Return both the key and parity for control block construction
+    return { key: outputKeyHex, parity: parity };
 
   } catch (e) {
     console.error('SECURITY: EC tweak failed:', e);
@@ -2446,6 +2460,15 @@ async function verifyFundingUtxo(txid, vout, expectedAddress, swap) {
     };
   }
 
+  // 2b. Also verify scriptPubKey format is P2TR (OP_1 <32-byte-key> = 5120...)
+  if (utxoInfo.scriptPubKey && !utxoInfo.scriptPubKey.startsWith('5120')) {
+    return {
+      valid: false,
+      message: `Invalid scriptPubKey format: expected P2TR (5120...), got ${utxoInfo.scriptPubKey.slice(0, 4)}...`,
+      utxoInfo
+    };
+  }
+
   // 3. Verify minimum confirmations
   if (utxoInfo.confirmations < MIN_FUNDING_CONFIRMATIONS) {
     return {
@@ -2855,15 +2878,28 @@ async function buildTaprootPsbt(claimData, swap) {
   console.log('TapMerkleRoot (2-leaf):', tapMerkleRoot);
   console.log('Sibling hash for control block:', siblingHash);
 
+  // Compute TapTweak and get OUTPUT KEY PARITY for control block
+  // BIP-341: parity bit must be derived from Q (output key), not internal key
+  const tapTweak = await taggedHash('TapTweak', internalKey + tapMerkleRoot);
+  const tweakResult = await tweakPublicKey(internalKey, tapTweak);
+  const outputKeyParity = tweakResult.parity;
+  console.log('Output key parity for control block:', outputKeyParity);
+
   // Control block for 2-leaf tree includes the sibling hash as merkle path
   // Format: [leafVersion | parity] || internal_key || merkle_path
-  const controlBlock = buildControlBlock(internalKey, 0xc0, [siblingHash], 0);
+  const controlBlock = buildControlBlock(internalKey, 0xc0, [siblingHash], outputKeyParity);
   console.log('Control block (with sibling):', controlBlock);
 
   // Build the unsigned transaction first
   const txidLE = reverseHex(claimData.input.txid);
   const vout = claimData.input.vout;
   const outputAmount = parseInt(claimData.output.amount);
+
+  // SECURITY: Dust threshold check - P2TR dust is 330 sats
+  const DUST_THRESHOLD = 330;
+  if (outputAmount < DUST_THRESHOLD) {
+    throw new Error(`Output amount ${outputAmount} sats is below dust threshold (${DUST_THRESHOLD} sats)`);
+  }
 
   // Compute output scriptPubKey from address
   const outputScriptPubKey = addressToScriptPubKey(claimData.output.address);
@@ -2878,7 +2914,7 @@ async function buildTaprootPsbt(claimData, swap) {
   unsignedTx += txidLE;
   unsignedTx += encodeLE32(vout);
   unsignedTx += '00';       // Empty scriptSig for segwit
-  unsignedTx += 'feffffff'; // Sequence (enables nLockTime)
+  unsignedTx += 'fdffffff'; // Sequence 0xfffffffd (RBF-enabled, enables nLockTime)
   // Output count
   unsignedTx += '01';
   // Output
@@ -2903,7 +2939,7 @@ async function buildTaprootPsbt(claimData, swap) {
   unsignedTxNoWitness += txidLE;
   unsignedTxNoWitness += encodeLE32(vout);
   unsignedTxNoWitness += '00';          // Empty scriptSig
-  unsignedTxNoWitness += 'feffffff';    // Sequence
+  unsignedTxNoWitness += 'fdffffff';    // Sequence 0xfffffffd (RBF-enabled)
   unsignedTxNoWitness += '01';          // Output count
   unsignedTxNoWitness += encodeLE64(outputAmount);
   unsignedTxNoWitness += encodeCompactSize(outputScriptPubKey.length / 2);
