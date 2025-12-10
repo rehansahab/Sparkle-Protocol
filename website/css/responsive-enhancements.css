@@ -164,10 +164,19 @@ main.container,
 
     .stat .value {
         font-size: 16pt;
+        font-family: 'IBM Plex Mono', 'Consolas', 'Monaco', monospace !important;
+        font-weight: 600;
+        border-bottom: 1px dotted #999;
+        padding-bottom: 2px;
     }
 
     .stat .label {
         font-size: 8pt;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-style: italic;
+        color: #444;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 }
 
