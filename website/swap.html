@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Taproot Atomic Swap - Sparkle Protocol v0.3.0</title>
+    <title>Taproot Atomic Swap - Sparkle Protocol v0.3.1</title>
     <meta name="description" content="Trustless P2P Ordinals trading with Taproot atomic swaps. No accounts, no custody, no middlemen. Powered by Nostr and Lightning Network.">
 
     <!-- Open Graph -->
@@ -704,7 +704,7 @@
         <div class="container">
             <a href="index.html" class="logo">
                 Sparkle Protocol
-                <span class="version-badge">v0.3.0</span>
+                <span class="version-badge">v0.3.1</span>
             </a>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
             <ul class="nav-links" id="navLinks">
@@ -943,12 +943,14 @@
     </footer>
 
     <!-- NostrTools for relay connections -->
+    <!-- SECURITY: Version pinned. For production, self-host or add SRI hash -->
+    <!-- Generate SRI: openssl dgst -sha384 -binary nostr.bundle.js | openssl base64 -A -->
     <script src="https://unpkg.com/nostr-tools@1.17.0/lib/nostr.bundle.js"></script>
 
-    <!-- Sparkle Protocol SDK v0.3.0 - Core swap primitives -->
+    <!-- Sparkle Protocol SDK v0.3.1 - Core swap primitives -->
     <script src="js/sparkle-browser.js"></script>
 
-    <!-- Sparkle Swap v0.3.0 - Secure NIP-07 + Taproot -->
+    <!-- Sparkle Swap v0.3.1 - Security Hardened (Dec 2024) -->
     <script src="sparkle-swap.js"></script>
 </body>
 </html>
