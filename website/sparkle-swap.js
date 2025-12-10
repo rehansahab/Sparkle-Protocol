@@ -1,12 +1,16 @@
 /**
- * Sparkle Protocol v0.3.6 - Secure P2P Swap Instrument
+ * Sparkle Protocol v0.3.7 - Secure P2P Swap Instrument
  *
  * SECURITY: This module NEVER handles private keys.
  * All signing is delegated to browser wallet extensions.
  *
+ * v0.3.7 SECURITY FIXES (December 2024):
+ * - All third-party libraries now SELF-HOSTED (supply-chain hardened)
+ * - Subresource Integrity (SRI) hashes on all external scripts
+ * - Removed unused nobleHashes import (uses Web Crypto API)
+ *
  * v0.3.6 SECURITY FIXES (December 2024):
  * - BOLT11 signature verification now STRICT (blocks on invalid)
- * - Added CDN self-hosting documentation for production
  *
  * v0.3.5 SECURITY FIXES (December 2024):
  * - PSBT now correctly built for 2-leaf tree (hashlock + refund)

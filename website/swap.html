@@ -944,41 +944,44 @@
 
     <!--
     ============================================================================
-    SECURITY NOTE: CDN Dependencies
+    SECURITY: Self-Hosted Dependencies with SRI (v0.3.7)
     ============================================================================
-    For PRODUCTION deployment, these libraries should be SELF-HOSTED:
-    1. Download @noble/secp256k1@2.1.0 and @noble/hashes@1.5.0
-    2. Download nostr-tools@1.17.0
-    3. Host locally with Subresource Integrity (SRI) hashes
-    4. Use: <script src="/js/noble-secp256k1.min.js" integrity="sha384-..." crossorigin="anonymous">
+    All cryptographic libraries are now self-hosted with Subresource Integrity.
+    - noble-secp256k1@2.1.0: EC operations, BOLT11 verification
+    - nostr-tools@1.17.0: Nostr relay connections
 
-    Current setup uses CDN with version pinning (testnet/demo acceptable).
-    jsdelivr ESM bundles don't support SRI hashes (dynamic generation).
+    SRI hashes computed via: openssl dgst -sha384 -binary file | openssl base64
+    DO NOT modify these files without updating integrity hashes.
     ============================================================================
     -->
 
+    <!-- Preload noble-secp256k1 ESM module with SRI -->
+    <link rel="modulepreload"
+          href="js/noble-secp256k1.esm.js"
+          integrity="sha384-5ToUgR3xsd2kdyJaA1jAlbtcHwPAB66/X2HwJOrgBseeyxqTbEhpUsxNEf7XAIzT"
+          crossorigin="anonymous">
+
     <!-- Noble secp256k1 - Audited EC cryptography library (MIT License) -->
     <!-- Used for: Taproot key tweaking, BOLT11 signature verification -->
-    <!-- Version pinned to 2.1.0 - DO NOT upgrade without security review -->
+    <!-- Version: 2.1.0 - Self-hosted with SRI -->
     <script type="module">
-        import * as secp from 'https://cdn.jsdelivr.net/npm/@noble/secp256k1@2.1.0/+esm';
-        import * as hashes from 'https://cdn.jsdelivr.net/npm/@noble/hashes@1.5.0/+esm';
+        import * as secp from './js/noble-secp256k1.esm.js';
         // Expose globally for non-module scripts
         window.nobleSecp256k1 = secp;
-        window.nobleHashes = hashes;
         // Signal that crypto libs are loaded
         window.dispatchEvent(new Event('noble-loaded'));
     </script>
 
-    <!-- NostrTools for relay connections -->
-    <!-- SECURITY: Version pinned to 1.17.0 - Self-host for production -->
-    <script src="https://unpkg.com/nostr-tools@1.17.0/lib/nostr.bundle.js"
+    <!-- NostrTools for relay connections - Self-hosted with SRI -->
+    <!-- Version: 1.17.0 - DO NOT upgrade without security review -->
+    <script src="js/nostr-tools.bundle.js"
+            integrity="sha384-GwmNxV/GnZt+zRBR/Hhtu5D4MKfbxeJSApW44ARryGYtj3MFheHMFgiEZ7tVnrln"
             crossorigin="anonymous"></script>
 
-    <!-- Sparkle Protocol SDK v0.3.6 - Core swap primitives -->
+    <!-- Sparkle Protocol SDK v0.3.7 - Core swap primitives -->
     <script src="js/sparkle-browser.js"></script>
 
-    <!-- Sparkle Swap v0.3.6 - Strict Signature Verification (Dec 2024) -->
+    <!-- Sparkle Swap v0.3.7 - Self-Hosted Dependencies + SRI (Dec 2024) -->
     <script src="sparkle-swap.js"></script>
 </body>
 </html>
