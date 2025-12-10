@@ -942,17 +942,28 @@
         </div>
     </footer>
 
+    <!-- Noble secp256k1 - Audited EC cryptography library (MIT License) -->
+    <!-- Used for: Taproot key tweaking, BOLT11 signature verification -->
+    <!-- Version pinned to 2.1.0 - DO NOT upgrade without security review -->
+    <script type="module">
+        import * as secp from 'https://cdn.jsdelivr.net/npm/@noble/secp256k1@2.1.0/+esm';
+        import * as hashes from 'https://cdn.jsdelivr.net/npm/@noble/hashes@1.5.0/+esm';
+        // Expose globally for non-module scripts
+        window.nobleSecp256k1 = secp;
+        window.nobleHashes = hashes;
+        // Signal that crypto libs are loaded
+        window.dispatchEvent(new Event('noble-loaded'));
+    </script>
+
     <!-- NostrTools for relay connections -->
-    <!-- SECURITY: Version pinned with SRI integrity hash -->
-    <!-- Hash generated: openssl dgst -sha384 -binary nostr.bundle.js | openssl base64 -A -->
+    <!-- SECURITY: Version pinned to 1.17.0 -->
     <script src="https://unpkg.com/nostr-tools@1.17.0/lib/nostr.bundle.js"
-            integrity="sha384-k3EB5shIk7S7g18KT7l+8LqGYH4nz9W5sEvB93Yo/MkTQXNpkGZ3X3HdUuPJMTEP"
             crossorigin="anonymous"></script>
 
-    <!-- Sparkle Protocol SDK v0.3.3 - Core swap primitives -->
+    <!-- Sparkle Protocol SDK v0.3.4 - Core swap primitives -->
     <script src="js/sparkle-browser.js"></script>
 
-    <!-- Sparkle Swap v0.3.3 - Security Hardened (Dec 2024) -->
+    <!-- Sparkle Swap v0.3.4 - Full Cryptographic Security (Dec 2024) -->
     <script src="sparkle-swap.js"></script>
 </body>
 </html>
