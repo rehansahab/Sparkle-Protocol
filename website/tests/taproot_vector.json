@@ -41,19 +41,21 @@
     },
 
     "funding_utxo": {
-      "txid": "0000000000000000000000000000000000000000000000000000000000000001",
-      "txid_comment": "Placeholder - replace with real txid in integration test",
-      "vout": 0,
-      "amount_sats": 10000,
-      "scriptPubKey_comment": "5120 || output_key (32 bytes)",
-      "confirmations": 2
+      "txid": "0dffff168dd1cd5778953a29717429215d1422b4738779ccc2136ad419cfc474",
+      "txid_comment": "REAL CONFIRMED FUNDING TX on regtest block 636",
+      "vout": 1,
+      "amount_sats": 100000,
+      "scriptPubKey": "5120b71e1da5436cfaaa3d3e17c50b95bebf6556894c50311f8bb1e4a80f40642b64",
+      "confirmations": 1,
+      "spend_txid": "d8f7bcb5108faf9a36a3dc30b45a24fd7c3f8831962db08103fa556c2c030d1e",
+      "spend_status": "CONFIRMED - End-to-end validation PASSED"
     },
 
     "claim_output": {
-      "address": "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-      "address_comment": "Standard testnet P2WPKH address for testing",
-      "amount_sats": 9500,
-      "amount_comment": "10000 - 500 fee = 9500 (above 330 dust threshold)"
+      "address": "bcrt1q6xuryqqd6jnwnaed5mmdt9xsqf85fv273es2p4",
+      "address_comment": "Regtest P2WPKH address from sparkle_test wallet",
+      "amount_sats": 99500,
+      "amount_comment": "100000 - 500 fee = 99500 sats"
     },
 
     "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -95,8 +97,8 @@
     "min_confirmations": 2,
     "nsequence": "0xfffffffd",
     "nsequence_comment": "RBF-enabled per BIP-125",
-    "psbt_tap_leaf_script_type": "0x16",
-    "psbt_tap_leaf_script_comment": "Key = 0x16 || leafVersion || script, Value = controlBlock",
+    "psbt_tap_leaf_script_type": "0x15",
+    "psbt_tap_leaf_script_comment": "Key = 0x15 || controlBlock, Value = script || leafVersion",
     "scriptpubkey_p2tr_prefix": "5120",
     "leaf_version": "0xc0"
   }

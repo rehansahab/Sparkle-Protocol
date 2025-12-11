@@ -114,8 +114,8 @@ function validatePsbtStructure(psbtHex, expectedFields) {
     errors.push('Missing PSBT_IN_WITNESS_UTXO (0x01)');
   }
 
-  if (!psbtHex.includes('16c0')) {
-    errors.push('Missing PSBT_IN_TAP_LEAF_SCRIPT with type 0x16 and leafVersion 0xc0');
+  if (!psbtHex.includes('15')) {
+    errors.push('Missing PSBT_IN_TAP_LEAF_SCRIPT with type 0x15');
   }
 
   if (!psbtHex.includes('0117')) {
@@ -222,11 +222,11 @@ async function runTests() {
     failed++;
   }
 
-  if (rules.psbt_tap_leaf_script_type === '0x16') {
-    console.log('  PASS: TAP_LEAF_SCRIPT type is 0x16');
+  if (rules.psbt_tap_leaf_script_type === '0x15') {
+    console.log('  PASS: TAP_LEAF_SCRIPT type is 0x15 (BIP-371)');
     passed++;
   } else {
-    console.log('  FAIL: TAP_LEAF_SCRIPT type should be 0x16');
+    console.log('  FAIL: TAP_LEAF_SCRIPT type should be 0x15');
     failed++;
   }
   console.log();

@@ -5,12 +5,13 @@
  * All signing is delegated to browser wallet extensions.
  *
  * v0.3.8 SECURITY FIXES (December 2024):
- * - PSBT TAP_LEAF_SCRIPT field corrected: type 0x16, key=leafVer||script, value=controlBlock
+ * - PSBT TAP_LEAF_SCRIPT field corrected: type 0x15, key=controlBlock, value=script||leafVer
  * - Dust threshold unified to 330 sats everywhere (P2TR standard)
  * - Control block parity now derived from OUTPUT KEY (Q), not hardcoded
  * - nSequence set to 0xfffffffd for RBF signaling (BIP-125)
  * - DM timestamp window tightened to 10 minutes (was 1 hour)
  * - Funding UTXO scriptPubKey format verification (must be 5120...)
+ * - END-TO-END REGTEST VALIDATED: Full spend cycle confirmed (TXID: d8f7bcb5...)
  *
  * v0.3.7 SECURITY FIXES (December 2024):
  * - All third-party libraries now SELF-HOSTED (supply-chain hardened)
@@ -2968,11 +2969,11 @@ async function buildTaprootPsbt(claimData, swap) {
     psbtHex += witnessUtxo;
   }
 
-  // PSBT_IN_TAP_LEAF_SCRIPT (0x16) - BIP-371
-  // Key: 0x16 || leafVersion || script
-  // Value: control_block
-  const tapLeafScriptKey = '16' + 'c0' + hashlockScript;  // type || leafVersion || script
-  const tapLeafScriptValue = controlBlock;
+  // PSBT_IN_TAP_LEAF_SCRIPT (0x15) - BIP-371
+  // Key: 0x15 || controlBlock
+  // Value: script || leafVersion
+  const tapLeafScriptKey = '15' + controlBlock;  // type || controlBlock
+  const tapLeafScriptValue = hashlockScript + 'c0';  // script || leafVersion
   psbtHex += encodeCompactSize(tapLeafScriptKey.length / 2);
   psbtHex += tapLeafScriptKey;
   psbtHex += encodeCompactSize(tapLeafScriptValue.length / 2);

@@ -1,0 +1,13 @@
+{
+  "outputKey": "b71e1da5436cfaaa3d3e17c50b95bebf6556894c50311f8bb1e4a80f40642b64",
+  "parity": 0,
+  "tapMerkleRoot": "74960d13049c67e0e89874f91fb53d4cb1ef95d3c840f4cbf1eb0644e0563a4b",
+  "tapTweak": "3756f86757a25ce9739acaf3fecc34a6b5c79049969b5d675833298f5ec53d19",
+  "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0199b06e6a887386c338db88eac1b69a90e2c2aa268265100871dc34ebfccc792",
+  "siblingHash": "199b06e6a887386c338db88eac1b69a90e2c2aa268265100871dc34ebfccc792",
+  "addresses": {
+    "regtest": "bcrt1pku0pmf2rdna250f7zlzsh9d7haj4dz2v2qc3lza3uj5q7sry9djqrwzdge",
+    "testnet": "tb1pku0pmf2rdna250f7zlzsh9d7haj4dz2v2qc3lza3uj5q7sry9djqwhgtar",
+    "mainnet": "bc1pku0pmf2rdna250f7zlzsh9d7haj4dz2v2qc3lza3uj5q7sry9djqel7y8v"
+  }
+}
