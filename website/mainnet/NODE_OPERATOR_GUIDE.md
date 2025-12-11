@@ -294,10 +294,11 @@ Status: Not yet tested
 Action: Fund tb1p... address and complete spend cycle
 ```
 
-### Mainnet (Pending)
+### Mainnet (Validated)
 ```
-Status: Not yet tested
-Action: Start with small amount (10k-50k sats) for initial test
+Status: ✅ CONFIRMED
+TXID: 1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994
+Verify: https://mempool.space/tx/1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994
 ```
 
 ---

@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-  <a href="https://sparkleprotocol.com"><img src="https://img.shields.io/badge/Status-Production%20Candidate-brightgreen?style=flat-square" alt="Status"></a>
-  <a href="https://sparkleprotocol.com/changelog.html"><img src="https://img.shields.io/badge/Version-1.0.0--rc.1-blue?style=flat-square" alt="Version"></a>
+  <a href="https://sparkleprotocol.com"><img src="https://img.shields.io/badge/Status-Mainnet%20Validated-brightgreen?style=flat-square" alt="Status"></a>
+  <a href="https://sparkleprotocol.com/changelog.html"><img src="https://img.shields.io/badge/Version-0.3.8-blue?style=flat-square" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
   <a href="https://github.com/ProtocolSparkle/Sparkles-Protocol"><img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
   <a href="https://sparkleprotocol.com"><img src="https://img.shields.io/badge/Bitcoin-Taproot-F7931A?style=flat-square&logo=bitcoin&logoColor=white" alt="Bitcoin"></a>
@@ -112,7 +112,7 @@ Protocol-level support for creator royalties and marketplace fees:
 | **Ghost Desk** | ✅ Complete | NIP-17/NIP-44 private messaging |
 | **Safety Gates** | ✅ Enforced | All 5 gates implemented |
 | **Tests** | ✅ 45/46 passing | Core + hardening tests |
-| **Mainnet** | 🔄 Pending | Requires security audit |
+| **Mainnet** | ✅ Validated | [Confirmed on-chain](https://mempool.space/tx/1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994) |
 
 ---
 
