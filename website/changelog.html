@@ -53,6 +53,51 @@
 
             <section class="section">
                 <div class="container">
+                    <h2>Version 0.3.8 – December 2025</h2>
+                    <p><em>Mainnet Validation Complete</em></p>
+                    <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
+                        <strong>🎉 Major Milestone: Mainnet Transaction Confirmed</strong><br>
+                        <span style="font-size: 0.95em;">Real Bitcoin spent via Taproot script-path on mainnet. <a href="https://mempool.space/tx/1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994" target="_blank">Verify on-chain →</a></span>
+                    </div>
+                    <ul>
+                        <li><strong>Mainnet validation:</strong> Complete atomic swap cycle confirmed on Bitcoin mainnet</li>
+                        <li><strong>Transaction proof:</strong>
+                            <ul>
+                                <li>Contract funding: <code>7739c731...55b4</code> (15,000 sats locked)</li>
+                                <li>Script-path spend: <code>1dcbeb24...e994</code> (hashlock claim with preimage)</li>
+                            </ul>
+                        </li>
+                        <li><strong>BIP-371 PSBT fix:</strong> TAP_LEAF_SCRIPT corrected to type 0x15 (was 0x16)</li>
+                        <li><strong>Control block parity:</strong> Now derived from output key (Q), not hardcoded</li>
+                        <li><strong>Dust threshold:</strong> Unified to 330 sats everywhere (P2TR standard)</li>
+                        <li><strong>Test suite:</strong> 6 comprehensive BIP compliance tests passing</li>
+                        <li><strong>Mainnet CLI:</strong> <code>sparkle-mainnet.js</code> for production contract creation</li>
+                        <li><strong>Documentation:</strong> Complete validation report with verification commands</li>
+                    </ul>
+
+                    <h3 style="margin-top: 1.5rem;">Verified On-Chain</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 0.5rem; text-align: left; border-bottom: 2px solid #333;">Transaction</th>
+                            <th style="padding: 0.5rem; text-align: left; border-bottom: 2px solid #333;">TXID</th>
+                            <th style="padding: 0.5rem; text-align: left; border-bottom: 2px solid #333;">Status</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd;">Contract Funding</td>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd; font-family: monospace; font-size: 0.85em;"><a href="https://mempool.space/tx/7739c731252bff34b35a7f4ba6b3f7f46494e67564c0fc8a50a2e5d11c2955b4" target="_blank">7739c731...55b4</a></td>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd;">Confirmed</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd;">Script-Path Spend</td>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd; font-family: monospace; font-size: 0.85em;"><a href="https://mempool.space/tx/1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994" target="_blank">1dcbeb24...e994</a></td>
+                            <td style="padding: 0.5rem; border-bottom: 1px solid #ddd;">Confirmed (3+ blocks)</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
                     <h2>Version 0.3.0 – December 2025</h2>
                     <p><em>Core Protocol Implementation Complete</em></p>
                     <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 1rem; margin-bottom: 1rem;">
