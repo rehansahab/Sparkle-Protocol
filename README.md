@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="assets/sparkle-logo.png" alt="Sparkle Protocol" width="120" height="120">
+  <a href="https://sparkleprotocol.com">
+    <img src="assets/sparkle-logo.png" alt="Sparkle Protocol" width="120" height="120">
+  </a>
 </p>
 
 <h1 align="center">Sparkle Protocol</h1>
