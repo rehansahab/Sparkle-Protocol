@@ -1,0 +1,103 @@
+{
+  "_comment": "Sparkle Protocol Taproot/PSBT Test Vectors v0.3.8",
+  "_description": "Deterministic inputs and expected outputs for regression testing",
+
+  "testnet_vector": {
+    "description": "Testnet atomic swap with 2-leaf Taproot tree",
+    "network": "testnet",
+
+    "inputs": {
+      "internal_key": "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0",
+      "internal_key_comment": "NUMS point (Nothing Up My Sleeve) - no known private key",
+
+      "payment_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "payment_hash_comment": "SHA256 of empty string - deterministic for testing",
+
+      "buyer_pubkey": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "buyer_pubkey_comment": "secp256k1 generator point G (compressed)",
+
+      "seller_pubkey": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "seller_pubkey_comment": "2*G point (compressed)",
+
+      "timeout_blocks": 850000,
+      "timeout_comment": "Block height for refund timelock",
+
+      "hashlock_script": "a820e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855882079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "hashlock_script_comment": "OP_SHA256 <payment_hash> OP_EQUALVERIFY <buyer_x_only> OP_CHECKSIG",
+
+      "refund_script": "0350f70cb17521c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5ac",
+      "refund_script_comment": "<timeout_le3> OP_CLTV OP_DROP <seller_x_only> OP_CHECKSIG",
+
+      "leaf_version": "0xc0"
+    },
+
+    "expected": {
+      "hashlock_leaf_hash_comment": "taggedHash('TapLeaf', 0xc0 || compactSize(script) || script)",
+      "refund_leaf_hash_comment": "taggedHash('TapLeaf', 0xc0 || compactSize(script) || script)",
+      "tap_merkle_root_comment": "taggedHash('TapBranch', sorted(hashlockLeafHash, refundLeafHash))",
+      "tap_tweak_comment": "taggedHash('TapTweak', internalKey || tapMerkleRoot)",
+      "output_key_parity_comment": "0 if Q.y is even, 1 if odd",
+      "control_block_comment": "(leafVersion | parity) || internalKey || siblingHash"
+    },
+
+    "funding_utxo": {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000001",
+      "txid_comment": "Placeholder - replace with real txid in integration test",
+      "vout": 0,
+      "amount_sats": 10000,
+      "scriptPubKey_comment": "5120 || output_key (32 bytes)",
+      "confirmations": 2
+    },
+
+    "claim_output": {
+      "address": "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+      "address_comment": "Standard testnet P2WPKH address for testing",
+      "amount_sats": 9500,
+      "amount_comment": "10000 - 500 fee = 9500 (above 330 dust threshold)"
+    },
+
+    "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
+    "preimage_comment": "Empty 32-byte preimage - SHA256 gives payment_hash above"
+  },
+
+  "mainnet_vector": {
+    "description": "Mainnet atomic swap with 2-leaf Taproot tree",
+    "network": "mainnet",
+
+    "inputs": {
+      "internal_key": "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0",
+      "payment_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "buyer_pubkey": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "seller_pubkey": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "timeout_blocks": 850000,
+      "hashlock_script": "a820e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855882079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "refund_script": "0350f70cb17521c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5ac",
+      "leaf_version": "0xc0"
+    },
+
+    "funding_utxo": {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000002",
+      "vout": 0,
+      "amount_sats": 100000,
+      "confirmations": 2
+    },
+
+    "claim_output": {
+      "address": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+      "amount_sats": 99500
+    },
+
+    "preimage": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+
+  "validation_rules": {
+    "dust_threshold_sats": 330,
+    "min_confirmations": 2,
+    "nsequence": "0xfffffffd",
+    "nsequence_comment": "RBF-enabled per BIP-125",
+    "psbt_tap_leaf_script_type": "0x16",
+    "psbt_tap_leaf_script_comment": "Key = 0x16 || leafVersion || script, Value = controlBlock",
+    "scriptpubkey_p2tr_prefix": "5120",
+    "leaf_version": "0xc0"
+  }
+}
