@@ -113,7 +113,7 @@ Protocol-level support for creator royalties and marketplace fees:
 | **Adapters** | ✅ Complete | `src/adapters/` — Hiro, NIP-07, UniSat, WebLN |
 | **Ghost Desk** | ✅ Complete | NIP-17/NIP-44 private messaging |
 | **Safety Gates** | ✅ Enforced | All 5 gates implemented |
-| **Tests** | ✅ 45/46 passing | Core + hardening tests |
+| **Tests** | ✅ All passing | Core + hardening tests |
 | **Mainnet** | ✅ Validated | [Confirmed on-chain](https://mempool.space/tx/1dcbeb24cbdbd60befed91d8ecbf2a067dad3dcc5b1b8d179bb16dfab481e994) |
 
 ---
