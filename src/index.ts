@@ -3,8 +3,15 @@
  *
  * Trustless atomic swaps for Bitcoin Ordinals via Lightning Network.
  *
+ * v1.2.0 - CRITICAL SECURITY UPDATE:
+ * - Inverted preimage flow (buyer-generated) - fixes seller theft vulnerability
+ * - 72-block safety buffer (was 12) - fixes time-bandit attack
+ * - Dust padding support (Gate 2 >= instead of ==) - fixes sub-dust ordinals
+ * - Settlement Watcher service for seller-side automation
+ * - FeeEstimator and HoldInvoice provider interfaces
+ *
  * @module sparkle-protocol
- * @version 1.0.0-rc.1
+ * @version 1.2.0
  */
 
 // =============================================================================
@@ -94,6 +101,12 @@ export type {
   // Ghost Desk types
   GhostDeskMessageType,
   GhostDeskMessage,
+
+  // v1.2 Inverted Preimage Flow types
+  BuyerPreimage,
+  HoldInvoice,
+  PreimageReveal,
+  WatcherConfig,
 } from './sdk-types.js';
 
 // =============================================================================
@@ -107,6 +120,12 @@ export type {
   LightningProvider,
   NostrProvider,
   NostrFilter,
+
+  // v1.2 Providers
+  FeePriority,
+  FeeEstimatorProvider,
+  HoldInvoiceProvider,
+  SettlementWatcherProvider,
 } from './sdk-providers.js';
 
 // =============================================================================
@@ -140,6 +159,25 @@ export {
   generateConversationId,
   computeEventId,
 } from './sdk-ghost-desk.js';
+
+// =============================================================================
+// SETTLEMENT WATCHER (v1.2 - Seller Automation)
+// =============================================================================
+
+export {
+  // Preimage utilities
+  generateBuyerPreimage,
+  verifyPreimage,
+
+  // Watcher classes
+  SettlementWatcher,
+  AutoSettler,
+
+  // Browser storage utilities
+  storePreimageLocal,
+  recoverPreimageLocal,
+  clearPreimageLocal,
+} from './sdk-watcher.js';
 
 // =============================================================================
 // ADAPTERS
@@ -279,7 +317,7 @@ export class SparkleSDK {
    * Get SDK version
    */
   static get version(): string {
-    return '1.0.0-rc.1';
+    return '1.2.0';
   }
 
   /**
@@ -336,4 +374,4 @@ export * as legacyBrowser from './browser/index.js';
 // VERSION
 // =============================================================================
 
-export const VERSION = '1.0.0-rc.1';
+export const VERSION = '1.2.0';

@@ -16,6 +16,9 @@ import type {
   PaymentResult,
   NostrEventTemplate,
   NostrEvent,
+  HoldInvoice,
+  PreimageReveal,
+  WatcherConfig,
 } from './sdk-types.js';
 
 // =============================================================================
@@ -373,4 +376,182 @@ export interface NostrProvider {
    * @returns List of relay URLs
    */
   getUserRelays(pubkey: string): Promise<string[]>;
+}
+
+// =============================================================================
+// FEE ESTIMATOR PROVIDER
+// =============================================================================
+
+/**
+ * Fee rate priority levels
+ */
+export type FeePriority = 'low' | 'medium' | 'high' | 'urgent';
+
+/**
+ * FeeEstimatorProvider - Dynamic Fee Estimation
+ *
+ * CRITICAL: Hardcoding fees or relying on wallet defaults is risky.
+ * If the sweep transaction gets stuck, the atomic swap fails.
+ *
+ * Implementations: mempool.space API, bitcoind estimatesmartfee
+ */
+export interface FeeEstimatorProvider {
+  /**
+   * Get recommended fee rate for priority level
+   *
+   * @param priority - Desired confirmation speed
+   * @returns Fee rate in sats/vByte
+   */
+  getFeeRate(priority: FeePriority): Promise<number>;
+
+  /**
+   * Get fee rates for all priority levels
+   *
+   * @returns Object with fee rates for each priority
+   */
+  getAllFeeRates(): Promise<{
+    low: number;      // ~1 hour (6 blocks)
+    medium: number;   // ~30 min (3 blocks)
+    high: number;     // ~10 min (1 block)
+    urgent: number;   // Next block (priority)
+  }>;
+
+  /**
+   * Estimate fee for a specific vsize
+   *
+   * @param vsize - Transaction virtual size in bytes
+   * @param priority - Desired confirmation speed
+   * @returns Total fee in satoshis
+   */
+  estimateFee(vsize: number, priority: FeePriority): Promise<number>;
+}
+
+// =============================================================================
+// HOLD INVOICE PROVIDER (For Inverted Preimage Flow)
+// =============================================================================
+
+/**
+ * HoldInvoiceProvider - Lightning Hold Invoice Management
+ *
+ * CRITICAL for secure submarine swaps: Hold invoices lock funds
+ * WITHOUT settling until the preimage is provided.
+ *
+ * Flow:
+ * 1. Seller creates hold invoice with buyer's payment hash
+ * 2. Buyer pays invoice (funds locked, not settled)
+ * 3. Buyer sweeps Ordinal (reveals preimage on-chain)
+ * 4. Seller detects preimage and settles hold invoice
+ *
+ * Implementations: LND (routerrpc), CLN (hold invoice plugin)
+ */
+export interface HoldInvoiceProvider {
+  /**
+   * Create a hold invoice tied to a specific payment hash
+   *
+   * Unlike regular invoices, hold invoices do NOT settle automatically.
+   * The seller must call settleInvoice() with the preimage.
+   *
+   * @param paymentHash - The buyer's payment hash (32-byte hex)
+   * @param amountSats - Amount in satoshis
+   * @param expirySecs - Invoice expiry in seconds (default: 3600)
+   * @param memo - Optional invoice description
+   * @returns Hold invoice object
+   */
+  createHoldInvoice(
+    paymentHash: string,
+    amountSats: number,
+    expirySecs?: number,
+    memo?: string
+  ): Promise<HoldInvoice>;
+
+  /**
+   * Get hold invoice state
+   *
+   * @param paymentHash - The payment hash to look up
+   * @returns Current invoice state
+   */
+  getInvoiceState(paymentHash: string): Promise<HoldInvoice['state']>;
+
+  /**
+   * Settle a hold invoice with the preimage
+   *
+   * MUST be called after detecting the preimage on-chain.
+   * Releases the locked funds to the seller.
+   *
+   * @param preimage - The revealed preimage (32-byte hex)
+   * @returns true if settled successfully
+   */
+  settleInvoice(preimage: string): Promise<boolean>;
+
+  /**
+   * Cancel a hold invoice
+   *
+   * Returns funds to the buyer. Use if swap fails or times out.
+   *
+   * @param paymentHash - The payment hash to cancel
+   * @returns true if cancelled successfully
+   */
+  cancelInvoice(paymentHash: string): Promise<boolean>;
+
+  /**
+   * Subscribe to invoice state changes
+   *
+   * @param paymentHash - The payment hash to watch
+   * @param onStateChange - Callback for state changes
+   * @returns Unsubscribe function
+   */
+  subscribeToInvoice(
+    paymentHash: string,
+    onStateChange: (state: HoldInvoice['state']) => void
+  ): () => void;
+}
+
+// =============================================================================
+// SETTLEMENT WATCHER PROVIDER
+// =============================================================================
+
+/**
+ * SettlementWatcherProvider - On-chain Preimage Detection
+ *
+ * CRITICAL: In the inverted flow, the seller MUST watch the blockchain
+ * to detect when the buyer reveals the preimage in the sweep transaction.
+ *
+ * If the seller closes their browser/app without a watcher running,
+ * they will LOSE THE PAYMENT (buyer gets Ordinal for free).
+ *
+ * Implementations: bitcoind RPC, Electrum, mempool.space websocket
+ */
+export interface SettlementWatcherProvider {
+  /**
+   * Start watching a lock UTXO for spend
+   *
+   * When the UTXO is spent (buyer sweeps), extracts the preimage
+   * from the witness stack and calls the callback.
+   *
+   * @param config - Watcher configuration
+   * @returns Stop function
+   */
+  watch(config: WatcherConfig): () => void;
+
+  /**
+   * Check if a UTXO has been spent
+   *
+   * @param txid - Transaction ID
+   * @param vout - Output index
+   * @returns Spending transaction info or null if unspent
+   */
+  checkUtxoSpent(
+    txid: string,
+    vout: number
+  ): Promise<{ spendingTxid: string; blockHeight?: number } | null>;
+
+  /**
+   * Extract preimage from a sweep transaction
+   *
+   * Parses the witness stack to find the preimage in the hashlock spend.
+   *
+   * @param txid - Sweep transaction ID
+   * @returns Preimage (32-byte hex) or null if not a hashlock spend
+   */
+  extractPreimage(txid: string): Promise<string | null>;
 }

@@ -102,8 +102,10 @@ export async function validateOffer(
   // =========================================================================
   // 5. PROTOCOL VERSION
   // =========================================================================
+  // Accept v1.1 (legacy) and v1.2 (current - inverted preimage flow)
 
-  if (offer.v !== PROTOCOL_VERSION) {
+  const supportedVersions = ['1.1', '1.2'];
+  if (!supportedVersions.includes(offer.v)) {
     errors.push('UNSUPPORTED_VERSION');
   }
 

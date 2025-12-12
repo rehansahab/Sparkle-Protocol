@@ -2969,11 +2969,12 @@ async function buildTaprootPsbt(claimData, swap) {
     psbtHex += witnessUtxo;
   }
 
-  // PSBT_IN_TAP_LEAF_SCRIPT (0x15) - BIP-371
-  // Key: 0x15 || controlBlock
-  // Value: script || leafVersion
-  const tapLeafScriptKey = '15' + controlBlock;  // type || controlBlock
-  const tapLeafScriptValue = hashlockScript + 'c0';  // script || leafVersion
+  // PSBT_IN_TAP_LEAF_SCRIPT (0x16) - BIP-371
+  // Key: 0x16 || leafVersion || script
+  // Value: control block
+  // NOTE: Per BIP-371, key contains the leaf data, value contains the control block
+  const tapLeafScriptKey = '16' + 'c0' + hashlockScript;  // type || leafVersion || script
+  const tapLeafScriptValue = controlBlock;                // control block
   psbtHex += encodeCompactSize(tapLeafScriptKey.length / 2);
   psbtHex += tapLeafScriptKey;
   psbtHex += encodeCompactSize(tapLeafScriptValue.length / 2);
@@ -3015,7 +3016,7 @@ async function buildTaprootPsbt(claimData, swap) {
     inputs: [{
       previousTxid: claimData.input.txid,
       previousVout: vout,
-      sequence: 0xfffffffe,
+      sequence: 0xfffffffd,
       witnessUtxo: {
         amount: inputAmount,
         scriptPubKey: scriptPubKeyHex

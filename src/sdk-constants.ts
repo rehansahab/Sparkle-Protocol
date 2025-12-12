@@ -43,9 +43,13 @@ export const RBF_SEQUENCE = 0xfffffffd;
  * The Bitcoin timelock must extend beyond Lightning invoice expiry
  * by at least this many blocks to prevent front-running attacks.
  *
- * Production Spec: 12 blocks (~2 hours)
+ * CRITICAL: 12 blocks is insufficient due to block time variance.
+ * Lightning uses Unix time, Bitcoin uses block height. If hashrate
+ * spikes, 12 blocks can occur in <60 minutes.
+ *
+ * Production Spec: 72 blocks (~12 hours) - accounts for extreme variance
  */
-export const SAFETY_BUFFER_BLOCKS = 12;
+export const SAFETY_BUFFER_BLOCKS = 72;
 
 /**
  * Average Bitcoin block time in seconds
@@ -144,8 +148,9 @@ export const ORDINAL_SAT_VALUE = 546;
 
 /**
  * Current protocol version
+ * v1.2 = Inverted preimage flow (buyer-generated)
  */
-export const PROTOCOL_VERSION = '1.1' as const;
+export const PROTOCOL_VERSION = '1.2' as const;
 
 /**
  * Supported networks

@@ -87,10 +87,18 @@ export async function constructSweepPsbt(
   // =========================================================================
   // 🛡️ GATE 2: ORDINAL PRESERVATION (Enforced in output construction)
   // =========================================================================
-  // We enforce this by setting Output[0].value = Input[0].value exactly.
-  // No fee deduction from the Ordinal UTXO is permitted.
+  // Output[0].value MUST be >= Input[0].value (allow dust padding)
+  //
+  // CRITICAL FIX: Many older Ordinals reside on 330 sat UTXOs.
+  // The Bitcoin network rejects outputs below 546 sat dust limit.
+  // We MUST allow padding from the funding UTXO to meet dust threshold.
 
-  const ordinalValue = params.lockUtxo.value;
+  let ordinalOutputValue = params.lockUtxo.value;
+
+  // Pad to dust threshold if Ordinal UTXO is below dust limit
+  if (ordinalOutputValue < DUST_THRESHOLD) {
+    ordinalOutputValue = DUST_THRESHOLD;
+  }
 
   // =========================================================================
   // 🛡️ GATE 3: AFFILIATE COMPLIANCE
@@ -226,11 +234,12 @@ export async function constructSweepPsbt(
   });
 
   // Output 0: Buyer receives Ordinal (GATE 2 ENFORCEMENT)
-  // Value is EXACTLY the lock UTXO value - no fees deducted
-  tx.addOutputAddress(params.buyerAddress, BigInt(ordinalValue), network);
+  // Value is >= lock UTXO value (may be padded to meet dust threshold)
+  tx.addOutputAddress(params.buyerAddress, BigInt(ordinalOutputValue), network);
 
-  // Calculate funding budget
-  let fundingBudget = params.fundingUtxo.value;
+  // Calculate funding budget (account for dust padding if any)
+  const dustPadding = ordinalOutputValue - params.lockUtxo.value;
+  let fundingBudget = params.fundingUtxo.value - dustPadding;
 
   // Affiliate outputs (from funding, not Ordinal)
   for (const aff of affiliates) {

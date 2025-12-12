@@ -13,14 +13,29 @@
 // =============================================================================
 
 /**
- * Sparkle Offer Content - FROZEN
+ * Sparkle Offer Content - v1.2 (Inverted Preimage Flow)
+ *
+ * CRITICAL SECURITY UPDATE: The preimage is now BUYER-GENERATED.
+ *
+ * OLD (BROKEN) FLOW:
+ *   Seller generates invoice -> Buyer pays -> Seller knows preimage first
+ *   PROBLEM: Seller can steal (cash + ordinal) if buyer's sweep fails
+ *
+ * NEW (SECURE) FLOW - Standard Submarine Swap Pattern:
+ *   1. Buyer generates preimage P and hash H = SHA256(P)
+ *   2. Buyer sends H to Seller
+ *   3. Seller locks Ordinal to H
+ *   4. Seller creates HOLD INVOICE tied to H
+ *   5. Buyer pays hold invoice (funds locked, not settled)
+ *   6. Buyer sweeps Ordinal on-chain (reveals P)
+ *   7. Seller detects P on blockchain and settles invoice
  *
  * This is the canonical data structure for a Sparkle atomic swap offer.
  * Published to Nostr as Kind 8888 event content.
  */
 export interface SparkleOfferContent {
-  /** Protocol version - MUST be "1.1" */
-  v: '1.1';
+  /** Protocol version - "1.1" (legacy) or "1.2" (inverted flow) */
+  v: '1.1' | '1.2';
 
   /** Network - mainnet or testnet */
   network: 'mainnet' | 'testnet';
@@ -40,7 +55,11 @@ export interface SparkleOfferContent {
   /** Price in satoshis */
   priceSats: number;
 
-  /** Payment hash - 32-byte hex (from Seller's Hold Invoice) */
+  /**
+   * Payment hash - 32-byte hex
+   * CRITICAL: This is now BUYER-GENERATED (H = SHA256(buyer_preimage))
+   * The buyer knows the preimage, the seller does not.
+   */
   paymentHash: string;
 
   /** Absolute block height for refund timelock */
@@ -252,6 +271,77 @@ export interface PaymentResult {
   preimage: string;
   /** Payment timestamp */
   paidAt: number;
+}
+
+// =============================================================================
+// INVERTED PREIMAGE FLOW TYPES (v1.2)
+// =============================================================================
+
+/**
+ * Buyer-generated preimage data
+ *
+ * In the secure submarine swap flow, the BUYER generates the preimage.
+ * This prevents the seller from knowing the preimage before the swap completes.
+ */
+export interface BuyerPreimage {
+  /** The preimage (32-byte hex) - KEEP SECRET until sweep */
+  preimage: string;
+  /** SHA256 hash of preimage (32-byte hex) - safe to share */
+  paymentHash: string;
+  /** Timestamp when generated */
+  createdAt: number;
+}
+
+/**
+ * Hold Invoice - Lightning invoice that locks funds without settling
+ *
+ * The seller creates a hold invoice tied to the buyer's payment hash.
+ * Funds are locked but NOT released to seller until they provide the preimage.
+ */
+export interface HoldInvoice {
+  /** BOLT11 invoice string */
+  bolt11: string;
+  /** Payment hash (must match buyer's hash) */
+  paymentHash: string;
+  /** Amount in satoshis */
+  amountSats: number;
+  /** Expiry timestamp (Unix) */
+  expiryUnix: number;
+  /** Hold invoice state */
+  state: 'pending' | 'accepted' | 'settled' | 'cancelled';
+}
+
+/**
+ * Preimage reveal event - detected when buyer sweeps on-chain
+ *
+ * The settlement watcher monitors the blockchain for the sweep transaction.
+ * When detected, it extracts the preimage from the witness stack.
+ */
+export interface PreimageReveal {
+  /** The revealed preimage (32-byte hex) */
+  preimage: string;
+  /** Transaction ID where preimage was revealed */
+  txid: string;
+  /** Block height of the sweep transaction */
+  blockHeight: number;
+  /** Timestamp when detected */
+  detectedAt: number;
+}
+
+/**
+ * Settlement watcher configuration
+ */
+export interface WatcherConfig {
+  /** Lock UTXO to monitor (txid:vout) */
+  lockUtxo: { txid: string; vout: number };
+  /** Expected payment hash */
+  paymentHash: string;
+  /** Callback when preimage is revealed */
+  onPreimageRevealed: (reveal: PreimageReveal) => void;
+  /** Callback when timelock expires without sweep */
+  onTimelockExpired?: () => void;
+  /** Poll interval in milliseconds (default: 10000) */
+  pollIntervalMs?: number;
 }
 
 // =============================================================================
