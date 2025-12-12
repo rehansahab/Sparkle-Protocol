@@ -555,3 +555,293 @@ export interface SettlementWatcherProvider {
    */
   extractPreimage(txid: string): Promise<string | null>;
 }
+
+// =============================================================================
+// SUBMARINE SWAP PROVIDER (C6 - LN Accessibility)
+// =============================================================================
+
+/**
+ * SubmarineSwapProvider - On-chain to Lightning Bridge
+ *
+ * ADDRESSING AUDIT FINDING C6: "Both parties must run LN nodes with
+ * sufficient channel liquidity. Many Ordinals traders do not operate
+ * LN channels. This requirement is a major barrier to adoption."
+ *
+ * Submarine swaps allow buyers WITHOUT Lightning channels to participate:
+ * 1. Buyer sends on-chain BTC to swap provider
+ * 2. Swap provider pays the Lightning invoice on buyer's behalf
+ * 3. Buyer receives preimage and can claim the Ordinal
+ *
+ * Implementations: Boltz, Loop, PeerSwap
+ */
+export interface SubmarineSwapProvider {
+  /**
+   * Get a quote for an on-chain to Lightning swap
+   *
+   * @param amountSats - Amount to swap in satoshis
+   * @returns Quote with fees and address to pay
+   */
+  getSwapQuote(amountSats: number): Promise<SubmarineSwapQuote>;
+
+  /**
+   * Create a submarine swap
+   *
+   * @param invoice - Lightning invoice to pay
+   * @returns Swap details including on-chain address to fund
+   */
+  createSwap(invoice: string): Promise<SubmarineSwap>;
+
+  /**
+   * Get swap status
+   *
+   * @param swapId - Swap identifier
+   * @returns Current swap state
+   */
+  getSwapStatus(swapId: string): Promise<SubmarineSwapStatus>;
+
+  /**
+   * Get the preimage after swap completion
+   *
+   * @param swapId - Swap identifier
+   * @returns Preimage if swap is complete, null otherwise
+   */
+  getPreimage(swapId: string): Promise<string | null>;
+
+  /**
+   * Claim refund if swap fails
+   *
+   * @param swapId - Swap identifier
+   * @param refundAddress - Address to receive refund
+   * @returns Refund transaction ID
+   */
+  claimRefund(swapId: string, refundAddress: string): Promise<string>;
+}
+
+/**
+ * Submarine swap quote
+ */
+export interface SubmarineSwapQuote {
+  /** Swap ID for tracking */
+  id: string;
+  /** Amount to receive on Lightning (after fees) */
+  receiveAmountSats: number;
+  /** Provider fee in satoshis */
+  feeSats: number;
+  /** On-chain miner fee estimate */
+  minerFeeSats: number;
+  /** Quote expiry timestamp */
+  expiresAt: number;
+}
+
+/**
+ * Active submarine swap
+ */
+export interface SubmarineSwap {
+  /** Unique swap identifier */
+  id: string;
+  /** On-chain address to fund */
+  address: string;
+  /** Amount to send (includes fees) */
+  expectedAmountSats: number;
+  /** Timeout block height for refund */
+  timeoutBlockHeight: number;
+  /** Redeem script for refund (if needed) */
+  redeemScript: string;
+  /** Current status */
+  status: SubmarineSwapStatus;
+}
+
+/**
+ * Submarine swap status
+ */
+export type SubmarineSwapStatus =
+  | 'created'        // Swap created, awaiting funding
+  | 'funded'         // On-chain payment received
+  | 'paying'         // Paying Lightning invoice
+  | 'completed'      // Invoice paid, preimage available
+  | 'refunding'      // Refund in progress
+  | 'refunded'       // Refund complete
+  | 'expired';       // Swap expired
+
+// =============================================================================
+// PRIVACY PROVIDER (C7 - Privacy Analysis)
+// =============================================================================
+
+/**
+ * PrivacyProvider - Route Privacy and Metadata Protection
+ *
+ * ADDRESSING AUDIT FINDING C7: "Linking a Lightning payment hash to an
+ * on-chain transaction may reveal the buyer's LN activity."
+ *
+ * Provides privacy-enhancing features:
+ * - Blinded routes (receiver privacy)
+ * - Route hints (private channel discovery)
+ * - Rendezvous routing (sender + receiver privacy)
+ */
+export interface PrivacyProvider {
+  /**
+   * Generate blinded route hints for invoice
+   *
+   * Blinded routes hide the final destination from intermediate nodes.
+   *
+   * @param hops - Number of blinded hops (default: 2)
+   * @returns Blinded route data to include in invoice
+   */
+  generateBlindedRoute(hops?: number): Promise<BlindedRoute>;
+
+  /**
+   * Create invoice with route hints for private channels
+   *
+   * @param routeHints - Private channel route hints
+   * @returns Modified invoice with route hints
+   */
+  addRouteHints(invoice: string, routeHints: RouteHint[]): Promise<string>;
+
+  /**
+   * Check if Tor is available for relay connections
+   */
+  isTorAvailable(): Promise<boolean>;
+
+  /**
+   * Get recommended privacy settings based on threat model
+   *
+   * @param threatLevel - 'low' | 'medium' | 'high'
+   * @returns Recommended privacy configuration
+   */
+  getRecommendedSettings(threatLevel: 'low' | 'medium' | 'high'): PrivacyConfig;
+}
+
+/**
+ * Blinded route for receiver privacy
+ */
+export interface BlindedRoute {
+  /** Blinded path ID */
+  pathId: string;
+  /** Introduction node pubkey */
+  introductionNode: string;
+  /** Encrypted route data */
+  encryptedData: string;
+  /** Expiry timestamp */
+  expiresAt: number;
+}
+
+/**
+ * Route hint for private channel discovery
+ */
+export interface RouteHint {
+  /** Node pubkey */
+  nodePubkey: string;
+  /** Short channel ID */
+  shortChannelId: string;
+  /** Fee base (millisats) */
+  feeBaseMsat: number;
+  /** Fee proportional (parts per million) */
+  feeProportionalMillionths: number;
+  /** CLTV expiry delta */
+  cltvExpiryDelta: number;
+}
+
+/**
+ * Privacy configuration
+ */
+export interface PrivacyConfig {
+  /** Use Tor for Nostr relay connections */
+  useTor: boolean;
+  /** Use blinded routes in invoices */
+  useBlindedRoutes: boolean;
+  /** Number of blinded hops */
+  blindedHops: number;
+  /** Include route hints for private channels */
+  includeRouteHints: boolean;
+  /** Randomize payment timing to prevent correlation */
+  randomizeTimings: boolean;
+  /** Maximum timing jitter in seconds */
+  maxTimingJitterSecs: number;
+}
+
+// =============================================================================
+// FEE BUMPING PROVIDER (C4 - Confirmation Race Conditions)
+// =============================================================================
+
+/**
+ * FeeBumpingProvider - CPFP and RBF Transaction Management
+ *
+ * ADDRESSING AUDIT FINDING C4: "If the lock transaction or claim transaction
+ * becomes stuck due to low fees, the refund path may activate or the HTLC
+ * may time out."
+ *
+ * Provides strategies to accelerate stuck transactions:
+ * - RBF (Replace-By-Fee) for own transactions
+ * - CPFP (Child-Pays-For-Parent) for any transaction
+ */
+export interface FeeBumpingProvider {
+  /**
+   * Check if a transaction supports RBF
+   *
+   * @param txid - Transaction ID
+   * @returns true if RBF-enabled (nSequence < 0xfffffffe)
+   */
+  isRbfEnabled(txid: string): Promise<boolean>;
+
+  /**
+   * Create RBF replacement transaction with higher fee
+   *
+   * @param originalTxHex - Original transaction hex
+   * @param newFeeRate - New fee rate in sats/vByte
+   * @returns Replacement transaction hex (unsigned)
+   */
+  createRbfReplacement(originalTxHex: string, newFeeRate: number): Promise<string>;
+
+  /**
+   * Create CPFP child transaction to bump parent
+   *
+   * @param parentTxid - Parent transaction ID to accelerate
+   * @param parentVout - Output index to spend
+   * @param targetFeeRate - Combined fee rate target
+   * @returns CPFP transaction hex (unsigned)
+   */
+  createCpfpBump(
+    parentTxid: string,
+    parentVout: number,
+    targetFeeRate: number
+  ): Promise<string>;
+
+  /**
+   * Calculate fee required to achieve target confirmation time
+   *
+   * @param vsize - Transaction virtual size
+   * @param targetBlocks - Target confirmation in blocks
+   * @returns Required fee in satoshis
+   */
+  calculateRequiredFee(vsize: number, targetBlocks: number): Promise<number>;
+
+  /**
+   * Get recommended fee bumping strategy
+   *
+   * @param txid - Transaction to bump
+   * @param urgency - How urgent is confirmation
+   * @returns Recommended strategy and parameters
+   */
+  getFeeBumpStrategy(
+    txid: string,
+    urgency: 'low' | 'medium' | 'high' | 'critical'
+  ): Promise<FeeBumpStrategy>;
+}
+
+/**
+ * Fee bumping strategy recommendation
+ */
+export interface FeeBumpStrategy {
+  /** Recommended method */
+  method: 'rbf' | 'cpfp' | 'wait';
+  /** Reason for recommendation */
+  reason: string;
+  /** Suggested new fee rate (sats/vByte) */
+  suggestedFeeRate: number;
+  /** Estimated additional cost (sats) */
+  estimatedCost: number;
+  /** Estimated confirmation time (blocks) */
+  estimatedBlocks: number;
+  /** Warning if any */
+  warning?: string;
+}

@@ -217,3 +217,142 @@ export const SAFETY_ERRORS = {
 } as const;
 
 export type SafetyError = typeof SAFETY_ERRORS[keyof typeof SAFETY_ERRORS];
+
+// =============================================================================
+// FEE BUMPING CONSTANTS (C4 - Confirmation Race Conditions)
+// =============================================================================
+
+/**
+ * Fee Bumping Thresholds
+ *
+ * ADDRESSING AUDIT FINDING C4: "Fee-bumping and confirmation race conditions"
+ *
+ * These constants define when and how to bump transaction fees.
+ */
+
+/**
+ * Minimum fee bump increment (BIP-125)
+ *
+ * RBF replacement must pay at least this much more per vByte
+ */
+export const MIN_RBF_INCREMENT = 1; // sats/vByte
+
+/**
+ * Recommended fee bump multiplier
+ *
+ * When bumping fees, multiply current rate by this factor
+ */
+export const FEE_BUMP_MULTIPLIER = 1.5;
+
+/**
+ * CPFP child transaction estimated vsize
+ *
+ * A minimal CPFP child spending a P2TR output
+ */
+export const CPFP_CHILD_VSIZE = 110;
+
+/**
+ * Maximum fee rate to prevent overpaying
+ *
+ * Safety cap to prevent accidentally paying excessive fees
+ */
+export const MAX_FEE_RATE = 500; // sats/vByte
+
+/**
+ * Fee rate urgency thresholds
+ *
+ * Used to determine when fee bumping is needed
+ */
+export const FEE_URGENCY_THRESHOLDS = {
+  /** Critical: Must confirm within 2 blocks */
+  critical: 2,
+  /** High: Should confirm within 6 blocks (1 hour) */
+  high: 6,
+  /** Medium: Should confirm within 12 blocks (2 hours) */
+  medium: 12,
+  /** Low: Can wait up to 144 blocks (24 hours) */
+  low: 144,
+} as const;
+
+/**
+ * Blocks remaining before timelock that triggers fee bump
+ *
+ * If fewer than this many blocks remain before timelock expires,
+ * aggressively bump fees to ensure confirmation.
+ */
+export const FEE_BUMP_TRIGGER_BLOCKS = 24;
+
+/**
+ * Minimum confirmations before considering a swap "safe"
+ *
+ * For high-value swaps, wait for more confirmations
+ */
+export const CONFIRMATION_THRESHOLDS = {
+  /** Low value (<100k sats): 1 confirmation sufficient */
+  low: 1,
+  /** Medium value (100k-1M sats): 2 confirmations recommended */
+  medium: 2,
+  /** High value (>1M sats): 3+ confirmations recommended */
+  high: 3,
+} as const;
+
+// =============================================================================
+// PRIVACY CONSTANTS (C7 - Privacy Analysis)
+// =============================================================================
+
+/**
+ * Privacy Configuration Defaults
+ *
+ * ADDRESSING AUDIT FINDING C7: "Lack of privacy analysis"
+ */
+
+/**
+ * Default number of blinded hops for invoices
+ */
+export const DEFAULT_BLINDED_HOPS = 2;
+
+/**
+ * Maximum timing jitter for payment correlation prevention
+ */
+export const MAX_TIMING_JITTER_SECS = 30;
+
+/**
+ * Recommended Nostr relays with Tor support
+ */
+export const TOR_ENABLED_RELAYS = [
+  'wss://relay.nostr.bg',
+  'wss://nostr.wine',
+  'wss://relay.primal.net',
+] as const;
+
+// =============================================================================
+// SUBMARINE SWAP CONSTANTS (C6 - LN Accessibility)
+// =============================================================================
+
+/**
+ * Submarine Swap Provider Configuration
+ *
+ * ADDRESSING AUDIT FINDING C6: "Lightning network requirements and UX"
+ */
+
+/**
+ * Default submarine swap providers (Boltz-compatible)
+ */
+export const SUBMARINE_SWAP_PROVIDERS = {
+  mainnet: 'https://api.boltz.exchange',
+  testnet: 'https://testnet.boltz.exchange',
+} as const;
+
+/**
+ * Maximum acceptable submarine swap fee (basis points)
+ *
+ * Warn user if swap provider fee exceeds this
+ */
+export const MAX_SUBMARINE_SWAP_FEE_BPS = 100; // 1%
+
+/**
+ * Submarine swap timeout (blocks)
+ *
+ * How long before a submarine swap can be refunded
+ */
+export const SUBMARINE_SWAP_TIMEOUT_BLOCKS = 288; // 48 hours

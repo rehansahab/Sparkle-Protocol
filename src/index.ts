@@ -3,7 +3,7 @@
  *
  * Trustless atomic swaps for Bitcoin Ordinals via Lightning Network.
  *
- * v1.2.0 - CRITICAL SECURITY UPDATE:
+ * v1.2.1 - PRODUCTION READINESS UPDATE (Audit Response):
  * - Inverted preimage flow (buyer-generated) - fixes seller theft vulnerability
  * - 72-block safety buffer (was 12) - fixes time-bandit attack
  * - Dust padding support (Gate 2 >= instead of ==) - fixes sub-dust ordinals
@@ -54,6 +54,25 @@ export {
   // Error codes
   SAFETY_ERRORS,
   SUPPORTED_NETWORKS,
+
+  // Fee bumping constants (C4)
+  MIN_RBF_INCREMENT,
+  FEE_BUMP_MULTIPLIER,
+  CPFP_CHILD_VSIZE,
+  MAX_FEE_RATE,
+  FEE_URGENCY_THRESHOLDS,
+  FEE_BUMP_TRIGGER_BLOCKS,
+  CONFIRMATION_THRESHOLDS,
+
+  // Privacy constants (C7)
+  DEFAULT_BLINDED_HOPS,
+  MAX_TIMING_JITTER_SECS,
+  TOR_ENABLED_RELAYS,
+
+  // Submarine swap constants (C6)
+  SUBMARINE_SWAP_PROVIDERS,
+  MAX_SUBMARINE_SWAP_FEE_BPS,
+  SUBMARINE_SWAP_TIMEOUT_BLOCKS,
 } from './sdk-constants.js';
 
 export type { SafetyError } from './sdk-constants.js';
@@ -126,6 +145,22 @@ export type {
   FeeEstimatorProvider,
   HoldInvoiceProvider,
   SettlementWatcherProvider,
+
+  // C6 - Submarine Swap Provider (LN Accessibility)
+  SubmarineSwapProvider,
+  SubmarineSwapQuote,
+  SubmarineSwap,
+  SubmarineSwapStatus,
+
+  // C7 - Privacy Provider
+  PrivacyProvider,
+  BlindedRoute,
+  RouteHint,
+  PrivacyConfig,
+
+  // C4 - Fee Bumping Provider
+  FeeBumpingProvider,
+  FeeBumpStrategy,
 } from './sdk-providers.js';
 
 // =============================================================================
@@ -178,6 +213,27 @@ export {
   recoverPreimageLocal,
   clearPreimageLocal,
 } from './sdk-watcher.js';
+
+// =============================================================================
+// TEST VECTORS (C1 - End-to-End Demonstration)
+// =============================================================================
+
+export {
+  // Complete swap flow test vector
+  SWAP_FLOW_TEST_VECTOR,
+  // Safety gate validation vectors
+  SAFETY_GATE_VECTORS,
+  // BIP-371 PSBT construction vector
+  PSBT_CONSTRUCTION_VECTOR,
+  // Preimage verification vectors
+  PREIMAGE_VECTORS,
+  // Settlement watcher vector
+  SETTLEMENT_WATCHER_VECTOR,
+  // Helper functions
+  generateTestPreimage,
+  verifyTestPreimage,
+  runTestVectors,
+} from './sdk-test-vectors.js';
 
 // =============================================================================
 // ADAPTERS
@@ -374,4 +430,4 @@ export * as legacyBrowser from './browser/index.js';
 // VERSION
 // =============================================================================
 
-export const VERSION = '1.2.0';
+export const VERSION = '1.2.1';
