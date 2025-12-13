@@ -748,7 +748,7 @@
 
     <a href="index.html" class="back-button">← Back to Home</a>
 
-    <header class="hero" style="padding-top: 0;">
+    <header class="hero">
         <h1 class="title" style="font-size: 20pt; border: none;">Taproot Atomic Swap</h1>
         <p class="subtitle" style="font-size: 12pt;">
             Trustless P2P swaps using Taproot script-path spending. No private keys required.
@@ -835,7 +835,7 @@
                         const list = document.getElementById('activeRelaysList');
                         if (!list || typeof getActiveRelays !== 'function') return;
                         const relays = getActiveRelays();
-                        list.innerHTML = 'Using: ' + relays.map(r => r.replace('wss://', '')).join(', ');
+                        list.textContent = 'Using: ' + relays.map(r => r.replace('wss://', '')).join(', ');
                     }
                     function handleAddRelay() {
                         const input = document.getElementById('customRelayInput');
@@ -979,9 +979,13 @@
             crossorigin="anonymous"></script>
 
     <!-- Sparkle Protocol SDK v0.3.8 - Core swap primitives -->
-    <script src="js/sparkle-browser.js"></script>
+    <script src="js/sparkle-browser.js"
+            integrity="sha384-wq8AQKyMG6QyMaJ6mUWBOI7sGBZlWl5PocfqiXcteejZMCd8JYtFiQOTGdbRX1fz"
+            crossorigin="anonymous"></script>
 
     <!-- Sparkle Swap v0.3.8 - BIP-341 Parity + RBF + Hardening (Dec 2024) -->
-    <script src="sparkle-swap.js"></script>
+    <script src="sparkle-swap.js"
+            integrity="sha384-il5Klr7PEXlgKXY+LJHq1hbP+fHTKoD+nvdCJRwkc8z/0ixq8VHQ7v++9rBbvMqo"
+            crossorigin="anonymous"></script>
 </body>
 </html>
