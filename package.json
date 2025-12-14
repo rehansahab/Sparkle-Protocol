@@ -1,5 +1,5 @@
 {
-  "name": "@sparkle-protocol/core",
+  "name": "@sparkleprotocol/core",
   "version": "1.0.0",
   "description": "Trustless atomic swaps for Bitcoin Ordinals via Lightning Network - Mainnet Validated",
   "type": "module",

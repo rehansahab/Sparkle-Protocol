@@ -11,7 +11,7 @@
 <p align="center">
   <a href="#mainnet-proof"><img src="https://img.shields.io/badge/Status-Mainnet%20Validated-brightgreen?style=flat-square" alt="Status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
-  <a href="https://www.npmjs.com/package/@sparkle-protocol/core"><img src="https://img.shields.io/npm/v/@sparkle-protocol/core?style=flat-square" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/@sparkleprotocol/core"><img src="https://img.shields.io/npm/v/@sparkleprotocol/core?style=flat-square" alt="npm"></a>
   <img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
 </p>
 
@@ -37,7 +37,7 @@ Sparkle Protocol enables **trustless atomic swaps for Bitcoin Ordinals** using L
 ### Installation
 
 ```bash
-npm install @sparkle-protocol/core
+npm install @sparkleprotocol/core
 ```
 
 ### Basic Usage
@@ -47,7 +47,7 @@ import {
   createSparkleSwapAddress,
   generatePreimage,
   computePaymentHash,
-} from '@sparkle-protocol/core';
+} from '@sparkleprotocol/core';
 
 // 1. Generate preimage and payment hash
 const { preimage, preimageHex } = generatePreimage();
@@ -165,5 +165,5 @@ MIT License - see [LICENSE](LICENSE)
 ## Links
 
 - **Website:** https://sparkleprotocol.com
-- **NPM:** https://www.npmjs.com/package/@sparkle-protocol/core
+- **NPM:** https://www.npmjs.com/package/@sparkleprotocol/core
 - **Specification:** [docs/SPECIFICATION.md](docs/SPECIFICATION.md)

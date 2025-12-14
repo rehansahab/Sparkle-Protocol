@@ -93,3 +93,4 @@ lnd.conf
 .htpasswd
 ftp-deploy.json
 deploy-config.*
+.npmrc
