@@ -1,0 +1,13 @@
+{
+  "test": "refund_path",
+  "timestamp": "2025-12-14T05:36:47.180Z",
+  "steps": [],
+  "current_height": 638,
+  "timelock_height": 641,
+  "seller_pubkey": "038ef863e6c758b25769eb0fef08ae2394bdf8590b49df5f8167a8a197de13683f",
+  "buyer_pubkey": "0220ea1c75320b2ccbc68d8c45139609e58a3288dbdcb9257bba1c22e6c401ef30",
+  "preimage": "ae799b2120bb3edccac77fffa9227224f2376741036bbf3d067cd42a4ffb2d4d",
+  "payment_hash": "f5ae6c6874527da82760fe3ba68405f6db17b3d320aa49d95b86ef68065b066e",
+  "error": "Not enough data",
+  "result": "ERROR"
+}
