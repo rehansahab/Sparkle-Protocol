@@ -1,0 +1,153 @@
+{
+  "proof_bundle_version": "1.0",
+  "generated": "2025-12-14",
+  "protocol_version": "1.2.0",
+
+  "inscription": {
+    "inscriptionId": "16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60i0",
+    "name": "Darkita #1",
+    "collection": "10K Darkitas",
+    "ordinals_url": "https://ordinals.com/inscription/16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60i0",
+    "original_utxo": "16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60:1",
+    "value_sats": 330
+  },
+
+  "lock_transaction": {
+    "txid": "a3c6b08ed820194ee3274a3eae945071c2ed33105b41db207cd16c9661de28a7",
+    "hex": "02000000000102606dd9bd591d984e8a489c5acef2fef7ac50d6c97fd73cea56ca42e5d5a2d7160100000000ffffffff8e8e533c6b0d46a029226999bf2d5e8553629bd2c989a3b7bae417260e484c220100000000ffffffff024a01000000000000225120743014446f9d5e871acc3fa803ce3a992929d775a8487195c5b873ee3c1d18a5b4020000000000002251204a9f6fb149524f1ab241058d662e478829756f550784d221b84b0700391eec280140d7f47f31074d9c6c0ebaf79520df0c6ea8be840816c4e60c4fca0daa5704f0f993b890e491b43531bb208bac775192089e052f13b75a913594fe174fe1cf3c020140a6fa29f426b87b0ed282b8c945807104b723b5210881bb595bf5af2829467b9a32b3679716d19fbc56403ea2975b27c4bb2625d642c08aad727f7ba4aa2416c800000000",
+    "mempool_url": "https://mempool.space/tx/a3c6b08ed820194ee3274a3eae945071c2ed33105b41db207cd16c9661de28a7",
+    "block_height": 927703,
+    "inputs": [
+      {
+        "index": 0,
+        "txid": "16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60",
+        "vout": 1,
+        "value": 330,
+        "type": "INSCRIPTION (Darkita #1)",
+        "note": "Inscription UTXO - FIFO position 0"
+      },
+      {
+        "index": 1,
+        "txid": "224c480e2617e4bab7a389c9d29b6253855e2dbf99692229a0460d6b3c538e8e",
+        "vout": 1,
+        "value": 2000,
+        "type": "FUNDING",
+        "note": "Fee funding input"
+      }
+    ],
+    "outputs": [
+      {
+        "index": 0,
+        "address": "bc1pwscpg3r0n40gwxkv875q8n36ny5jn4m44py8r9w9hpe7u0qarzjsxvhpr6",
+        "value": 330,
+        "type": "LOCK ADDRESS (P2TR with hashlock/timelock)",
+        "note": "Inscription locked here - FIFO position 0 preserved"
+      },
+      {
+        "index": 1,
+        "address": "bc1pf20klv2f2f834vjpqkxkvtj83q5h2m64q7zdygdcfvrsqwg7as5q0m9hpe",
+        "value": 692,
+        "type": "CHANGE"
+      }
+    ],
+    "fee": 1308,
+    "fifo_verified": true
+  },
+
+  "sweep_transaction": {
+    "txid": "9422e6cb358295d86ad6d73bc0566c869aa0be8290c60598be205f4eea9ce50b",
+    "hex": "02000000000102a728de61966cd17c20db415b1033edc2715094ae3e4a27e34e1920d88eb0c6a30000000000ffffffff5c6c7ccecadd1fb452fd6e81b35078b4b22b4fea52950fac3b2f996e4dc3d1650100000000ffffffff024a01000000000000225120d8f87c802a4b4da1d769d01c95533113cf276384bc6376521e46c32157c3ddcd3fda0200000000002251209f7b50b376c4c7acb568ae316462cc7c9d6ce4e09d60874fb70ea0b2ebfeddd90140e99fc7afce60682ea525ad5c49ed2c8619e380b8f816254b78e2507f5cba9e7ce22f8e371f068256b24e229be8b98f3e1479c9522fa21beceac1d8d8ca2ce65c0140768edc9e5285156d0f02f0cb1606938612fe41dc6f9596db37373f54a63baac834b121f888786a810d65429f08d6776e4cb0deb5ac9c527a5b04c99ab4c6de4a00000000",
+    "mempool_url": "https://mempool.space/tx/9422e6cb358295d86ad6d73bc0566c869aa0be8290c60598be205f4eea9ce50b",
+    "block_height": 927703,
+    "inputs": [
+      {
+        "index": 0,
+        "txid": "a3c6b08ed820194ee3274a3eae945071c2ed33105b41db207cd16c9661de28a7",
+        "vout": 0,
+        "value": 330,
+        "type": "LOCK OUTPUT",
+        "note": "Spending from lock address - FIFO position 0"
+      },
+      {
+        "index": 1,
+        "txid": "65d1c34d6e992f3bac0f9552ea4f2bb2b47850b3816efd52b41fddcace7c6c5c",
+        "vout": 1,
+        "value": 188251,
+        "type": "FUNDING",
+        "note": "Fee funding input"
+      }
+    ],
+    "outputs": [
+      {
+        "index": 0,
+        "address": "bc1pmru8eqp2fdx6r4mf6qwf25e3z08jwcuyh33hv5s7gmpjz47rmhxs8v8w3f",
+        "value": 330,
+        "type": "BUYER RECEIVES INSCRIPTION",
+        "note": "Inscription transferred - FIFO position 0 preserved"
+      },
+      {
+        "index": 1,
+        "address": "bc1pnaa4pvmkcnr6edtg4cckgckv0jwkee8qn4sgwnahp6st96l7mhvsh9e7n6",
+        "value": 186943,
+        "type": "CHANGE"
+      }
+    ],
+    "fee": 1308,
+    "fifo_verified": true
+  },
+
+  "lightning_settlement": {
+    "payment_hash": "1b812c64655e9ca5e002c16a6f932b6ce95eee29a4f7b7227b371f005b027626",
+    "preimage": "b0f0af91b3602129c38f3db8febdeecb9e5507ca816116616e360738b58830e9",
+    "amount_sats": 5000,
+    "state": "SETTLED",
+    "payer": "Phoenix Wallet",
+    "memo": "SPARKLE Atomic Swap - Darkita Inscription",
+    "cryptographic_binding": {
+      "claim": "SHA256(preimage) == payment_hash",
+      "verification": "SHA256(b0f0af91b3602129c38f3db8febdeecb9e5507ca816116616e360738b58830e9) = 1b812c64655e9ca5e002c16a6f932b6ce95eee29a4f7b7227b371f005b027626",
+      "result": "VERIFIED"
+    }
+  },
+
+  "ordinals_provenance": {
+    "location_before_lock": "16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60:1:0",
+    "location_after_lock": "a3c6b08ed820194ee3274a3eae945071c2ed33105b41db207cd16c9661de28a7:0:0",
+    "location_after_sweep": "9422e6cb358295d86ad6d73bc0566c869aa0be8290c60598be205f4eea9ce50b:0:0",
+    "fifo_chain_verified": true
+  },
+
+  "verification_steps": [
+    {
+      "step": 1,
+      "description": "Verify Lock TX on mempool.space",
+      "url": "https://mempool.space/tx/a3c6b08ed820194ee3274a3eae945071c2ed33105b41db207cd16c9661de28a7",
+      "expected": "Confirmed in block 927703"
+    },
+    {
+      "step": 2,
+      "description": "Verify Sweep TX on mempool.space",
+      "url": "https://mempool.space/tx/9422e6cb358295d86ad6d73bc0566c869aa0be8290c60598be205f4eea9ce50b",
+      "expected": "Confirmed in block 927703, spends Lock TX output 0"
+    },
+    {
+      "step": 3,
+      "description": "Verify inscription on ordinals.com",
+      "url": "https://ordinals.com/inscription/16d7a2d5e542ca56ea3cd77fc9d650acf7fef2ce5a9c488a4e981d59bdd96d60i0",
+      "expected": "Current location matches sweep TX output 0"
+    },
+    {
+      "step": 4,
+      "description": "Verify cryptographic binding",
+      "command": "echo -n 'b0f0af91b3602129c38f3db8febdeecb9e5507ca816116616e360738b58830e9' | xxd -r -p | sha256sum",
+      "expected": "1b812c64655e9ca5e002c16a6f932b6ce95eee29a4f7b7227b371f005b027626"
+    }
+  ],
+
+  "atomic_swap_summary": {
+    "seller_locked": "Darkita #1 inscription (330 sats)",
+    "buyer_paid": "5,000 sats via Lightning",
+    "settlement": "Preimage revealed, buyer claimed inscription",
+    "result": "COMPLETE ATOMIC SWAP - Both parties received their assets"
+  }
+}
