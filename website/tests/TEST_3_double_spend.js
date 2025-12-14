@@ -9,7 +9,7 @@ const { execSync } = require('child_process');
 const crypto = require('crypto');
 
 // Regtest configuration
-const CLI = 'D:\\Bitcoin\\bin\\bitcoin-cli.exe -regtest -rpcuser=sparkle -rpcpassword=test123 -rpcport=18443';
+const CLI = 'bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -rpcport=18443';
 const WALLET = '-rpcwallet=sparkle_test';
 
 function btcCli(cmd) {
@@ -190,7 +190,7 @@ runDoubleSpendTest()
         // Save result to file
         const fs = require('fs');
         fs.writeFileSync(
-            'C:\\Users\\sk84l\\Downloads\\PROTOCOL UPDATE\\hostinger-deploy\\tests\\TEST_3_double_spend_result.json',
+            './TEST_3_double_spend_result.json',
             JSON.stringify(result, null, 2)
         );
         console.log('\nResult saved to TEST_3_double_spend_result.json');

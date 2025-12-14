@@ -238,7 +238,7 @@ This confirms proper UTXO chaining and atomic execution.
 
 ```javascript
 const CONFIG = {
-  bitcoinCli: 'D:\\Bitcoin\\bin\\bitcoin-cli.exe',
+  bitcoinCli: 'bitcoin-cli',
   rpcUser: 'darkita',
   rpcPassword: '***',
   rpcPort: 8332,

@@ -510,7 +510,7 @@ bitcoin-cli decodescript "5120b9289ef4e1e27a5a1470b905ff438bc2b9ce8a1754bb816fcc
 ### 11.3 File Locations
 
 ```
-C:\Users\sk84l\Downloads\PROTOCOL UPDATE\hostinger-deploy\mainnet\
+C:\Users\user\Downloads\PROTOCOL UPDATE\hostinger-deploy\mainnet\
 ├── sparkle-mainnet.js
 ├── complete-spend-mainnet.js
 ├── test-broadcast.js

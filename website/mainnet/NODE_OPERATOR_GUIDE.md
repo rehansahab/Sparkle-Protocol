@@ -36,7 +36,7 @@ bitcoin-cli getbalance
 ```bash
 cd /path/to/hostinger-deploy/mainnet
 # Or on Windows:
-cd C:\Users\sk84l\Downloads\PROTOCOL UPDATE\hostinger-deploy\mainnet
+cd /path/to/sparkle
 ```
 
 ### Step 2: Install dependencies

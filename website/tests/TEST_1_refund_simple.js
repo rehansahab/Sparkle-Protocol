@@ -10,7 +10,7 @@ const { execSync } = require('child_process');
 const crypto = require('crypto');
 const fs = require('fs');
 
-const CLI = 'D:\\Bitcoin\\bin\\bitcoin-cli.exe -regtest -rpcuser=sparkle -rpcpassword=test123 -rpcport=18443';
+const CLI = 'bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -rpcport=18443';
 const WALLET = '-rpcwallet=sparkle_test';
 
 function btcCli(cmd) {
@@ -229,7 +229,7 @@ async function runRefundTest() {
     console.log(JSON.stringify(testResult, null, 2));
 
     fs.writeFileSync(
-        'C:\\Users\\sk84l\\Downloads\\PROTOCOL UPDATE\\hostinger-deploy\\tests\\TEST_1_refund_simple_result.json',
+        './TEST_1_refund_simple_result.json',
         JSON.stringify(testResult, null, 2)
     );
     console.log('\nResult saved to TEST_1_refund_simple_result.json');

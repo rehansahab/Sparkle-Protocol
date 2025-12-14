@@ -20,7 +20,7 @@ Complete guide to test Taproot atomic swaps on Bitcoin regtest.
 mkdir C:\bitcoin-regtest
 
 # Start bitcoind in regtest mode
-bitcoind -regtest -daemon -datadir=C:\bitcoin-regtest -server -rpcuser=sparkle -rpcpassword=test123
+bitcoind -regtest -daemon -datadir=C:\bitcoin-regtest -server -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD
 
 # Wait 2-3 seconds for startup
 Start-Sleep -Seconds 3
@@ -29,7 +29,7 @@ Start-Sleep -Seconds 3
 ### Linux/Mac
 ```bash
 mkdir ~/.bitcoin-regtest
-bitcoind -regtest -daemon -datadir=~/.bitcoin-regtest -server -rpcuser=sparkle -rpcpassword=test123
+bitcoind -regtest -daemon -datadir=~/.bitcoin-regtest -server -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD
 sleep 3
 ```
 
@@ -39,13 +39,13 @@ sleep 3
 
 ```bash
 # Create a wallet
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 createwallet "sparkle_test"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD createwallet "sparkle_test"
 
 # Generate 101 blocks (coins mature after 100 confirmations)
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 -generate 101
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -generate 101
 
 # Check balance (should be 50 BTC from first block)
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 getbalance
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD getbalance
 ```
 
 ---
@@ -54,10 +54,10 @@ bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 getbalance
 
 ```bash
 # Get a bech32m (Taproot) address for receiving change
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 getnewaddress "change" "bech32m"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD getnewaddress "change" "bech32m"
 
 # Get a legacy address for comparison
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 getnewaddress "legacy" "legacy"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD getnewaddress "legacy" "legacy"
 ```
 
 Save these addresses - you'll need them.
@@ -89,13 +89,13 @@ This will output the regtest Taproot address (bcrt1p...).
 
 ```bash
 # Send 0.001 BTC (100,000 sats) to the Taproot address
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 sendtoaddress "bcrt1p[YOUR_TAPROOT_ADDRESS]" 0.001
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD sendtoaddress "bcrt1p[YOUR_TAPROOT_ADDRESS]" 0.001
 
 # Mine a block to confirm
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 -generate 1
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -generate 1
 
 # Get the txid and vout
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 listunspent 1 9999999 '["bcrt1p[YOUR_TAPROOT_ADDRESS]"]'
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD listunspent 1 9999999 '["bcrt1p[YOUR_TAPROOT_ADDRESS]"]'
 ```
 
 ---
@@ -123,10 +123,10 @@ This outputs:
 
 ```bash
 # Decode and analyze
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 decodepsbt "BASE64_PSBT_HERE"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD decodepsbt "BASE64_PSBT_HERE"
 
 # Check it's valid structure
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 analyzepsbt "BASE64_PSBT_HERE"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD analyzepsbt "BASE64_PSBT_HERE"
 ```
 
 ---
@@ -149,16 +149,16 @@ node sign-claim-psbt.js
 
 ```bash
 # Finalize the PSBT
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 finalizepsbt "SIGNED_PSBT_BASE64"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD finalizepsbt "SIGNED_PSBT_BASE64"
 
 # Broadcast the transaction
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 sendrawtransaction "FINAL_TX_HEX"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD sendrawtransaction "FINAL_TX_HEX"
 
 # Mine a block
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 -generate 1
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -generate 1
 
 # Verify it confirmed
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 gettransaction "TXID"
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD gettransaction "TXID"
 ```
 
 ---
@@ -169,7 +169,7 @@ To test the refund/timeout path:
 
 ```bash
 # Mine blocks until timeout height is reached
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 -generate 100
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD -generate 100
 
 # Build refund PSBT (uses refund script instead of hashlock)
 node build-refund-psbt.js
@@ -183,7 +183,7 @@ node build-refund-psbt.js
 
 ```bash
 # Alias for convenience (add to profile)
-alias btc="bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123"
+alias btc="bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD"
 
 # Common commands
 btc getblockcount          # Current block height
@@ -201,7 +201,7 @@ btc decoderawtransaction "..." # Decode raw tx
 
 ```bash
 # Stop bitcoind
-bitcoin-cli -regtest -rpcuser=sparkle -rpcpassword=test123 stop
+bitcoin-cli -regtest -rpcuser=YOUR_USERNAME -rpcpassword=YOUR_PASSWORD stop
 
 # Delete regtest data (fresh start)
 rm -rf C:\bitcoin-regtest\regtest   # Windows

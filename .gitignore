@@ -1,33 +1,95 @@
+# ===============================================
+# SPARKLE PROTOCOL - GITIGNORE
+# ===============================================
+
 # Dependencies
 node_modules/
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Build output
 dist/
+build/
 *.js.map
 
-# IDE
+# IDE and Editor
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-*
+.project
+.settings/
 
-# OS
+# OS files
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Environment
+# Environment and Secrets (CRITICAL)
 .env
+.env.*
 .env.local
 .env.*.local
+*.env
+secrets/
+.secrets
+credentials.json
+**/credentials/*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Private keys and wallets (CRITICAL)
+*.wif
+*wallet*.json
+*mnemonic*
+*seed*
+*privkey*
+*private*key*
 
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Test coverage
+# Test coverage and results
 coverage/
+.nyc_output/
+*.lcov
 
 # Temporary files
 *.tmp
 *.temp
+*.bak
+*.backup
+*~
+
+# Internal documentation (not for public)
+UPLOAD_INSTRUCTIONS*
+*_INTERNAL*
+*_AUDIT_REPORT*
+*_FIX_REPORT*
+MIGRATION_GUIDE*
+
+# Local test outputs  
+test-output/
+.test-results/
+
+# Bitcoin/Lightning local configs
+bitcoin.conf
+lnd.conf
+*.macaroon
+
+# Deployment specific
+.htaccess
+.htpasswd
+ftp-deploy.json
+deploy-config.*
