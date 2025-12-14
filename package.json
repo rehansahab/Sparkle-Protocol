@@ -1,9 +1,29 @@
 {
-  "name": "sparkle-protocol",
-  "version": "0.3.0",
-  "description": "Lightning-atomic Ordinal auction system - Taproot atomic swaps",
+  "name": "@sparkle-protocol/core",
+  "version": "1.0.0",
+  "description": "Trustless atomic swaps for Bitcoin Ordinals via Lightning Network - Mainnet Validated",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    },
+    "./adapters": {
+      "import": "./dist/adapters/index.js",
+      "types": "./dist/adapters/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "sparkle": "./dist/cli/sparkle-cli.js"
   },
@@ -11,12 +31,27 @@
     "build": "tsc",
     "build:browser": "node scripts/build-browser.mjs",
     "build:all": "tsc && node scripts/build-browser.mjs",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "vitest",
     "test:swap": "npx tsx tests/swap.test.ts",
     "test:e2e": "npx tsx tests/end-to-end-swap.ts",
     "test:verify": "npx tsx tests/verify-deep.ts",
     "cli": "npx tsx src/cli/sparkle-cli.ts"
   },
+  "keywords": [
+    "bitcoin",
+    "ordinals",
+    "inscriptions",
+    "atomic-swap",
+    "lightning-network",
+    "taproot",
+    "nostr",
+    "cryptocurrency",
+    "btc",
+    "swap",
+    "trustless"
+  ],
   "dependencies": {
     "@noble/curves": "^1.9.7",
     "@noble/hashes": "^1.3.3",
@@ -34,6 +69,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ProtocolSparkle/Sparkles-Protocol"
+    "url": "https://github.com/ProtocolSparkle/Sparkle-Protocol"
+  },
+  "bugs": {
+    "url": "https://github.com/ProtocolSparkle/Sparkle-Protocol/issues"
+  },
+  "homepage": "https://sparkleprotocol.com",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

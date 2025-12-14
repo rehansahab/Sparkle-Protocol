@@ -1,0 +1,38 @@
+# Source files (TypeScript)
+src/
+*.ts
+!*.d.ts
+
+# Test files
+tests/
+*.test.ts
+*.spec.ts
+vitest.config.*
+
+# Build scripts
+scripts/
+build-browser.mjs
+
+# Documentation (keep README)
+docs/
+proofs/
+*.md
+!README.md
+
+# Config files
+tsconfig.json
+.gitignore
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.log
+*.tmp
+node_modules/

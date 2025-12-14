@@ -10,18 +10,12 @@
 
 // Core exports for browser
 export {
-  generatePreimage,
-  verifyPreimage,
-  calculateRefundLocktime,
-  type SwapPreimage,
-} from './core/lightning-invoice.js';
-
-export {
   createSparkleSwapAddress,
   createHashlockScript,
   createTimelockScript,
-  type SwapAddressParams,
-  type SwapAddressResult,
+  calculateRefundLocktime,
+  type SparkleSwapParams,
+  type SparkleSwapAddress,
 } from './core/taproot-scripts.js';
 
 export {
